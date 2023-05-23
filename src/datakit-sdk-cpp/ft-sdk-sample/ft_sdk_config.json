@@ -1,0 +1,14 @@
+{
+    "general_config": {
+        "enable_sdk_log": true
+    },
+    "http_config": {
+        "serverUrl": "http://10.0.0.1:9529",
+    },
+    "user_config": {
+        "email": "someone@mail.com",
+        "extdata": "{\"ft_key\":\"ft_value\"}",
+        "id": "1001",
+        "name": "user"
+    }
+}
