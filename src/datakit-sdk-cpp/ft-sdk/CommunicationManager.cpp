@@ -10,18 +10,6 @@
 namespace com::ft::sdk::internal
 {
 
-	CommunicationManager* CommunicationManager::pInstance = nullptr;
-
-	CommunicationManager& CommunicationManager::instance()
-	{
-		if (pInstance == nullptr)
-		{
-			pInstance = new CommunicationManager();
-		}
-
-		return *pInstance;
-	}
-
 	void CommunicationManager::initialize(FTSDKConfig& config)
 	{
 		m_generalConfig = config;
@@ -31,7 +19,7 @@ namespace com::ft::sdk::internal
 		RestClient::init();
 
 		// get a connection object
-		m_pConnection = new RestClient::Connection(m_generalConfig.getServerUrl());
+		m_pConnection = std::make_shared<RestClient::Connection>(m_generalConfig.getServerUrl());
 
 		// configure basic auth
 		//m_pConnection->SetBasicAuth("WarMachine68", "WARMACHINEROX");

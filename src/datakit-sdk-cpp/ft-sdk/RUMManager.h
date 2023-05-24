@@ -33,7 +33,6 @@ namespace com::ft::sdk::internal
         void startView(const std::string& viewName);
         void stopView();
 
-        RUMManager();
         void init();
         void clear();
     public:
@@ -44,6 +43,7 @@ namespace com::ft::sdk::internal
 
 
     private:
+        RUMManager();
         void setTransformContent(std::string resourceId, ResourceParams params);
         void setNetState(std::string resourceId, NetStatus netStatusBean);
         void putRUMResourcePerformance(std::string resourceId);
@@ -80,6 +80,8 @@ namespace com::ft::sdk::internal
         std::int64_t m_lastSessionTime = 0;
         std::int64_t m_lastActionTime = 0;
         std::map<std::string, RUMResource*> m_mapResource;
+
+        friend class Singleton;
     };
 
 }

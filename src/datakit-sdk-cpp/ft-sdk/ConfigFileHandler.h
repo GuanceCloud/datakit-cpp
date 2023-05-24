@@ -22,7 +22,6 @@ namespace com::ft::sdk::internal
 	class ConfigFileHandler : public Singleton<ConfigFileHandler>
 	{
 	public:
-		ConfigFileHandler() {}
 
 		bool load(const std::string& filePath = "");
 		bool updateConfig(UpdateConfigType type, bool isClear = false);
@@ -64,6 +63,7 @@ namespace com::ft::sdk::internal
 			return m_enableSDKLog;
 		}
 	private:
+		ConfigFileHandler() {}
 		std::string tryGetValue(nlohmann::json& j, std::vector<std::string> keys);
 
 	private:
@@ -82,6 +82,8 @@ namespace com::ft::sdk::internal
 		std::string m_configFilePath;
 
 		bool m_enableSDKLog = false;
+
+		friend class Singleton;
 	};
 }
 

@@ -73,7 +73,7 @@ namespace com::ft::sdk
 
 		internal::FTSDKConfigManager::getInstance().setGeneralConfig(cpConfig);
 		internal::DataSyncManager::getInstance().init();
-		internal::CommunicationManager::instance().initialize(cpConfig);
+		internal::CommunicationManager::getInstance().initialize(cpConfig);
 
 		internal::LoggerManager::getInstance().logInfo("initialized general config.");
 

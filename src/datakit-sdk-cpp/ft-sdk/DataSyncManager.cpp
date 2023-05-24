@@ -182,7 +182,7 @@ namespace com::ft::sdk::internal
 		{
 			linePtl = LineProtocolBuilder::getInstance().encode(dMsg);
 		}
-		ResponseData response = CommunicationManager::instance().post(dMsg.dataType, linePtl);
+		ResponseData response = CommunicationManager::getInstance().post(dMsg.dataType, linePtl);
 		if (response.code == 200)
 		{
 			internal::LoggerManager::getInstance().logInfo("successfully posted the rum event to datakit agent.");
@@ -208,7 +208,7 @@ namespace com::ft::sdk::internal
 		{
 			linePtl = LineProtocolBuilder::getInstance().encode(dMsg);
 		}
-		ResponseData response = CommunicationManager::instance().post(dMsg.dataType, linePtl);
+		ResponseData response = CommunicationManager::getInstance().post(dMsg.dataType, linePtl);
 		if (response.code == 200)
 		{
 			internal::LoggerManager::getInstance().logInfo("successfully posted the log event to datakit agent.");

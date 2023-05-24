@@ -46,7 +46,6 @@ namespace com::ft::sdk::internal
 	class MonitorManager : public Singleton<MonitorManager>
 	{
 	public:
-		MonitorManager() {};
 		void init();
 
 		bool isErrorMonitorType(ErrorMonitorType errorMonitorType);
@@ -54,11 +53,17 @@ namespace com::ft::sdk::internal
 
 		void addMonitor(RUMView* view);
 		void removeMonitor(const std::string viewId);
+
+	private:
+		MonitorManager() {};
+
 	private:
 		ErrorMonitorType errorMonitorType = ErrorMonitorType::NO_SET;
 		DeviceMetricsMonitorType deviceMetricsMonitorType = DeviceMetricsMonitorType::NO_SET;
 
 		std::map<std::string, MonitoredViewContainer*> m_mapViewContainer;
+
+		friend class Singleton;
 	};
 
 }

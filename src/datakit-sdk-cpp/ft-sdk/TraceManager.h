@@ -21,9 +21,9 @@ namespace com::ft::sdk::internal
 
         const int TIME_OUT = 60000;//暂不考虑长链接情况
 
-        TraceHeader* header;
+        std::shared_ptr<TraceHeader> header;
 
-        TraceHeaderContainer(TraceHeader* header) 
+        TraceHeaderContainer(std::shared_ptr<TraceHeader> header)
         {
             this->header = header;
             addResourced = !FTSDKConfigManager::getInstance().getRUMConfig().isRumEnable();
@@ -51,19 +51,25 @@ namespace com::ft::sdk::internal
 		std::map<std::string, std::string> getTraceHeader(HttpUrl& httpUrl);
 		std::map<std::string, std::string> getTraceHeader(std::string key, HttpUrl httpUrl);
 
-        TraceHeader* getHeader(std::string resourceId);
+        std::shared_ptr<TraceHeader> getHeader(std::string resourceId);
         void removeByAddResource(std::string key);
         void removeByStopResource(std::string key);
-        void checkToRemove(std::string key, TraceHeaderContainer* container);
+        void checkToRemove(std::string key, std::shared_ptr<TraceHeaderContainer> container);
+
+    private:
+        TraceManager() {}
+
 	private:
-        std::map<std::string, TraceHeaderContainer*> m_mapTraceHeaderContainer;
+        std::map<std::string, std::shared_ptr<TraceHeaderContainer>> m_mapTraceHeaderContainer;
 		std::string m_traceID = "";
 		std::string m_spanID = "";
 
 		//是否可以采样
-		bool m_enableTrace;
+		bool m_enableTrace = false;
 
 		FTTraceConfig m_traceConfig;
+
+        friend class Singleton;
 	};
 
 }

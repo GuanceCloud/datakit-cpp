@@ -8,6 +8,7 @@
 #include "restclient-cpp/connection.h"
 #include "Include/FTSDKConfig.h"
 #include "InternalEnums.h"
+#include "Singleton.h"
 
 namespace com::ft::sdk::internal
 {
@@ -17,15 +18,13 @@ namespace com::ft::sdk::internal
 		std::string message;
 	};
 
-	class CommunicationManager
+	class CommunicationManager : public Singleton<CommunicationManager>
 	{
 	private:
-		static CommunicationManager* pInstance;
 		CommunicationManager() {}
 		std::string calculateDate();
 
 	public:
-		static CommunicationManager& instance();
 		void initialize(FTSDKConfig& config);
 		void deinitialize();
 
@@ -41,9 +40,11 @@ namespace com::ft::sdk::internal
 
 	private:
 		FTSDKConfig m_generalConfig;
-		RestClient::Connection* m_pConnection = nullptr;
+		std::shared_ptr<RestClient::Connection> m_pConnection;
 
 		std::map<std::string, std::string> m_headParams;
+
+		friend class Singleton;
 	};
 
 }

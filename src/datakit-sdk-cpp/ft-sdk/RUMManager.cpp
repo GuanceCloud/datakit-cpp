@@ -233,7 +233,7 @@ namespace com::ft::sdk::internal
 
     void RUMManager::setTransformContent(std::string resourceId, ResourceParams params)
     {
-        TraceHeader* pHeader = TraceManager::getInstance().getHeader(resourceId);
+        auto pHeader = TraceManager::getInstance().getHeader(resourceId);
         std::string spanId = "";
         std::string traceId = "";
         if (pHeader != nullptr) {

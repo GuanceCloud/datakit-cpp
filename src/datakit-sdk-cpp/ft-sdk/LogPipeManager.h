@@ -17,12 +17,15 @@ namespace com::ft::sdk::internal
 		void addLog(std::string content, LogLevel level);
 
 	private:
+		LogPipeManager() {}
 		bool checkLogLevel(LogLevel level);
 
 	private:
-		FTLogConfig* m_pLogPipeConfig;
+		FTLogConfig* m_pLogPipeConfig = nullptr;
 
 		const int LOG_LIMIT_SIZE = 30720;
+
+		friend class Singleton;
 	};
 
 }

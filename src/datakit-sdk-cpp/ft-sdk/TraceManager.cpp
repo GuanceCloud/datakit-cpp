@@ -25,16 +25,16 @@ namespace com::ft::sdk::internal
 
     std::map<std::string, std::string> TraceManager::getTraceHeader(std::string key, HttpUrl httpUrl)
     {
-        TraceHeader* pTH = new TraceHeader(m_enableTrace, m_traceConfig.getTraceType());
-        m_mapTraceHeaderContainer[key] = new TraceHeaderContainer(pTH);
+        std::shared_ptr<TraceHeader> pTH = std::make_shared<TraceHeader>(m_enableTrace, m_traceConfig.getTraceType());
+        m_mapTraceHeaderContainer[key] = std::make_shared<TraceHeaderContainer>(pTH);
 
         std::map<std::string, std::string> header = pTH->getTraceHeader(httpUrl);
         return header;
     }
 
-    TraceHeader* TraceManager::getHeader(std::string resourceId)
+    std::shared_ptr<TraceHeader> TraceManager::getHeader(std::string resourceId)
     {
-        TraceHeaderContainer* pContainer = m_mapTraceHeaderContainer[resourceId];
+        auto pContainer = m_mapTraceHeaderContainer[resourceId];
         if (pContainer != nullptr)
         {
             return pContainer->header;
@@ -45,7 +45,7 @@ namespace com::ft::sdk::internal
 
     void TraceManager::removeByAddResource(std::string key)
     {
-        TraceHeaderContainer* pContainer = m_mapTraceHeaderContainer[key];
+        auto pContainer = m_mapTraceHeaderContainer[key];
         if (pContainer != nullptr) 
         {
             pContainer->addResourced = true;
@@ -55,7 +55,7 @@ namespace com::ft::sdk::internal
 
     void TraceManager::removeByStopResource(std::string key)
     {
-        TraceHeaderContainer* pContainer = m_mapTraceHeaderContainer[key];
+        auto pContainer = m_mapTraceHeaderContainer[key];
         if (pContainer != nullptr)
         {
             pContainer->resourceStop = true;
@@ -63,7 +63,7 @@ namespace com::ft::sdk::internal
         }
     }
 
-    void TraceManager::checkToRemove(std::string key, TraceHeaderContainer* pContainer)
+    void TraceManager::checkToRemove(std::string key, std::shared_ptr<TraceHeaderContainer> pContainer)
     {
         if (pContainer->addResourced && pContainer->resourceStop
             || pContainer->isTimeOut()) 

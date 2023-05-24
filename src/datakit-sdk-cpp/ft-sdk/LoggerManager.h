@@ -80,13 +80,17 @@ namespace com::ft::sdk::internal
             m_enableLog = enabled;
         }
     private:
-        const std::string LOGGER_NAME = "DataKit";
+        LoggerManager() {}
         void setupLogger(std::string appLogFileName);
         int putLog(int severity, char const* component, char const* message);
 
     private:
+        const std::string LOGGER_NAME = "DataKit";
+
         std::string m_component = "";
         bool m_enableLog = false;
+
+        friend class Singleton;
     };
 
 }

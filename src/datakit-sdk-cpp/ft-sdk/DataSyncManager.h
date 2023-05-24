@@ -50,10 +50,8 @@ namespace com::ft::sdk::internal
 		void sendDataMessageFromDB(DataMsg& bgMsg);
 		void notifyNewLinefromDB();
 
-	public:
-		DataSyncManager();
-
 	private:
+		DataSyncManager();
 		void processData();
 		void getDataFromDB();
 		DataMsg receiveDataMessage(void);
@@ -64,18 +62,26 @@ namespace com::ft::sdk::internal
 	private:
 		bool m_stopping = false;
 
-		std::deque<DataMsg> m_dataMsgQue;			/* message queue to pass the data to working thread */
-		std::mutex m_dataQueMtx;					/* Mutex to protect the queue */
-		std::condition_variable m_dataQueNotEmpty; /* the Queue is not empty, i.e. there is at least one Message in queue */
-		std::condition_variable m_dataQueFull; /* the Queue is full, has to wait for processing data */
+		/* message queue to pass the data to working thread */
+		std::deque<DataMsg> m_dataMsgQue;	
+		/* Mutex to protect the queue */
+		std::mutex m_dataQueMtx;
+		/* the Queue is not empty, i.e. there is at least one Message in queue */
+		std::condition_variable m_dataQueNotEmpty; 
+		/* the Queue is full, has to wait for processing data */
+		std::condition_variable m_dataQueFull; 
 
-		std::mutex m_dbDataMtx;					/* Mutex to protect the queue */
-		std::condition_variable m_dataIncomingFromDB; /* new data inserted in DB */
+		/* Mutex to protect the queue */
+		std::mutex m_dbDataMtx;	
+		/* new data inserted in DB */
+		std::condition_variable m_dataIncomingFromDB; 
 		bool m_hasIncomingData = false;
 
 		static const int MAX_DATA_QUEUE_SIZE = 100;
 
 		bool m_enableFileCache = false;
+
+		friend class Singleton;
 	};
 
 }

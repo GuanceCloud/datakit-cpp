@@ -12,7 +12,6 @@ namespace com::ft::sdk::internal
 	class FTSDKConfigManager : public Singleton<FTSDKConfigManager>
 	{
 	public:
-		FTSDKConfigManager();
 		FTSDKConfigManager&& setGeneralConfig(FTSDKConfig& config);
 
 		FTSDKConfigManager&& setRUMConfig(FTRUMConfig& config);
@@ -82,6 +81,8 @@ namespace com::ft::sdk::internal
 			return m_workingDir;
 		}
 	private:
+		FTSDKConfigManager();
+
 		bool isDefaultAppVersion();
 
 	private:
@@ -92,6 +93,7 @@ namespace com::ft::sdk::internal
 		FTTraceConfig m_traceConfig;
 		FTLogConfig m_logPipeConfig;
 
+		//设置全局 tag
 		std::map<std::string, std::string> m_mapGlobalContext;
 
 		bool m_enableOfflineMode = false;
@@ -99,6 +101,8 @@ namespace com::ft::sdk::internal
 
 		std::string m_configFilePath;
 		std::string m_workingDir;
+
+		friend class Singleton;
 	};
 
 }

@@ -14,8 +14,6 @@ namespace com::ft::sdk::internal
 	class TraceIDGenerator : public Singleton<TraceIDGenerator>
 	{
 	public:
-		TraceIDGenerator();
-
 		std::string getZipKinNewTraceId();
 		std::string getZipKinNewSpanId();
 
@@ -26,6 +24,8 @@ namespace com::ft::sdk::internal
 		std::string getSkyWalkingSW(SkyWalkingVersion ver, const std::string& sampled, std::int64_t requestTime, HttpUrl url);
 
 	private:
+		TraceIDGenerator();
+
 		std::string createSw8Head(std::string sampled, std::int64_t requestTime, HttpUrl url);
 		std::string createSw6Head(std::string sampled, std::int64_t requestTime, HttpUrl url);
 
@@ -46,6 +46,8 @@ namespace com::ft::sdk::internal
 #endif
 
 		const int INCREASING_NUMBER_MAX = 9999;
+
+		friend class Singleton;
 	};
 
 }

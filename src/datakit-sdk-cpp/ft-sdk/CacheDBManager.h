@@ -11,7 +11,6 @@ namespace com::ft::sdk::internal
 	class CacheDBManager : public Singleton<CacheDBManager>
 	{
 	public:
-		CacheDBManager();
 		void deinit();
 		void insertRUMItem(std::string measurementName, std::map<std::string, std::string> tags, std::map<std::string, std::any> fields);
 		void insertLogItem(std::string measurementName, std::map<std::string, std::string> tags, std::map<std::string, std::any> fields);
@@ -19,6 +18,7 @@ namespace com::ft::sdk::internal
 
 		void updateRUMCollect(bool collect);
 	private:
+		CacheDBManager();
 		void processData();
 		void addGlobalContexts(TagMap& tags, TagMap& src);
 	private:
@@ -28,6 +28,8 @@ namespace com::ft::sdk::internal
 		bool m_enableFileCache = false;
 		bool m_enableRUMCollect = true;
 		bool m_stopping = false;
+
+		friend class Singleton;
 	};
 
 }

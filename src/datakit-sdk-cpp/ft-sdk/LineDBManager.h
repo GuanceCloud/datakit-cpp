@@ -26,7 +26,6 @@ namespace com::ft::sdk::internal
 	class LineDBManager : public Singleton<LineDBManager>
 	{
 	public:
-		LineDBManager();
 		void init();
 
 		void clearDB();
@@ -34,7 +33,10 @@ namespace com::ft::sdk::internal
 
 		bool insertLine(DataMsg& log);
 		std::vector<std::shared_ptr<DataMsg>> queryLineFromDB(DataType type);
+
 	private:
+		LineDBManager();
+
 		int executeSQL(std::string sql);
 		std::string getTableName(DataType type);
 		int executeSQLs(std::string sql, std::vector<int> vtIds);
@@ -42,6 +44,8 @@ namespace com::ft::sdk::internal
 	private:
 		std::shared_ptr<SQLite::Database> m_pDB;
 		std::string DB_FILE = "";
+
+		friend class Singleton;
 	};
 
 }
