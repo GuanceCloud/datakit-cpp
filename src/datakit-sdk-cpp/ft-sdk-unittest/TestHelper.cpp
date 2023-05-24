@@ -1,4 +1,4 @@
-#include "TestHelper.h"
+﻿#include "TestHelper.h"
 #include "../../datakit-sdk-cpp/ft-sdk/Include/FTSDKDataContracts.h"
 #include "../../datakit-sdk-cpp/ft-sdk/FTSDKConstants.h"
 #include <thread>

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Include/FTSDK.h"
 #include "DataSyncManager.h"
 #include "FTSDKConfigManager.h"

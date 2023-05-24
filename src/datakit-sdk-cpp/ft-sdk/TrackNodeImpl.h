@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef _TRACK_NODE_IMPL_H_
 #define _TRACK_NODE_IMPL_H_
 

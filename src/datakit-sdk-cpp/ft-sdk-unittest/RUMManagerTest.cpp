@@ -1,4 +1,4 @@
-#include "ft-sdk-unittest.h"
+﻿#include "ft-sdk-unittest.h"
 #include "../../datakit-sdk-cpp/ft-sdk/Include/FTSDKDataContracts.h"
 #include "../../datakit-sdk-cpp/ft-sdk/LoggerManager.h"
 #include "../../datakit-sdk-cpp/ft-sdk/RUMManager.h"

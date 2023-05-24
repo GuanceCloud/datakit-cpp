@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DataSyncManager.h"
 #include "LineProtocolBuilder.h"
 #include <thread>

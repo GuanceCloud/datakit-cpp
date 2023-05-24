@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace com::ft::sdk::internal
 {

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef _TEST_HELPER_H_
 #define _TEST_HELPER_H_
 

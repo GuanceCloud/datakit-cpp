@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "RUMManager.h"
 #include "FTSDKConstants.h"
 #include "LoggerManager.h"

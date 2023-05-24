@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef _DATAKIT_LOG_PIPER_H_
 #define _DATAKIT_LOG_PIPER_H_
 

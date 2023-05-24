@@ -1,4 +1,4 @@
-/*
+﻿/*
   Author: Zhou Guangyong
   Datakit SDK C++ interface.
 */

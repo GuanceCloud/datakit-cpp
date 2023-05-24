@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Platform.h"
 #if defined(WIN32)
 #include <iostream>

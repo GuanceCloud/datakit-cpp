@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef _FT_SDK_UNIT_TEST_H_
 #define _FT_SDK_UNIT_TEST_H_
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef _DATAKIT_CPP_DATA_CONTRACT_H_
 #define _DATAKIT_CPP_DATA_CONTRACT_H_
 

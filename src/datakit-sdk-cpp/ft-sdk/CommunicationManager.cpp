@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CommunicationManager.h"
 #include "FTSDKConstants.h"
 #include <ctime>

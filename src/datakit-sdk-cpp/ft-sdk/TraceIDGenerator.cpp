@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "TraceIDGenerator.h"
 #include <stduuid/uuid.h>
 #include <random>

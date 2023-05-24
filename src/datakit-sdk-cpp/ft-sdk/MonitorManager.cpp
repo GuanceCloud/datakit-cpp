@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MonitorManager.h"
 #include "FTSDKConfigManager.h"
 #include "Platform.h"

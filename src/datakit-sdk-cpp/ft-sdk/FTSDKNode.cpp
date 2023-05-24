@@ -1,4 +1,4 @@
-#include "FTSDKNode.h"
+﻿#include "FTSDKNode.h"
 #include "TrackNodeImpl.h"
 #include <typeinfo>
 #include <type_traits>

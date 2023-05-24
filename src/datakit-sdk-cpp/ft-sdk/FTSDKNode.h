@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef _DATAKIT_SDK_NODE_H_
 #define _DATAKIT_SDK_NODE_H_
 

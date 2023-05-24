@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef _DATAKIT_UTILS_H_
 #define _DATAKIT_UTILS_H_
 

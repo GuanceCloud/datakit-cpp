@@ -1,4 +1,4 @@
-
+﻿
 #include "Include/FTSDKFactory.h"
 
 namespace com::ft::sdk

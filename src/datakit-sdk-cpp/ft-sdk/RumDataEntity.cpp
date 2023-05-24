@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "RumDataEntity.h"
 #include "Utils.h"
 #include <algorithm>

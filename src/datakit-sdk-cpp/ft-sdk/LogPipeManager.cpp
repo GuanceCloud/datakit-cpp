@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "LogPipeManager.h"
 #include "Include/FTSDKConfig.h"
 #include "FTSDKConfigManager.h"

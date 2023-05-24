@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ConfigFileHandler.h"
 #include "LoggerManager.h"
 #include <fstream>

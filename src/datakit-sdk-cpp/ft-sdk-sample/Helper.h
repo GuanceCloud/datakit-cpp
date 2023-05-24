@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "FTSDKFactory.h"
 #include "restclient-cpp/restclient.h"
