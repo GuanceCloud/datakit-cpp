@@ -39,9 +39,6 @@ namespace com::ft::sdk::constants
 	const std::string KEY_RUM_RESOURCE_METHOD = "resource_method";
 	const std::string KEY_RUM_RESPONSE_HEADER = "response_header";
 	const std::string KEY_RUM_REQUEST_HEADER = "request_header";
-	const std::string KEY_RUM_SDK_PACKAGE_AGENT = "sdk_package_agent";
-	const std::string KEY_RUM_SDK_PACKAGE_TRACK = "sdk_package_track";
-	const std::string KEY_RUM_SDK_PACKAGE_NATIVE = "sdk_package_native";
 	const std::string KEY_SDK_VERSION = "sdk_version";
 
 	const std::string KEY_RUM_RESOURCE_STATUS = "resource_status";
@@ -105,21 +102,14 @@ namespace com::ft::sdk::constants
 	const std::string FT_LOG_DEFAULT_MEASUREMENT = "df_rum_linux_log";
 #endif // __WIN32
 
-	const std::string DEFAULT_OBJECT_CLASS = "Mobile_Device";//默认的对象名
 #ifdef _WIN32
 	const std::string DEFAULT_LOG_SERVICE_NAME = "df_rum_windows";
 #elif __linux__
 	const std::string DEFAULT_LOG_SERVICE_NAME = "df_rum_linux";
 #endif // __WIN32
-	const int MAX_DB_CACHE_NUM = 5000;//数据库最大缓存容量
-
+	
 	const std::string KEY_TIME_COST_DURATION = "duration";
 	const std::string KEY_STATUS = "status";
-
-	const std::string KEY_BATTERY_TOTAL = "battery_total";
-	const std::string KEY_BATTERY_CHARGE_TYPE = "battery_charge_type";
-	const std::string KEY_BATTERY_STATUS = "battery_status";
-	const std::string KEY_BATTERY_USE = "battery_use";
 
 	const std::string KEY_MEMORY_TOTAL = "memory_total";
 	const std::string KEY_MEMORY_USE = "memory_use";
@@ -143,7 +133,7 @@ namespace com::ft::sdk::constants
 	const std::string KEY_APP_VERSION_NAME = "version";
 	const std::string KEY_SDK_NAME = "sdk_name";
 	const std::string KEY_MESSAGE = "message";
-	const std::string KEY_BACKENDSAMPLE = "backend_sample";
+
 }
 
 #endif // !_DATAKIT_SDK_CONST_H_

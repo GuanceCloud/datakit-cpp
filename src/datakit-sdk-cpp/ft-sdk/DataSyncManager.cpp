@@ -35,6 +35,9 @@ namespace com::ft::sdk::internal
 	void DataSyncManager::deinit()
 	{
 		m_stopping = true;
+
+		m_dataIncomingFromDB.notify_one();
+		m_dataQueNotEmpty.notify_one();
 	}
 
 	void DataSyncManager::processData()
@@ -83,6 +86,8 @@ namespace com::ft::sdk::internal
 				internal::LoggerManager::getInstance().logError("failed to send the data message for 3 times, abandon it...");
 			}
 		}
+
+		internal::LoggerManager::getInstance().logInfo("DataSyncManager: working thread exited.");
 	}
 
 	void DataSyncManager::sendDataMessage(DataMsg& bgMsg)
@@ -111,6 +116,11 @@ namespace com::ft::sdk::internal
 			std::unique_lock<std::mutex> lck(m_dbDataMtx);
 			m_dataIncomingFromDB.wait(lck, [=] { return m_hasIncomingData || m_stopping; });
 			
+			if (m_stopping)
+			{
+				break;
+			}
+
 			DataType allTypes[] = { DataType::RUM_APP, DataType::LOG };
 
 			for (DataType tp : allTypes)
@@ -123,6 +133,8 @@ namespace com::ft::sdk::internal
 			}
 			m_hasIncomingData = false;
 		}
+
+		internal::LoggerManager::getInstance().logInfo("DataSyncManager: working thread 2 exited.");
 	}
 
 	void DataSyncManager::sendDataMessageFromDB(DataMsg& bgMsg)

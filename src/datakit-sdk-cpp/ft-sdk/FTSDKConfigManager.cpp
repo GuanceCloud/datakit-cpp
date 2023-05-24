@@ -189,15 +189,7 @@ namespace com::ft::sdk::internal
 		config.addGlobalContext(constants::KEY_APPLICATION_UUID, DATAKIT_APP_UUID);
 		config.addGlobalContext(constants::KEY_ENV, utils::convertToLowerCase(EnumToString(getGeneralConfig().getEnv())));
 		config.addGlobalContext(constants::KEY_DEVICE_UUID, platform::getDeviceUUID());
-		//config.addGlobalContext(constants::KEY_RUM_SDK_PACKAGE_AGENT, in_constants::AGENT_VERSION);
-		//if (!FTSdk.PLUGIN_VERSION.isEmpty()) 
-		//{
-		//	config.addGlobalContext(constants::KEY_RUM_SDK_PACKAGE_TRACK, FTSdk.PLUGIN_VERSION);
-		//}
-		//if (!FTSdk.NATIVE_VERSION.isEmpty()) 
-		//{
-		//	config.addGlobalContext(constants::KEY_RUM_SDK_PACKAGE_NATIVE, FTSdk.NATIVE_VERSION);
-		//}
+
 		config.addGlobalContext(constants::KEY_SDK_VERSION, constants::DATAKIT_SDK_VERSION);
 	}
 
