@@ -111,7 +111,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$(ProjectName)d</TargetName>
+    <TargetName>$(ProjectName)d_static</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -184,8 +184,7 @@
       <AdditionalDependencies>version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>rmdir /S /Q $(SolutionDir)..\..\datakit_sdk_redist
-mkdir $(SolutionDir)..\..\datakit_sdk_redist
+      <Command>mkdir $(SolutionDir)..\..\datakit_sdk_redist
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\lib
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\lib\win64
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\include
@@ -214,8 +213,7 @@ copy $(ProjectDir)Include\* $(SolutionDir)..\..\datakit_sdk_redist\include\
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>rmdir /S /Q $(SolutionDir)..\..\datakit_sdk_redist
-mkdir $(SolutionDir)..\..\datakit_sdk_redist
+      <Command>mkdir $(SolutionDir)..\..\datakit_sdk_redist
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\lib
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\lib\win64
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\include
@@ -252,8 +250,7 @@ copy $(ProjectDir)Include\* $(SolutionDir)..\..\datakit_sdk_redist\include\
       <Command>powershell.exe -Command "'#define DATAKIT_APP_UUID \"' + [Guid]::NewGuid().ToString() + ’\"‘ | Out-File $(ProjectDir)\Include\Datakit_UUID.h"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>rmdir /S /Q $(SolutionDir)..\..\datakit_sdk_redist
-mkdir $(SolutionDir)..\..\datakit_sdk_redist
+      <Command>mkdir $(SolutionDir)..\..\datakit_sdk_redist
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\lib
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\lib\win64
 mkdir $(SolutionDir)..\..\datakit_sdk_redist\include
