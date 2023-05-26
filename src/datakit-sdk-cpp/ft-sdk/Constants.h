@@ -17,9 +17,6 @@ namespace com::ft::sdk::internal::in_constants
 	const std::int64_t ACTION_NORMAL_TIME_OUT = 100000000L;
 
 	const std::string PACKAGE_UUID = "NA";
-	const std::string AGENT_VERSION = "1.4";
-	const std::string DEVICE_UUID = "NA";
-
 	const int RUM_ITEM_LIMIT_SIZE = 10;
 }
 
