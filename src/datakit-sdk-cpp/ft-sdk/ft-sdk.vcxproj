@@ -285,10 +285,12 @@ copy $(ProjectDir)Include\* $(SolutionDir)..\..\datakit_sdk_redist\include\
     <ClInclude Include="MonitorManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="RumDataEntity.h" />
     <ClInclude Include="CacheDBManager.h" />
     <ClInclude Include="RUMManager.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="FTSDKDLLWrapper.h" />
     <ClInclude Include="TraceHeader.h" />
     <ClInclude Include="TraceManager.h" />
     <ClInclude Include="TraceIDGenerator.h" />
@@ -331,6 +333,7 @@ copy $(ProjectDir)Include\* $(SolutionDir)..\..\datakit_sdk_redist\include\
     <ClCompile Include="RumDataEntity.cpp" />
     <ClCompile Include="CacheDBManager.cpp" />
     <ClCompile Include="RUMManager.cpp" />
+    <ClCompile Include="FTSDKDLLWrapper.cpp" />
     <ClCompile Include="TraceHeader.cpp" />
     <ClCompile Include="TraceManager.cpp" />
     <ClCompile Include="TraceIDGenerator.cpp" />
@@ -339,6 +342,9 @@ copy $(ProjectDir)Include\* $(SolutionDir)..\..\datakit_sdk_redist\include\
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ft-sdk.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
