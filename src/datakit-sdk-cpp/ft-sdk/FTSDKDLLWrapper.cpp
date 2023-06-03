@@ -200,8 +200,8 @@ namespace com::ft::sdk::wrapper {
 		json extra = j["extra"];
 
 		std::string userIdStr(userId);
-		std::string userNameStr(userId);
-		std::string userEmailStr(userId);
+        std::string userNameStr(userName);
+        std::string userEmailStr(userEmail);
 
 		UserData uc;
 		uc.init(userIdStr, userNameStr, userEmailStr);
