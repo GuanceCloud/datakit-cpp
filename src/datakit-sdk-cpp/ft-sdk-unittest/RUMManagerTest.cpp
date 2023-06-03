@@ -51,8 +51,8 @@ TEST_F(RUMManagerTest, TestViewGeneration)
 	
 	internal::RUMManager::getInstance().startAction("just4test", "click");
 	internal::RUMManager::getInstance().addLongTask("test long task", 100010);
-	internal::RUMManager::getInstance().addError("test error", "first error", RUMErrorType::native_crash, AppState::UNKNOWN);
-	internal::RUMManager::getInstance().addError("test error", "second error", RUMErrorType::network_error, AppState::UNKNOWN);
+	internal::RUMManager::getInstance().addError("test error", "first error", RUMErrorType::NATIVE_CRASH, AppState::UNKNOWN);
+	internal::RUMManager::getInstance().addError("test error", "second error", RUMErrorType::NETWORK_ERROR, AppState::UNKNOWN);
 	internal::RUMManager::getInstance().stopAction();
 
 	internal::RUMManager::getInstance().stopView();
@@ -221,7 +221,7 @@ TEST_F(RUMManagerTest, TestResourceGeneration)
 
 	internal::PropagationUrl url = internal::PropagationUrl::parse("https://www.example.com/test.html?param=1");
 	internal::HttpUrl internalUrl{ url.getHost(), url.getPath(), url.getPort() };
-	auto traceHdr = internal::TraceManager::getInstance().getTraceHeader(resId, internalUrl);
+	auto traceHdr = internal::TraceManager::getInstance().getTraceHeader(resId, "https://www.example.com/test.html?param=1");
 
 	internal::RUMManager::getInstance().addResource(resId, params, status);
 

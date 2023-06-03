@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   CommunicationManager.h
+ * \brief  HTTP Communication encapsulation
+ * 
+ * \author Zhou Guangyong
+ * \date   Dec 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_COMM_MANAGER_H_
 #define _DATAKIT_SDK_COMM_MANAGER_H_
 

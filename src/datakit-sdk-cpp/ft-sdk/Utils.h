@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   utils.h
+ * \brief  Global Utilities
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_UTILS_H_
 #define _DATAKIT_UTILS_H_
 

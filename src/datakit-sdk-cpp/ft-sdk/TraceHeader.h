@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   TraceHeader.h
+ * \brief  Trace Header Generator
+ * 
+ * \author Zhou Guangyong
+ * \date   December 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_TRACE_HEADER_H_
 #define _DATAKIT_SDK_TRACE_HEADER_H_
 

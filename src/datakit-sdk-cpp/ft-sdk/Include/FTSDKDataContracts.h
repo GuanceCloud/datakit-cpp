@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
 #include "datakit_exports.h"
 
 #define ENUM_MACRO10(name, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10)\
@@ -103,17 +104,17 @@ namespace com::ft::sdk
 	/**
 	 * RUM 错误类型
 	 */
-	ENUM_MACRO4(RUMErrorType, native_crash, java_crash, flutter_crash, network_error)
+	ENUM_MACRO4(RUMErrorType, NATIVE_CRASH, JAVA_CRASH, FLUTTER_CRASH, NETWORK_ERROR)
 
 	/**
 	 * 错误源
 	 */
-	ENUM_MACRO2(ErrorSource, logger, network)
+	ENUM_MACRO2(ErrorSource, LOGGER, NETWORK)
 
 	/**
 	 * 日志级别
 	 */
-	ENUM_MACRO5(LogLevel, info, WARNING, ERR, CRITICAL, OK)
+	ENUM_MACRO5(LogLevel, INFO, WARNING, ERR, CRITICAL, OK)
 
 	/**
 	 * 数据传输环境
@@ -186,6 +187,16 @@ namespace com::ft::sdk
         /** 响应 HTTP 状态 */
 		int resourceStatus = -1;
 	};
+
+	class FTSDK_EXPORT FTSDKException : public std::exception
+	{
+	public:
+		FTSDKException(const std::string& file, int line, const std::string& source, const std::string& message)
+			: std::exception(std::logic_error(source + " : " + message))
+		{
+		}
+	};
+
 }
 
 #endif // !_DATAKIT_CPP_DATA_CONTRACT_H_

@@ -16,15 +16,21 @@ namespace com::ft::sdk::internal
 
     }
 
-    std::map<std::string, std::string> TraceManager::getTraceHeader(HttpUrl& httpUrl)
+    std::map<std::string, std::string> TraceManager::getTraceHeader(const std::string& urlStr)
     {
+        PropagationUrl url = internal::PropagationUrl::parse(urlStr);
+        HttpUrl httpUrl{ url.getHost(), url.getPath(), url.getPort() };
+
         TraceHeader th(m_enableTrace, m_traceConfig.getTraceType());
 
         return th.getTraceHeader(httpUrl);
     }
 
-    std::map<std::string, std::string> TraceManager::getTraceHeader(std::string key, HttpUrl httpUrl)
+    std::map<std::string, std::string> TraceManager::getTraceHeader(const std::string& key, const std::string& urlStr)
     {
+        PropagationUrl url = internal::PropagationUrl::parse(urlStr);
+        HttpUrl httpUrl{ url.getHost(), url.getPath(), url.getPort() };
+
         std::shared_ptr<TraceHeader> pTH = std::make_shared<TraceHeader>(m_enableTrace, m_traceConfig.getTraceType());
         m_mapTraceHeaderContainer[key] = std::make_shared<TraceHeaderContainer>(pTH);
 

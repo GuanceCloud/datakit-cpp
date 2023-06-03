@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   RUMManager.h
+ * \brief  The unified entry for all RUM operations
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_RUM_MANAGER_H_
 #define _DATAKIT_SDK_RUM_MANAGER_H_
 

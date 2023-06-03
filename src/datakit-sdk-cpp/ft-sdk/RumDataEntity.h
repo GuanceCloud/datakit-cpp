@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   RumDataEntity.h
+ * \brief  All classes for RUM entities
+ * 
+ * \author Zhou Guangyong
+ * \date   November 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_RUM_DATA_ENTITY_H_
 #define _DATAKIT_SDK_RUM_DATA_ENTITY_H_
 
@@ -71,6 +78,8 @@ namespace com::ft::sdk::internal
 		void reset();
 	protected:
 		RUMItemContainer();
+		~RUMItemContainer();
+
 		void addItem(RUMItem* item);
 
 		RUMItemList m_rumItems;
@@ -96,12 +105,15 @@ namespace com::ft::sdk::internal
 		//RUMApplication(const std::string& parentId);
 		RUMSession& createSession();
 		RUMView& addView(std::string viewName);
+	
+		void checkViewCapacity();
 
 		const std::string& getSessionId();
 		std::vector<RUMView*> getViewList();
 		void refreshSessionId();
 	private:
 		RUMApplication();
+		~RUMApplication();
 		RUMSession m_rumSession;
 	};
 
@@ -112,6 +124,7 @@ namespace com::ft::sdk::internal
 	{
 	public:
 		RUMIndicatorHost();
+		~RUMIndicatorHost();
 
 		virtual RUMResource& addResource(RUMItem* pParentItem, const std::string& name);
 		virtual RUMError& addError(RUMItem* pParentItem, const std::string& name);

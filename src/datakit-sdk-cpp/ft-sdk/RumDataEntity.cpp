@@ -7,14 +7,18 @@
 
 namespace com::ft::sdk::internal
 {
-    //std::string _trim(const std::string& str)
-    //{
-    //    size_t start = str.find_first_not_of(" \n\r\t");
-    //    size_t until = str.find_last_not_of(" \n\r\t");
-    //    std::string::const_iterator i = start == std::string::npos ? str.begin() : str.begin() + start;
-    //    std::string::const_iterator x = until == std::string::npos ? str.end() : str.begin() + until + 1;
-    //    return std::string(i, x);
-    //}
+
+    template<typename T>
+    void deleteRUMItemList(std::vector<T*>& vtRUMItem)
+    {
+        std::for_each(vtRUMItem.begin(), vtRUMItem.end(), [](T* pItem) {
+            if (pItem != nullptr)
+            {
+                delete pItem;
+            }
+        });
+    }
+
 
     RUMItem::RUMItem()
     {
@@ -78,6 +82,11 @@ namespace com::ft::sdk::internal
         m_itemName = "APP";
     }
 
+    RUMApplication::~RUMApplication()
+    {
+
+    }
+
     //RUMApplication::RUMApplication(const std::string& parentId) : RUMItemContainer(parentId)
     //{
     //}
@@ -122,6 +131,20 @@ namespace com::ft::sdk::internal
         this->addItem(pView);
 
         return *pView;
+    }
+
+    void RUMApplication::checkViewCapacity()
+    {
+        if (m_rumItems.size() > 2)
+        {
+            auto it = m_rumItems.begin();
+            if (*it != nullptr)
+            {
+                delete (*it);
+            }
+
+            m_rumItems.erase(it);
+        }
     }
 
     RUMSession::RUMSession(RUMItem* pParentItem) : RUMItem(pParentItem)
@@ -228,6 +251,18 @@ namespace com::ft::sdk::internal
     RUMIndicatorHost::RUMIndicatorHost()
     {
         m_startTime = utils::getCurrentNanoTime();
+    }
+
+    RUMItemContainer::~RUMItemContainer()
+    {
+        deleteRUMItemList<RUMItem>(m_rumItems);
+    }
+
+    RUMIndicatorHost::~RUMIndicatorHost()
+    {
+        deleteRUMItemList<RUMItem>(m_vtResource);
+        deleteRUMItemList<RUMItem>(m_vtError);
+        deleteRUMItemList<RUMItem>(m_vtLongTask);
     }
 
     RUMResource& RUMIndicatorHost::addResource(RUMItem* pParentItem, const std::string& name)

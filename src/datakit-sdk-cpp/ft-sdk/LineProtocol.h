@@ -1,4 +1,15 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   LineProtocol.h
+ * \brief  Line Protocol Serialization
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+
+#pragma once
+#ifndef _DATAKIT_SDK_LINE_PROTOCOL_H_
+#define _DATAKIT_SDK_LINE_PROTOCOL_H_
+
 #include <string>
 #include <chrono>
 #include <variant>
@@ -68,3 +79,5 @@ namespace com::ft::sdk::internal
 
 	};
 }
+
+#endif // !_DATAKIT_SDK_LINE_PROTOCOL_H_

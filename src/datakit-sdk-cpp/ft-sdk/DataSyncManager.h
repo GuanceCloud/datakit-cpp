@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   DataSyncManager.h
+ * \brief  Data synchronization, sending the collected data to datakit agent
+ * 
+ * \author Zhou Guangyong
+ * \date   Dec 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_DATA_SYNC_MANAGER_H_
 #define _DATAKIT_SDK_DATA_SYNC_MANAGER_H_
 

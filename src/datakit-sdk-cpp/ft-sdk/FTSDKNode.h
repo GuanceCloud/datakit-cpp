@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   FTSDKNode.h
+ * \brief  User Custom Node
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_NODE_H_
 #define _DATAKIT_SDK_NODE_H_
 

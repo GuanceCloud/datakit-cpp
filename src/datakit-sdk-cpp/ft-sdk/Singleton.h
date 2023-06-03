@@ -1,4 +1,13 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   Singleton.h
+ * \brief  Singleton Base Class
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#pragma once
+#ifndef _DATAKIT_SDK_SINGLETON_H_
+#define _DATAKIT_SDK_SINGLETON_H_
 
 namespace com::ft::sdk::internal
 {
@@ -19,3 +28,5 @@ namespace com::ft::sdk::internal
         Singleton& operator=(Singleton const&) = delete;
     };
 }
+
+#endif // !_DATAKIT_SDK_SINGLETON_H_

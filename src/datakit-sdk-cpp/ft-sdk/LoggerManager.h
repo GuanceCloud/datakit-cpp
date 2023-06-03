@@ -1,6 +1,13 @@
-﻿#pragma once
-#ifndef _LOG_MANAGER_H_
-#define _LOG_MANAGER_H_
+﻿/*****************************************************************//**
+ * \file   LoggerManager.h
+ * \brief  General Logger Encapsulation for SDK
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#pragma once
+#ifndef _DATAKIT_SDK_LOG_MANAGER_H_
+#define _DATAKIT_SDK_LOG_MANAGER_H_
 
 #include <string>
 #include <fmt/format.h>
@@ -80,7 +87,7 @@ namespace com::ft::sdk::internal
             m_enableLog = enabled;
         }
     private:
-        LoggerManager() {}
+        LoggerManager() : AbstractManager(__func__) {}
         void setupLogger(std::string appLogFileName);
         int putLog(int severity, char const* component, char const* message);
 
@@ -94,4 +101,4 @@ namespace com::ft::sdk::internal
     };
 
 }
-#endif // !_LOG_MANAGER_H_
+#endif // !_DATAKIT_SDK_LOG_MANAGER_H_

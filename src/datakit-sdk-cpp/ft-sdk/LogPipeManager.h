@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   LogPipeManager.h
+ * \brief  Push the user log to datakit agent
+ * 
+ * \author Zhou Guangyong
+ * \date   February 2023
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_LOG_PIPER_H_
 #define _DATAKIT_LOG_PIPER_H_
 
@@ -17,7 +24,7 @@ namespace com::ft::sdk::internal
 		void addLog(std::string content, LogLevel level);
 
 	private:
-		LogPipeManager() {}
+		LogPipeManager() : AbstractManager(__func__)  {}
 		bool checkLogLevel(LogLevel level);
 
 	private:

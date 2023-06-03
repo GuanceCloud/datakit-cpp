@@ -7,6 +7,7 @@
 #include "../../datakit-sdk-cpp/ft-sdk/LineProtocolBuilder.h"
 #include "../../datakit-sdk-cpp/ft-sdk/LogPipeManager.h"
 #include "../../datakit-sdk-cpp/ft-sdk/FTSDKConstants.h"
+#include "../../datakit-sdk-cpp/ft-sdk/Utils.h"
 #include "TestHelper.h"
 #include <thread>
 #include <chrono>
@@ -43,7 +44,7 @@ TEST_F(UserLogTest, TesUserLogWithSampleRateZero) {
 	internal::LogPipeManager::getInstance().init(internal::FTSDKConfigManager::getInstance().getLogPipeConfig());
 
 	std::string logContent = "----logInsertDataTest----";
-	internal::LogPipeManager::getInstance().addLog(logContent, LogLevel::info);
+	internal::LogPipeManager::getInstance().addLog(logContent, LogLevel::INFO);
 
 	waitForCompleted();
 
@@ -79,7 +80,7 @@ TEST_F(UserLogTest, TesUserLogWithoutRum) {
 	if (vtLogs.size() > 0)
 	{
 		VERIFY_RUM_FIELD_STR((vtLogs[0]), (constants::KEY_MESSAGE), "\"" + logContent + "\"");
-		VERIFY_RUM_TAG((vtLogs[0]), (constants::KEY_STATUS), EnumToString(level));
+		VERIFY_RUM_TAG((vtLogs[0]), (constants::KEY_STATUS), internal::utils::convertToLowerCase(EnumToString(level)));
 
 		EXPECT_TRUE(vtLogs[0]->tags.find(constants::KEY_RUM_VIEW_NAME) == vtLogs[0]->tags.end());
 	}
@@ -92,7 +93,7 @@ TEST_F(UserLogTest, TesUserLogWithRum) {
 	internal::RUMManager::getInstance().startView(FIRST_VIEW);
 
 	std::string logContent = "----logInsertDataTest----";
-	internal::LogPipeManager::getInstance().addLog(logContent, LogLevel::info);
+	internal::LogPipeManager::getInstance().addLog(logContent, LogLevel::INFO);
 
 	internal::RUMManager::getInstance().stopView();
 	waitForCompleted();

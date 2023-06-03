@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   TrackNodeImpl.h
+ * \brief  Handle the user custom track node
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#pragma once
 #ifndef _TRACK_NODE_IMPL_H_
 #define _TRACK_NODE_IMPL_H_
 

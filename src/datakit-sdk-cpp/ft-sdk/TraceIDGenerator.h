@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   TraceIDGenerator.h
+ * \brief  Helper class to generate trace id
+ * 
+ * \author Zhou Guangyong
+ * \date   December 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_TRACEID_HELPER_H_
 #define _DATAKIT_TRACEID_HELPER_H_
 

@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   Platform.h
+ * \brief  Encapsulate the platform dependent operations
+ * 
+ * \author Zhou Guangyong
+ * \date   February 2023
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_PLATFORM_H_
 #define _DATAKIT_SDK_PLATFORM_H_
 

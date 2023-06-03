@@ -41,10 +41,9 @@ void request(const std::string& url, const std::string& resId, ResourceParams& p
     }
     conn->SetHeaders(headers);
 
-    // append additional headers
-    conn->AppendHeader("X-MY-HEADER", "foo");
-
+    pSDK->startResource(resId);
     RestClient::Response r = conn->get("/get");
+    pSDK->stopResource(resId);
 
     RestClient::Connection::Info info = conn->GetInfo();
 

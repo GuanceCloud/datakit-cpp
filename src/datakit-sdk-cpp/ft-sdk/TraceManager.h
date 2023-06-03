@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   TraceManager.h
+ * \brief  Generate trace header for the specified resource
+ * 
+ * \author Zhou Guangyong
+ * \date   December 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_TRACE_MANAGER_H_
 #define _DATAKIT_SDK_TRACE_MANAGER_H_
 
@@ -48,8 +55,8 @@ namespace com::ft::sdk::internal
 		void initialize(FTTraceConfig& config);
 		void deinitialize();
 
-		std::map<std::string, std::string> getTraceHeader(HttpUrl& httpUrl);
-		std::map<std::string, std::string> getTraceHeader(std::string key, HttpUrl httpUrl);
+		std::map<std::string, std::string> getTraceHeader(const std::string& urlStr);
+		std::map<std::string, std::string> getTraceHeader(const std::string& key, const std::string& urlStr);
 
         std::shared_ptr<TraceHeader> getHeader(std::string resourceId);
         void removeByAddResource(std::string key);
@@ -57,7 +64,7 @@ namespace com::ft::sdk::internal
         void checkToRemove(std::string key, std::shared_ptr<TraceHeaderContainer> container);
 
     private:
-        TraceManager() {}
+        TraceManager() : AbstractManager(__func__) {}
 
 	private:
         std::map<std::string, std::shared_ptr<TraceHeaderContainer>> m_mapTraceHeaderContainer;

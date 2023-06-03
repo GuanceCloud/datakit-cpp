@@ -55,41 +55,6 @@ namespace com::ft::sdk::internal
 		return std::move(*this);
 	}
 
-	//FTSDKConfigManager&& FTSDKConfigManager::setHttpConfig(HttpConfig& config)
-	//{
-	//	m_httpConfig = config;
-
-	//	if (ConfigFileHandler::getInstance().isInited())
-	//	{
-	//		if (m_httpConfig.getUsername() == "")
-	//		{
-	//			m_httpConfig.setUsername(ConfigFileHandler::getInstance().getUsername());
-	//		}
-	//		else
-	//		{
-	//			ConfigFileHandler::getInstance().setUsername(m_httpConfig.getUsername());
-	//		}
-
-	//		if (m_httpConfig.getPassword() == "")
-	//		{
-	//			m_httpConfig.setPassword(ConfigFileHandler::getInstance().getPassword());
-	//		}
-	//		else
-	//		{
-	//			ConfigFileHandler::getInstance().setPassword(m_httpConfig.getPassword());
-	//		}
-
-	//		if (m_httpConfig.getServerUrl() != "")
-	//		{
-	//			ConfigFileHandler::getInstance().setServerUrl(m_httpConfig.getServerUrl());
-	//		}
-
-	//		ConfigFileHandler::getInstance().updateConfig(UpdateConfigType::http);
-	//	}
-
-	//	return std::move(*this);
-	//}
-
 	FTSDKConfigManager&& FTSDKConfigManager::setTraceConfig(FTTraceConfig& config)
 	{
 		m_traceConfig = config;

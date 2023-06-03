@@ -4,6 +4,7 @@
 #include "FTSDKConstants.h"
 #include "FTSDKConfigManager.h"
 #include "LineDBManager.h"
+#include "FTSDKError.h"
 #include "Constants.h"
 #include <chrono>
 #include <thread>
@@ -79,8 +80,16 @@ namespace com::ft::sdk::internal
 		}
 	}
 
+	/**
+	 * Consumer thread, for the tracking item in the message queue.
+	 * 1. if enabling the file DB cache, get the item from message queue, and push it to file cache 
+	 * 2. if not enabling the file DB cache, get the item from message queue, and forward it to sync manager
+	 * 
+	 */
 	void CacheDBManager::processData()
 	{
+		BEGIN_THREAD();
+
 		std::vector<Measurement> vtMeasurement(10);
 		while (!m_stopping)
 		{
@@ -146,6 +155,8 @@ namespace com::ft::sdk::internal
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		}
+
+		END_THREAD();
 	}
 
 	void CacheDBManager::addGlobalContexts(TagMap& tags, TagMap& src)

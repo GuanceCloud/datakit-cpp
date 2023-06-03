@@ -1,11 +1,11 @@
 ﻿
 #include "Include/FTSDKFactory.h"
+#include "FTSDKError.h"
 
 namespace com::ft::sdk
 {
     std::unique_ptr<FTSDK> FTSDKFactory::get(const std::string& configJson)
     {
-        //return std::make_unique<FTSDK>(configJson);
-        return std::unique_ptr<FTSDK>(new FTSDK(configJson));
+        FTSDK_CHECK_RETURN(std::unique_ptr<FTSDK>, std::unique_ptr<FTSDK>(new FTSDK(configJson)));
     }
 }

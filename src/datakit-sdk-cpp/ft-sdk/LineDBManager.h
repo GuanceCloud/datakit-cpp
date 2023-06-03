@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   LineDBManager.h
+ * \brief  File DB Cache for line protocol message
+ * 
+ * \author Zhou Guangyong
+ * \date   March 2023
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_LINE_DB_MANAGER_H_
 #define _DATAKIT_SDK_LINE_DB_MANAGER_H_
 

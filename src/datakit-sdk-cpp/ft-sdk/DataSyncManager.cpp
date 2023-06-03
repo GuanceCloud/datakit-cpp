@@ -6,6 +6,7 @@
 #include "LoggerManager.h"
 #include "LineDBManager.h"
 #include "FTSDKConfigManager.h"
+#include "FTSDKError.h"
 
 namespace com::ft::sdk::internal
 {
@@ -40,15 +41,24 @@ namespace com::ft::sdk::internal
 		m_dataQueNotEmpty.notify_one();
 	}
 
+	/**
+	 * working thread for processing the data message.
+	 * 1. get data message from queue
+	 * 2. dispatch the message to the corresponding handler
+	 * 3. send the message and handle the retry
+	 * 
+	 */
 	void DataSyncManager::processData()
 	{
+		BEGIN_THREAD();
+
 		while (!m_stopping)
 		{
 			DataMsg dataMsg = receiveDataMessage();
 			int retryCount = 0;
 			bool needRetry = false;
 
-			while (retryCount < HTTP_RETRY_COUNT)
+			while ((retryCount < HTTP_RETRY_COUNT) && !m_stopping)
 			{
 				switch (dataMsg.dataType)
 				{
@@ -81,13 +91,15 @@ namespace com::ft::sdk::internal
 				}
 			}
 
-			if (needRetry && retryCount >= HTTP_RETRY_COUNT)
+			if (!m_stopping && needRetry && retryCount >= HTTP_RETRY_COUNT)
 			{
 				internal::LoggerManager::getInstance().logError("failed to send the data message for 3 times, abandon it...");
 			}
 		}
 
 		internal::LoggerManager::getInstance().logInfo("DataSyncManager: working thread exited.");
+
+		END_THREAD();
 	}
 
 	void DataSyncManager::sendDataMessage(DataMsg& bgMsg)
@@ -109,8 +121,14 @@ namespace com::ft::sdk::internal
 		m_dataIncomingFromDB.notify_one();
 	}
 
+	/**
+	 * working thread for querying the data message from file DB
+	 * 
+	 */
 	void DataSyncManager::getDataFromDB()
 	{
+		BEGIN_THREAD();
+
 		while (!m_stopping)
 		{
 			std::unique_lock<std::mutex> lck(m_dbDataMtx);
@@ -135,6 +153,8 @@ namespace com::ft::sdk::internal
 		}
 
 		internal::LoggerManager::getInstance().logInfo("DataSyncManager: working thread 2 exited.");
+
+		END_THREAD();
 	}
 
 	void DataSyncManager::sendDataMessageFromDB(DataMsg& bgMsg)

@@ -123,16 +123,25 @@ namespace com::ft::sdk::internal
 		if (FTSDKConfigManager::getInstance().isOfflineMode())
 		{
 			std::cout << uri << " -- \n" << data << std::endl;
-			ResponseData resDt = { 200, "Test" };
+			ResponseData resDt = { HTTP_STATUS::HTTP_OK , "Test" };
 
 			return resDt;
 		}
 		else
 		{
-			RestClient::Response r = m_pConnection->post(uri, data);
-			ResponseData resDt = { r.code, r.body };
+			try
+			{
+				RestClient::Response r = m_pConnection->post(uri, data);
+				ResponseData resDt = { r.code, r.body };
+				return resDt;
+			}
+			catch (std::exception ex)
+			{
+				ResponseData resDt = { HTTP_STATUS::HTTP_BAD_REQUEST, ex.what() };
 
-			return resDt;
+				return resDt;
+			}
+
 		}
 	}
 

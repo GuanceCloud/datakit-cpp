@@ -1,4 +1,13 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   LineProtocolBuilder.h
+ * \brief  Factory class to encode/decode line protocol message
+ * 
+ * \author Zhou Guangyong
+ * \date   Dec 2022
+ *********************************************************************/
+#pragma once
+#ifndef _DATAKIT_SDK_LINE_PROTOCOL_BUILD_H_
+#define _DATAKIT_SDK_LINE_PROTOCOL_BUILD_H_
 
 #include "Singleton.h"
 #include "DataSyncManager.h"
@@ -23,3 +32,4 @@ namespace com::ft::sdk::internal
 	};
 }
 
+#endif // !_DATAKIT_SDK_LINE_PROTOCOL_BUILD_H_

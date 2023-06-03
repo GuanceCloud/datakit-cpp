@@ -104,7 +104,7 @@ namespace com::ft::sdk
 		 * @param url	网络地址
 		 * @return		trace数据
 		 */
-		PropagationHeader generateTraceHeader(const std::string url);
+		PropagationHeader generateTraceHeader(const std::string& url);
 
 		/**
 		 * 按配置生成trace数据
@@ -113,7 +113,7 @@ namespace com::ft::sdk
 		 * @param url			网络地址
 		 * @return				trace数据
 		 */
-		PropagationHeader generateTraceHeader(const std::string& resourceId, const std::string url);
+		PropagationHeader generateTraceHeader(const std::string& resourceId, const std::string& url);
 
 		/**
 		 * 上传用户日志到datakit
@@ -160,8 +160,8 @@ namespace com::ft::sdk
 
 		/**
 		 * resource 终止
-		 *
-		 * @param resourceId		资源 Id
+		 * 
+		 * @param resourceId
 		 */
 		void stopResource(std::string resourceId);
 

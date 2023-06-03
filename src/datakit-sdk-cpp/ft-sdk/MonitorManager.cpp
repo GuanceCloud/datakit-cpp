@@ -2,6 +2,7 @@
 #include "MonitorManager.h"
 #include "FTSDKConfigManager.h"
 #include "Platform.h"
+#include "FTSDKError.h"
 
 #include <thread>
 #include <algorithm>
@@ -29,6 +30,8 @@ namespace com::ft::sdk::internal
 
 	void MonitoredViewContainer::collectMetrics()
 	{
+		BEGIN_THREAD();
+
 		while (!m_stop)
 		{
 			// collect cpu usage
@@ -51,6 +54,8 @@ namespace com::ft::sdk::internal
 
 			std::this_thread::sleep_for(std::chrono::milliseconds((int)detectFreq));
 		}
+
+		END_THREAD();
 	}
 
 	void MonitorManager::init()

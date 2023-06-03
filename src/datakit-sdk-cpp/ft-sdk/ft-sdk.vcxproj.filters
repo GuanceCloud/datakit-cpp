@@ -127,6 +127,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FTSDKDLLWrapper.h">
+    <ClInclude Include="FTSDKError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

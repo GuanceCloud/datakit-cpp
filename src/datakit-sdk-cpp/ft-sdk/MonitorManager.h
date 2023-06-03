@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   MonitorManager.h
+ * \brief  Monitor the system metrics for the specified view
+ * 
+ * \author Zhou Guangyong
+ * \date   April 2023
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_MONITOR_MANAGER_H_
 #define _DATAKIT_SDK_MONITOR_MANAGER_H_
 

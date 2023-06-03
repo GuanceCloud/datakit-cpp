@@ -357,8 +357,8 @@ namespace com::ft::sdk::internal::utils
 			strHdr.append("\"" + item + "\"");
 			strHdr.append(",");
 		}
-		strHdr = strHdr.substr(0, strHdr.size() - 2);
-		strHdr.append("\"]");
+		strHdr = strHdr.substr(0, strHdr.size() - 1);
+		strHdr.append("]");
 
 		return strHdr;
 	}

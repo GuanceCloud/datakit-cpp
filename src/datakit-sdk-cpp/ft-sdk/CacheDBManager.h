@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   CacheDBManager.h
+ * \brief  Memory Cache for tracking items
+ * 
+ * \author Zhou Guangyong
+ * \date   January 2023
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_CACHE_DB_MANAGER_H_
 #define _DATAKIT_SDK_CACHE_DB_MANAGER_H_
 

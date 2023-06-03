@@ -27,7 +27,7 @@ namespace com::ft::sdk::internal
         RUMApplication::getInstance().reset();
     }
 
-    RUMManager::RUMManager()
+    RUMManager::RUMManager() : AbstractManager(__func__)
     {
         m_lastSessionTime = utils::getCurrentNanoTime();
         m_lastActionTime = m_lastSessionTime;
@@ -63,9 +63,6 @@ namespace com::ft::sdk::internal
             fields[constants::KEY_RUM_LONG_TASK_STACK] = log;
 
             CacheDBManager::getInstance().insertRUMItem(constants::FT_MEASUREMENT_RUM_LONG_TASK, tags, fields);
-            // TODO: decide if need to maintain the count in DB
-            //increaseLongTask(tags);
-
         }
         catch (std::exception e)
         {
@@ -90,8 +87,8 @@ namespace com::ft::sdk::internal
             auto tags = internal::FTSDKConfigManager::getInstance().getRUMPublicDynamicTags();
             internal::RUMManager::getInstance().attachRUMRelative(tags, true);
 
-            tags[constants::KEY_RUM_ERROR_TYPE] = EnumToString(errorType);
-            tags[constants::KEY_RUM_ERROR_SOURCE] = EnumToString(ErrorSource::logger);
+            tags[constants::KEY_RUM_ERROR_TYPE] = utils::convertToLowerCase(EnumToString(errorType));
+            tags[constants::KEY_RUM_ERROR_SOURCE] = utils::convertToLowerCase(EnumToString(ErrorSource::LOGGER));
             tags[constants::KEY_RUM_ERROR_SITUATION] = EnumToString(state);
 
             FieldMap fields;
@@ -413,8 +410,8 @@ namespace com::ft::sdk::internal
             {
                 auto errorTags = FTSDKConfigManager::getInstance().getRUMPublicDynamicTags();
                 FieldMap errorField;
-                errorTags[constants::KEY_RUM_ERROR_TYPE] = EnumToString(RUMErrorType::network_error);
-                errorTags[constants::KEY_RUM_ERROR_SOURCE] = EnumToString(ErrorSource::network);
+                errorTags[constants::KEY_RUM_ERROR_TYPE] = utils::convertToLowerCase(EnumToString(RUMErrorType::NETWORK_ERROR));
+                errorTags[constants::KEY_RUM_ERROR_SOURCE] = utils::convertToLowerCase(EnumToString(ErrorSource::NETWORK));
                 errorTags[constants::KEY_RUM_ERROR_SITUATION] = EnumToString(AppState::RUN);
                 errorTags[constants::KEY_RUM_ACTION_ID] = actionId;
                 errorTags[constants::KEY_RUM_ACTION_NAME] = actionName;
@@ -554,12 +551,6 @@ namespace com::ft::sdk::internal
     {
         RUMView& view = initView(viewName);
 
-        auto& viewList = RUMApplication::getInstance().getItems();
-        if (viewList.size() > 2) 
-        {
-            viewList.erase(viewList.begin());
-        }
-
         checkSessionRefresh();
 
         // close the previous view
@@ -569,6 +560,7 @@ namespace com::ft::sdk::internal
             closeView(*m_pActiveView);
         }
 
+        RUMApplication::getInstance().checkViewCapacity();
 
         //long loadTime = -1;
         //if (preActivityDuration.get(viewName) != null) {
@@ -625,6 +617,11 @@ namespace com::ft::sdk::internal
         flushRUMData();
     }
 
+    /**
+     * 1. Walk through the RUM tree from the root, report the final statistic data to the datakit agent if it's closed.
+     * 2. Setting the sync flag once it's uploaded. 
+     * 3. The view/action wont be cleaned up at this moment. It will be handled when the next view is added.
+     */
     void RUMManager::flushRUMData()
     {
         LoggerManager::getInstance().logTrace("DUMP DB before Flush: \n" + RUMApplication::getInstance().toString());
@@ -655,38 +652,6 @@ namespace com::ft::sdk::internal
             }
         }
 
-        // clear all synced items
-        /*
-        auto viewIt = viewList.begin();
-        while (viewIt != viewList.end())
-        {
-            RUMView* pV = (RUMView*)(*viewIt);
-            if (pV->isSynced() && pV->isClose())
-            {
-                viewIt = viewList.erase(viewIt);
-            }
-            else
-            {
-                viewIt++;
-
-                // clear actions 
-                //RUMItemList actions = pV->getItems();
-                //auto actionIt = actions.begin();
-                //while (actionIt != actions.end())
-                //{
-                //    RUMAction* pA = (RUMAction*)(*actionIt);
-                //    if (pA->isSynced() && pA->isClose())
-                //    {
-                //        actionIt = actions.erase(actionIt);
-                //    }
-                //    else
-                //    {
-                //        actionIt++;
-                //    }
-                //}
-            }
-        }
-        */
         LoggerManager::getInstance().logTrace("DUMP DB after Flush: \n" + RUMApplication::getInstance().toString());
     }
 
@@ -756,7 +721,6 @@ namespace com::ft::sdk::internal
         }
 
         CacheDBManager::getInstance().insertRUMItem(constants::FT_MEASUREMENT_RUM_VIEW, tags, fields);
-        //FTDBManager.get().cleanCloseViewData();
 
         //internal::LoggerManager::getInstance().logInfo("Generated View Summary: \n" + view.toString());
     }
@@ -791,7 +755,6 @@ namespace com::ft::sdk::internal
             catch (std::exception e) {
                 internal::LoggerManager::getInstance().logError("failed to generate action sum: ");
             }
-            //FTDBManager.get().cleanCloseActionData();
 
             internal::LoggerManager::getInstance().logInfo("Generated Action Summary: " + action.toString());
     }

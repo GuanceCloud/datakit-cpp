@@ -1,10 +1,16 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   FTSDKConstants.h
+ * \brief  Global Constant Definition
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_CONST_H_
 #define _DATAKIT_SDK_CONST_H_
 
 #include <string>
 
-// TODO: divide this into two pieces: internal and external
 namespace com::ft::sdk::constants
 {
 	const std::string USER_AGENT = "datakit-cpp-sdk";

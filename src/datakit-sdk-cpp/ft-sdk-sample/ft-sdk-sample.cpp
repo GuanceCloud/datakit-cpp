@@ -82,14 +82,12 @@ int main()
 
     sdk->startAction("just4test", "click");
     sdk->addLongTask("test long task", 100010);
-    sdk->addError("test error 1", "first error", RUMErrorType::native_crash, AppState::UNKNOWN);
-    sdk->addError("test error 2", "second error", RUMErrorType::network_error, AppState::UNKNOWN);
+    sdk->addError("test error 1", "first error", RUMErrorType::NATIVE_CRASH, AppState::UNKNOWN);
+    sdk->addError("test error 2", "second error", RUMErrorType::NETWORK_ERROR, AppState::UNKNOWN);
 
-    std::string resId = "resource id 1111";
-    sdk->startResource(resId);
-    sdk->stopResource(resId);
 
     // 6. generate trace header linked to RUM resource
+    std::string resId = "resource id 1111";
     NetStatus status;
     ResourceParams params;
     request(TEST_FAKE_URL, resId, params, status, sdk);
@@ -113,8 +111,8 @@ int main()
 
     sdk->startView("TEST_VIEW_THREE");
     // 6. upload the user log
-    sdk->addLog("this\\is a \"test\" log", LogLevel::info);
-    sdk->stopView();    
+    sdk->addLog("this\\is a \"test\" log", LogLevel::INFO);
+    sdk->stopView();    //测试
     
     // 7. wait a litter longer so that the background thread has enough time to upload the event to datakit agent
     std::cout << "Press any key to exit...";

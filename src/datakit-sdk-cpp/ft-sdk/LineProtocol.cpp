@@ -5,6 +5,7 @@
 #include <memory>
 #include <sstream>
 #include "Utils.h"
+#include "FTSDKConstants.h"
 
 namespace com::ft::sdk::internal
 {
@@ -60,7 +61,9 @@ namespace com::ft::sdk::internal
         mTags += ",";
         mTags += utils::escapeTagAndKeyValue(key);
         mTags += "=";
-        mTags += utils::escapeTagAndKeyValue(value);
+
+        std::string convertedVal = value == "" ? constants::UNKNOWN : value;
+        mTags += utils::escapeTagAndKeyValue(convertedVal);
         return std::move(*this);
     }
 

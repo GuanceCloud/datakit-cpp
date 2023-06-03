@@ -269,6 +269,7 @@ copy $(ProjectDir)Include\* $(SolutionDir)..\..\datakit_sdk_redist\include\
     <ClInclude Include="FTSDKConfigManager.h" />
     <ClInclude Include="CommunicationManager.h" />
     <ClInclude Include="FTSDKConstants.h" />
+    <ClInclude Include="FTSDKError.h" />
     <ClInclude Include="FTSDKNode.h" />
     <ClInclude Include="Include\datakit_exports.h" />
     <ClInclude Include="Include\FTSDK.h" />

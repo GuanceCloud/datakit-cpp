@@ -1,4 +1,12 @@
-﻿#include "pch.h"
+﻿/*****************************************************************//**
+ * \file   FTSDK.cpp
+ * \brief  Datakit SDK Interface: it's basically a transparent proxy,
+ *		   forwarding all the SDK operations to the internal managers.
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#include "pch.h"
 #include "Include/FTSDK.h"
 #include "DataSyncManager.h"
 #include "FTSDKConfigManager.h"
@@ -15,20 +23,10 @@
 #include "LineDBManager.h"
 #include "CacheDBManager.h"
 #include "FTSDKConstants.h"
+#include "FTSDKError.h"
 
 namespace com::ft::sdk
 {
-	//FTSDK* FTSDK::pInstance = nullptr;
-
-	//FTSDK& FTSDK::instance()
-	//{
-	//	if (pInstance == nullptr)
-	//	{
-	//		pInstance = new FTSDK();
-	//	}
-
-	//	return *pInstance;
-	//}
 
 	FTSDK::FTSDK(const std::string& configJson)
 	{
@@ -39,18 +37,20 @@ namespace com::ft::sdk
 
 	void FTSDK::init()
 	{
-		internal::LoggerManager::getInstance().init();
-		internal::LoggerManager::getInstance().logInfo("SDK initializing...");
+		FTSDK_LOG_EXCEPTION(internal::LoggerManager::getInstance().init());
+		_LOG_INFO("SDK initializing...");
 
-		internal::LineDBManager::getInstance().init();
+		FTSDK_LOG_EXCEPTION(internal::LineDBManager::getInstance().init());
+		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().setSDKInited(true));
 	}
 
 	void FTSDK::deinit()
 	{
-		internal::LoggerManager::getInstance().logInfo("SDK uninitializing...");
+		CHECK_SDK_INITED();
+		_LOG_INFO("SDK uninitializing...");
 
-		internal::DataSyncManager::getInstance().deinit();
-		internal::CacheDBManager::getInstance().deinit();
+		FTSDK_LOG_EXCEPTION(internal::DataSyncManager::getInstance().deinit());
+		FTSDK_LOG_EXCEPTION(internal::CacheDBManager::getInstance().deinit());
 	}
 
 	std::string FTSDK::getVersionString()
@@ -60,6 +60,7 @@ namespace com::ft::sdk
 
 	FTSDK&& FTSDK::install(FTSDKConfig& config)
 	{
+		CHECK_SDK_INITED();
 		FTSDKConfig cpConfig = config;
 		if (cpConfig.getAppVersion() == "")
 		{
@@ -71,58 +72,59 @@ namespace com::ft::sdk
 			cpConfig.setServiceName(constants::DEFAULT_LOG_SERVICE_NAME);
 		}
 
-		internal::FTSDKConfigManager::getInstance().setGeneralConfig(cpConfig);
-		internal::DataSyncManager::getInstance().init();
-		internal::CommunicationManager::getInstance().initialize(cpConfig);
+		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().setGeneralConfig(cpConfig));
+		FTSDK_LOG_EXCEPTION(internal::DataSyncManager::getInstance().init());
+		FTSDK_LOG_EXCEPTION(internal::CommunicationManager::getInstance().initialize(cpConfig));
 
-		internal::LoggerManager::getInstance().logInfo("initialized general config.");
+		_LOG_INFO("initialized general config.");
 
 		return std::move(*this);
 	}
 
 	FTSDK&& FTSDK::bindUserData(UserData& config)
 	{
-		internal::FTSDKConfigManager::getInstance().bindUserData(config);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().bindUserData(config));
 
-		internal::LoggerManager::getInstance().logInfo("initialized user config.");
+		_LOG_INFO("initialized user config.");
 
 		return std::move(*this);
 	}
 
 	void FTSDK::unbindUserData()
 	{
-		internal::FTSDKConfigManager::getInstance().unbindUserData();
-		internal::ConfigFileHandler::getInstance().updateConfig(internal::UpdateConfigType::user, true);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().unbindUserData());
+		FTSDK_LOG_EXCEPTION(internal::ConfigFileHandler::getInstance().updateConfig(internal::UpdateConfigType::user, true));
 	}
 
 	FTSDK&& FTSDK::initRUMWithConfig(FTRUMConfig& config)
 	{
-		internal::FTSDKConfigManager::getInstance().setRUMConfig(config);
-		internal::MonitorManager::getInstance().init();
-		internal::RUMManager::getInstance().init();
-		internal::LoggerManager::getInstance().logInfo("initialized RUM config.");
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().setRUMConfig(config));
+		FTSDK_LOG_EXCEPTION(internal::MonitorManager::getInstance().init());
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().init());
+		_LOG_INFO("initialized RUM config.");
 
 		return std::move(*this);
 	}
 
 	FTSDK&& FTSDK::initTraceWithConfig(FTTraceConfig& config)
 	{
-		internal::FTSDKConfigManager::getInstance().setTraceConfig(config);
-
-		internal::LoggerManager::getInstance().logInfo("initialized trace config.");
-
-		internal::TraceManager::getInstance().initialize(config);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().setTraceConfig(config));
+		_LOG_INFO("initialized trace config.");
+		FTSDK_LOG_EXCEPTION(internal::TraceManager::getInstance().initialize(config));
 
 		return std::move(*this);
 	}
 
 	FTSDK&& FTSDK::initLogWithConfig(FTLogConfig& config)
 	{
-		internal::FTSDKConfigManager::getInstance().setLogPipeConfig(config);
-
-		internal::LoggerManager::getInstance().logInfo("initialized Log Pipe config.");
-
-		internal::LogPipeManager::getInstance().init(config);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().setLogPipeConfig(config));
+		_LOG_INFO("initialized Log Pipe config.");
+		FTSDK_LOG_EXCEPTION(internal::LogPipeManager::getInstance().init(config));
 
 		return std::move(*this);
 	}
@@ -130,6 +132,7 @@ namespace com::ft::sdk
 #ifdef _SUPPORT_CUSTOM_TRACK_
 	void FTSDK::addCustomTrack(const std::shared_ptr<TrackNode> pTrackNodes)
 	{
+		CHECK_SDK_INITED();
 		auto pTN = std::dynamic_pointer_cast<internal::TrackNodeImpl>(pTrackNodes);
 
 		internal::DataMsg msg;
@@ -152,78 +155,87 @@ namespace com::ft::sdk
 		{
 			msm.tags[gt.first] = gt.second;
 		}
-		internal::DataSyncManager::getInstance().sendDataMessage(msg);
+		FTSDK_LOG_EXCEPTION(internal::DataSyncManager::getInstance().sendDataMessage(msg));
 	}
 #endif // _SUPPORT_CUSTOM_TRACK_
 
-	PropagationHeader FTSDK::generateTraceHeader(const std::string urlStr)
+	PropagationHeader FTSDK::generateTraceHeader(const std::string& urlStr)
 	{
-		internal::PropagationUrl url = internal::PropagationUrl::parse(urlStr);
-		internal::HttpUrl internalUrl {url.getHost(), url.getPath(), url.getPort()};
-		return internal::TraceManager::getInstance().getTraceHeader(internalUrl);
+		CHECK_SDK_INITED();
+		FTSDK_CHECK_RETURN(PropagationHeader, internal::TraceManager::getInstance().getTraceHeader(urlStr));
 	}
 
-	PropagationHeader FTSDK::generateTraceHeader(const std::string& resourceId, const std::string urlStr)
+	PropagationHeader FTSDK::generateTraceHeader(const std::string& resourceId, const std::string& urlStr)
 	{
-		internal::PropagationUrl url = internal::PropagationUrl::parse(urlStr);
-		internal::HttpUrl internalUrl{ url.getHost(), url.getPath(), url.getPort() };
-		return internal::TraceManager::getInstance().getTraceHeader(resourceId, internalUrl);
+		CHECK_SDK_INITED();
+		FTSDK_CHECK_RETURN(PropagationHeader, internal::TraceManager::getInstance().getTraceHeader(resourceId, urlStr));
 	}
 
 	void FTSDK::addLog(std::string content, LogLevel level)
 	{
-		internal::LogPipeManager::getInstance().addLog(content, level);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::LogPipeManager::getInstance().addLog(content, level));
 	}
 
 	// --- RUM interface
 	void FTSDK::addLongTask(std::string log, long duration)
 	{
-		internal::RUMManager::getInstance().addLongTask(log, duration);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().addLongTask(log, duration));
 	}
 
 	void FTSDK::addError(std::string log, std::string message, RUMErrorType errorType, AppState state)
 	{
-		internal::RUMManager::getInstance().addError(log, message, errorType, state);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().addError(log, message, errorType, state));
 	}
 
 	void FTSDK::addResource(std::string resourceId, ResourceParams params, NetStatus netStatusBean)
 	{
-		internal::RUMManager::getInstance().addResource(resourceId, params, netStatusBean);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().addResource(resourceId, params, netStatusBean));
 	}
 
 	void FTSDK::startResource(std::string resourceId)
 	{
-		internal::RUMManager::getInstance().startResource(resourceId);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().startResource(resourceId));
 	}
 
 	void FTSDK::stopResource(std::string resourceId)
 	{
-		internal::RUMManager::getInstance().stopResource(resourceId);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().stopResource(resourceId));
 	}
 
 	void FTSDK::addAction(std::string actionName, std::string actionType, long duration, long startTime)
 	{
-		internal::RUMManager::getInstance().addAction(actionName, actionType, duration, startTime);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().addAction(actionName, actionType, duration, startTime));
 	}
 
 	void FTSDK::startAction(std::string actionName, std::string actionType)
 	{
-		internal::RUMManager::getInstance().startAction(actionName, actionType);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().startAction(actionName, actionType));
 	}
 
 	void FTSDK::stopAction()
 	{
-		internal::RUMManager::getInstance().stopAction();
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().stopAction());
 	}
 
 	void FTSDK::startView(std::string viewName)
 	{
-		internal::RUMManager::getInstance().startView(viewName);
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().startView(viewName));
 	}
 
 	void FTSDK::stopView()
 	{
-		internal::RUMManager::getInstance().stopView();
+		CHECK_SDK_INITED();
+		FTSDK_LOG_EXCEPTION(internal::RUMManager::getInstance().stopView());
 	}
 	// --- end RUM interface
 }

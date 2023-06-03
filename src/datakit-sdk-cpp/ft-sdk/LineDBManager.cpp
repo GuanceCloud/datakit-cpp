@@ -100,6 +100,14 @@ namespace com::ft::sdk::internal
         return false;
     }
 
+    /**
+     * Query line protocol message from file DB
+     * 1. query message by data type
+     * 2. delete the message from DB after retrieval
+     * 
+     * @param type
+     * @return 
+     */
     std::vector<std::shared_ptr<DataMsg>> LineDBManager::queryLineFromDB(DataType type)
     {
         std::vector<std::shared_ptr<DataMsg>> vtLine;

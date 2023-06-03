@@ -1,4 +1,12 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   ConfigFileHandler.h
+ * \brief  Config file handler: support loading the sdk settings from the 
+ *		   config file.
+ * 
+ * \author Zhou Guangyong
+ * \date   March 2023
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_CONFIG_FILE_HANDLER_H_
 #define _DATAKIT_SDK_CONFIG_FILE_HANDLER_H_
 

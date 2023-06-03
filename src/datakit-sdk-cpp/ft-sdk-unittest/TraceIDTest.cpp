@@ -21,6 +21,7 @@ protected:
 		std::cout << "TearDown...\n" << std::endl;
 	}
 
+	std::string urlStr = "https://www.example.com/test.html?param=1";
 	HttpUrl url{ "host", "path", 1234 };
 	FTTraceConfig tc;
 };
@@ -70,7 +71,7 @@ TEST_F(TraceIDTest, TestTraceHeader_DDTRACE) {
 	tc.setTraceType(TraceType::DDTRACE);
 	TraceManager::getInstance().initialize(tc);
 
-	auto header = TraceManager::getInstance().getTraceHeader(url);
+	auto header = TraceManager::getInstance().getTraceHeader(urlStr);
 	for (auto& item : header)
 	{
 		std::cout << item.first << " = " << item.second << std::endl;
@@ -86,7 +87,7 @@ TEST_F(TraceIDTest, TestTraceHeader_SKYWALKING) {
 	tc.setTraceType(TraceType::SKYWALKING);
 	TraceManager::getInstance().initialize(tc);
 
-	auto header = TraceManager::getInstance().getTraceHeader(url);
+	auto header = TraceManager::getInstance().getTraceHeader(urlStr);
 	for (auto& item : header)
 	{
 		std::cout << item.first << " = " << item.second << std::endl;
@@ -101,7 +102,7 @@ TEST_F(TraceIDTest, TestTraceHeader_ZIPKIN) {
 	tc.setTraceType(TraceType::ZIPKIN_MULTI_HEADER);
 	TraceManager::getInstance().initialize(tc);
 
-	auto header = TraceManager::getInstance().getTraceHeader(url);
+	auto header = TraceManager::getInstance().getTraceHeader(urlStr);
 	for (auto& item : header)
 	{
 		std::cout << item.first << " = " << item.second << std::endl;

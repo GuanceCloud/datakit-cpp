@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * \file   FTSDKConfigManager.h
+ * \brief  The unified entry to manage all the configs for SDK
+ * 
+ * \author Zhou Guangyong
+ * \date   October 2022
+ *********************************************************************/
+#pragma once
 #ifndef _DATAKIT_SDK_CONFIG_MANAGER_H_
 #define _DATAKIT_SDK_CONFIG_MANAGER_H_
 
@@ -80,12 +87,22 @@ namespace com::ft::sdk::internal
 		{
 			return m_workingDir;
 		}
+
+		void setSDKInited(bool inited)
+		{
+			m_isSDKInited = inited;
+		}
+		bool isSDKInited()
+		{
+			return m_isSDKInited;
+		}
 	private:
 		FTSDKConfigManager();
 
 		bool isDefaultAppVersion();
 
 	private:
+		bool m_isSDKInited = false;
 		FTSDKConfig m_generalConfig;
 		UserData m_userData;
 		FTRUMConfig m_rumConfig;
