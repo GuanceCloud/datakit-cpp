@@ -264,10 +264,10 @@ namespace com::ft::sdk::wrapper {
 
 		std::string et = internal::utils::convertToLowerCase(errorType);
 
-		RUMErrorType ret = RUMErrorType::native_crash;
+		RUMErrorType ret = RUMErrorType::NATIVE_CRASH;
 
 		if (et == "network_error") {
-			ret= RUMErrorType::network_error;
+			ret= RUMErrorType::NETWORK_ERROR;
 		}
 
 		sdk->addError(logStr, messageStr, ret, ase);
@@ -293,14 +293,14 @@ namespace com::ft::sdk::wrapper {
 		std::string resourceIdStr(resourceId);
 		
 		json resourceJson = json::parse(resourceParamsJsonStr);
-		auto resourceMethod = resourceJson.value("resourceMethod", "N/A");
-		auto requestHeader = resourceJson.value("requestHeader", "N/A");
-		auto responseHeader = resourceJson.value("responseHeader", "N/A");
-		auto responseBody = resourceJson.value("responseBody", "N/A");
-		auto responseConnection = resourceJson.value("responseConnection", "N/A");
-		auto responseContentEncoding = resourceJson.value("responseContentEncoding", "N/A");
-		auto responseContentType = resourceJson.value("responseContentType", "N/A");
-		auto url = resourceJson.value("url", "http://0.0.0.0");
+		auto resourceMethod = resourceJson.value("resourceMethod", "");
+		auto requestHeader = resourceJson.value("requestHeader", "");
+		auto responseHeader = resourceJson.value("responseHeader", "");
+		auto responseBody = resourceJson.value("responseBody", "");
+		auto responseConnection = resourceJson.value("responseConnection", "");
+		auto responseContentEncoding = resourceJson.value("responseContentEncoding", "");
+		auto responseContentType = resourceJson.value("responseContentType", "");
+		auto url = resourceJson.value("url","");
 		auto resourceStatus = resourceJson.value("resourceStatus", -1);
 
 		json netStatusJson = json::parse(netStatusJsonStr);
@@ -339,7 +339,7 @@ namespace com::ft::sdk::wrapper {
 		std::string logLevelStr(content);
 
 		std::string ll = internal::utils::convertToLowerCase(logLevel);
-		LogLevel lle =LogLevel::info;
+		LogLevel lle =LogLevel::INFO;
 
 		if (ll == "critical") {
 			lle = LogLevel::CRITICAL;
