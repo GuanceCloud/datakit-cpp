@@ -39,14 +39,14 @@ namespace ft_sdk_wrapper_sample
 
             string resourceId = "unique_uuid_xxxx";
 
-            FTWrapper.StartResource(resourceId);
-
-            FTWrapper.StopResource(resourceId);
-
             IntPtr headData = FTWrapper.GetTraceHeader(resourceId,FAKE_URL);
             string helloJsonString = Marshal.PtrToStringAnsi(headData);
 
             Console.WriteLine(helloJsonString);
+
+            FTWrapper.StartResource(resourceId);
+
+            FTWrapper.StopResource(resourceId);
 
             FTWrapper.AddResource(resourceId, "{\"resourceStatus\":200,\"url\":\""+ FAKE_URL + "\"}", "{}");
 
