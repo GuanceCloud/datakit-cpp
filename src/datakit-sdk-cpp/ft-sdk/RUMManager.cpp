@@ -15,12 +15,14 @@
 #include "TraceHeader.h"
 #include "MonitorManager.h"
 #include "InternalStructs.h"
+#include "FTSDKError.h"
 
 namespace com::ft::sdk::internal
 {
     const std::int64_t MAX_RESTING_TIME = 900000000000;
     const std::int64_t SESSION_EXPIRE_TIME = 14400000000000;
     const int FILTER_CAPACITY = 5;
+    const int ACTION_TIMEOUT = 5;
 
     void RUMManager::clear()
     {
@@ -41,6 +43,8 @@ namespace com::ft::sdk::internal
 
     void RUMManager::addLongTask(std::string log, std::int64_t duration)
     {
+        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
+
         LoggerManager::getInstance().logDebug("add long task: " + log);
 
         if (m_pActiveAction == nullptr || m_pActiveAction->isClose())
@@ -72,6 +76,8 @@ namespace com::ft::sdk::internal
 
     void RUMManager::addError(std::string log, std::string message, RUMErrorType errorType, AppState state)
     {
+        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
+
         LoggerManager::getInstance().logDebug("add error: " + log + " , " + message);
 
         if (m_pActiveAction == nullptr || m_pActiveAction->isClose())
@@ -128,6 +134,8 @@ namespace com::ft::sdk::internal
 
     void RUMManager::addError(std::string log, RUMMap& tags, FieldMap& fields)
     {
+        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
+
         LoggerManager::getInstance().logDebug("add internal error: " + log);
 
         if (m_pActiveAction == nullptr || m_pActiveAction->isClose())
@@ -145,17 +153,22 @@ namespace com::ft::sdk::internal
 
     void RUMManager::addAction(std::string actionName, std::string actionType, std::int64_t duration, std::int64_t startTime)
     {
+        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
+        LoggerManager::getInstance().logDebug("add action:" + actionName + " , " + actionType);
 
+        checkSessionRefresh();
+        auto action = &(m_pActiveView->addAction(actionName, actionType));
+        action->close();
+        action->setStartTime(startTime);
+        action->setEndTime(startTime + duration);
+        this->m_lastActionTime = action->getStartTime();
+
+        flushRUMData();
     }
 
     void RUMManager::startAction(std::string actionName, std::string actionType)
     {
-        // TODO: if there is no active view, report error 
-        if (m_pActiveView == nullptr)
-        {
-
-        }
-
+        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
         LoggerManager::getInstance().logDebug("start action:" + actionName + " , " + actionType);
 
         std::string viewId = m_pActiveView != nullptr ? m_pActiveView->getId() : "";
@@ -167,12 +180,7 @@ namespace com::ft::sdk::internal
         if (m_pActiveAction == nullptr || m_pActiveAction->isClose()) {
             initAction(actionName, actionType);
 
-            // to generate the properties
-            //initSumAction();
-            //mHandler.removeCallbacks(mActionRecheckRunner);
-            //mHandler.postDelayed(mActionRecheckRunner, 5000);
-
-            // TODO: check action close in 5 seconds
+            new std::thread(&RUMManager::checkForActionTimeout, this);
         }
     }
 
@@ -200,6 +208,7 @@ namespace com::ft::sdk::internal
 
     void RUMManager::addResource(std::string resourceId, ResourceParams params, NetStatus netStatusBean)
     {
+        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
         setTransformContent(resourceId, params);
         setNetState(resourceId, netStatusBean);
     }
@@ -457,6 +466,7 @@ namespace com::ft::sdk::internal
 
     void RUMManager::startResource(std::string resourceId)
     {
+        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
         LoggerManager::getInstance().logDebug("start resource: " + resourceId);
 
         if (m_pActiveAction == nullptr || m_pActiveAction->isClose())
@@ -963,5 +973,19 @@ namespace com::ft::sdk::internal
         }
 
         CacheDBManager::getInstance().updateRUMCollect(collect);
+    }
+
+    void RUMManager::checkForActionTimeout()
+    {
+        try
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(ACTION_TIMEOUT));
+            checkActionClose();
+        }
+        catch (const std::exception& ex)
+        {
+            std::string err = "Exception in checkForActionTimeout : ";
+            internal::LoggerManager::getInstance().logError(err.append(ex.what()));
+        }
     }
 }

@@ -79,6 +79,7 @@ namespace com::ft::sdk::internal
 
         bool checkSessionWillCollect(std::string sessionId);
         void checkSessionKeep();
+        void checkForActionTimeout();
     private:
         std::map<std::string, bool> m_mapCollectStatus;
         RUMView* m_pActiveView = nullptr;
@@ -88,7 +89,7 @@ namespace com::ft::sdk::internal
         std::int64_t m_lastActionTime = 0;
         std::map<std::string, RUMResource*> m_mapResource;
 
-        friend class Singleton;
+        ENABLE_SINGLETON();
     };
 
 }

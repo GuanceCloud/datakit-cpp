@@ -60,5 +60,6 @@ namespace com::ft::sdk::internal::platform
 	};
 	DeviceInfo getDeviceInfo();
 
+	void registerSystemExceptionHandler();
 }
 #endif // _DATAKIT_SDK_PLATFORM_H_

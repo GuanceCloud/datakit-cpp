@@ -14,6 +14,10 @@
 #define FTSDK_THROW_EXCEPTION(message)	    \
     throw FTSDKException(__FILE__, __LINE__, __func__, message);
 
+#define CHECK_SDK_CONDITION(code, message)	    \
+    if (!(code))		\
+			FTSDK_THROW_EXCEPTION(#message)
+
 #define CHECK_SDK_INITED()	    \
     if (!internal::FTSDKConfigManager::getInstance().isSDKInited())		\
 			FTSDK_THROW_EXCEPTION("SDK is not initialized!")

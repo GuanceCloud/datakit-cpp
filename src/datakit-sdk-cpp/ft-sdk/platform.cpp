@@ -14,6 +14,7 @@
 #include <cstring>
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
+#include <csignal>
 #endif
 #include <vector>
 #include <assert.h>
@@ -603,4 +604,23 @@ namespace com::ft::sdk::internal::platform
     }
 #endif
 
+#ifdef _WIN32
+    void se_translator(unsigned int u, EXCEPTION_POINTERS* pExp)
+#elif __linux__
+    void sig_handler(int sig)
+#endif // _WIN32
+    {
+        throw std::runtime_error("Access violation");
+    }
+
+
+    void registerSystemExceptionHandler()
+    {
+#ifdef _WIN32
+        _set_se_translator(se_translator);
+#elif __linux__
+        signal(SIGFPE, sig_handler);
+#endif // _WIN32
+
+    }
 }

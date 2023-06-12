@@ -27,7 +27,6 @@
 
 namespace com::ft::sdk
 {
-
 	FTSDK::FTSDK(const std::string& configJson)
 	{
 		// load config
@@ -37,6 +36,8 @@ namespace com::ft::sdk
 
 	void FTSDK::init()
 	{
+		internal::platform::registerSystemExceptionHandler();
+
 		FTSDK_LOG_EXCEPTION(internal::LoggerManager::getInstance().init());
 		_LOG_INFO("SDK initializing...");
 
