@@ -22,6 +22,8 @@ if(UNIX)
   message(UNIX "CMAKE_CXX_FLAGS:" ${CMAKE_CXX_FLAGS})
 
 elseif(WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+  add_definitions(-D_WINDOWS)
   add_definitions(-D_WIN32_WINNT=0x0600)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(/wd4200) # warning C4200: nonstandard extension used: zero-sized array in struct/union
@@ -71,7 +73,15 @@ if (CMAKE_CROSSCOMPILING)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif()
 
+#if(DEFINED BUILD_FROM_VCPKG)
+#message(STATUS "got vcpkg!")
+#endif()
+
+if (WIN32)
+add_subdirectory(datakit-sdk-cpp/ft-sdk)
+else ()
 add_subdirectory(datakit-sdk-cpp/ft-sdk)
 add_subdirectory(datakit-sdk-cpp/ft-sdk-sample)
 add_subdirectory(datakit-sdk-cpp/ft-sdk-unittest)
+endif ()
 
