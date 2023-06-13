@@ -304,12 +304,22 @@ namespace com::ft::sdk::wrapper {
 		auto resourceStatus = resourceJson.value("resourceStatus", -1);
 
 		json netStatusJson = json::parse(netStatusJsonStr);
-		long dnsTime = netStatusJson.value("userId", -1l);
+		long dnsTime = netStatusJson.value("dnsTime", -1l);
 		long tcpTime = netStatusJson.value("tcpTime", -1l);
 		long sslTime = netStatusJson.value("sslTime", -1l);
 		long ttfb = netStatusJson.value("ttfb", -1l);
 		long responseTime = netStatusJson.value("responseTime", -1l);
 		long firstByteTime = netStatusJson.value("firstByteTime", -1l);
+
+		long fetchStartTime = netStatusJson.value("fetchStartTime", -1l);
+		long dnsStartTime = netStatusJson.value("dnsStartTime", -1l);
+		long dnsEndTime = netStatusJson.value("dnsEndTime", -1l);
+		long responseStartTime = netStatusJson.value("responseStartTime", -1l);
+		long responseEndTime = netStatusJson.value("responseEndTime", -1l);
+		long sslStartTime = netStatusJson.value("sslStartTime", -1l);
+		long sslEndTime = netStatusJson.value("sslEndTime", -1l);
+		long tcpStartTime = netStatusJson.value("tcpStartTime", -1l);
+		long tcpEndTime = netStatusJson.value("tcpEndTime", -1l);
 
 		NetStatus status;
 		ResourceParams params;
@@ -330,6 +340,16 @@ namespace com::ft::sdk::wrapper {
 		status.ttfb = ttfb;
 		status.responseTime = responseTime;
 		status.firstByteTime = firstByteTime;
+
+		status.fetchStartTime = fetchStartTime;
+		status.dnsStartTime = dnsStartTime;
+		status.dnsEndTime = dnsEndTime;
+		status.responseStartTime = responseStartTime;
+		status.responseEndTime = responseEndTime;
+		status.sslStartTime = sslStartTime;
+		status.sslEndTime = sslEndTime;
+		status.tcpStartTime = tcpStartTime;
+		status.tcpEndTime = tcpEndTime;
 
 		sdk->addResource(resourceIdStr, params, status);
 	}
