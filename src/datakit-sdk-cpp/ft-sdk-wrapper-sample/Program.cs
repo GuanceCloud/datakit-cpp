@@ -6,16 +6,9 @@ namespace ft_sdk_wrapper_sample
     class Program
     {
         const string FAKE_URL= "https://www.guance.com/path_test/?param=1";
-        //用于指定加载 dll 路径
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetDllDirectory(string lpPathName);
+
         static void Main(string[] args)
         {
-
-            //指定 dll 生成路径或将执行 dll 文件，将 dll 拷贝至 c# 执行 bin\debug\ 对应目录下
-            string dllPath = "C:\\Users\\dell\\Desktop\\ft-sdk-cpp-develop\\ft-sdk-cpp-develop\\src\\datakit-sdk-cpp\\x64\\Debug";
-            SetDllDirectory(dllPath);
 
             FTWrapper.Install("{\"serverUrl\":\"http://10.100.64.166:9529\",\"envType\":\"prod\",\"serviceName\":\"Your Services\",\"globalContext\":{\"custom_key\":\"custom value\"}}");
 
