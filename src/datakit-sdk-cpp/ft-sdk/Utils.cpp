@@ -401,4 +401,30 @@ namespace com::ft::sdk::internal::utils
 
 		return result;
 	}
+
+
+	void removeNullValues(nlohmann::json& json) {
+		if (json.is_object()) {
+			for (auto it = json.begin(); it != json.end(); ) {
+				if (it->is_null()) {
+					it = json.erase(it);  
+				}
+				else {
+					removeNullValues(*it);  
+					++it;
+				}
+			}
+		}
+		else if (json.is_array()) {
+			for (auto it = json.begin(); it != json.end(); ) {
+				if (it->is_null()) {
+					it = json.erase(it);  
+				}
+				else {
+					removeNullValues(*it);  
+					++it;
+				}
+			}
+		}
+	}
 }

@@ -77,6 +77,8 @@ namespace com::ft::sdk::internal::utils
 	std::string trimRet(const std::string& str);
 
 	std::vector<std::string> splitStringByChar(const std::string& str, const char ch);
+
+	void removeNullValues(nlohmann::json& json);
 }
 
 

@@ -20,12 +20,15 @@ namespace com::ft::sdk::wrapper {
 		sdk->init();
 		json j = json::parse(jsonString);
 
-		auto serverUrl = j.value("serverUrl","");
-		auto envType = j.value("envType","prod");
-		bool enableFileDBCache = j.value("enableFileDBCache",false);
-		bool clearDBWhenStartUp = j.value("clearDBWhenStartUp",false);
-		auto appVersion = j.value("appVersion","");
-		auto serviceName = j.value("serviceName","");
+		internal::utils::removeNullValues(j);
+
+		auto serverUrl = j.value("serverUrl", "");
+		auto envType = j.value("envType", "prod");
+		bool enableFileDBCache = j.value("enableFileDBCache", false);
+		bool clearDBWhenStartUp = j.value("clearDBWhenStartUp", false);
+		auto appVersion = j.value("appVersion", "");
+		auto serviceName = j.value("serviceName", "");
+
 		json globalContext = j["globalContext"];
 
 		std::string serverUrlStr(serverUrl);
@@ -87,8 +90,11 @@ namespace com::ft::sdk::wrapper {
 
 		json j = json::parse(jsonString);
 
-		auto appid = j.value("appId","");
-		auto sampleRate = j.value("sampleRate",1.0f);
+		internal::utils::removeNullValues(j);
+
+		auto appid = j.value("appId", "");
+		auto sampleRate = j.value("sampleRate", 1.0f);
+
 		json globalContext = j["globalContext"];
 
 		FTRUMConfig rc;
@@ -117,6 +123,8 @@ namespace com::ft::sdk::wrapper {
 	void InitLogConfig(const char* jsonString) {
 
 		json j = json::parse(jsonString);
+
+		internal::utils::removeNullValues(j);
 
 		auto sampleRate = j.value("sampleRate",1.0f);
 		auto enableCustomLog = j.value("enableCustomLog",false);
@@ -151,9 +159,11 @@ namespace com::ft::sdk::wrapper {
 
 		json j = json::parse(jsonString);
 
-		auto sampleRate = j.value("sampleRate",1.0f);
-		auto traceType = j.value("traceType","ddtrace");
-		auto enableLinkRumData = j.value("enableLinkRumData",false);
+		internal::utils::removeNullValues(j);
+
+		auto sampleRate = j.value("sampleRate", 1.0f);
+		auto traceType = j.value("traceType", "ddtrace");
+		auto enableLinkRumData = j.value("enableLinkRumData", false);
 
 		FTTraceConfig tc;
 		if (sampleRate) {
@@ -194,9 +204,12 @@ namespace com::ft::sdk::wrapper {
 	void BindUserData(const char* jsonString) {
 
 		json j = json::parse(jsonString);
-		auto userId = j.value("userId","");
-		auto userName = j.value("userName","");
-		auto userEmail = j.value("userEmail","");
+
+		internal::utils::removeNullValues(j);
+
+		auto userId = j.value("userId", "");
+		auto userName = j.value("userName", "");
+		auto userEmail = j.value("userEmail", "");
 		json extra = j["extra"];
 
 		std::string userIdStr(userId);
@@ -291,8 +304,10 @@ namespace com::ft::sdk::wrapper {
 
 	void AddResource(const char* resourceId, const char* resourceParamsJsonStr, const char* netStatusJsonStr) {
 		std::string resourceIdStr(resourceId);
-		
 		json resourceJson = json::parse(resourceParamsJsonStr);
+
+		internal::utils::removeNullValues(resourceJson);
+		
 		auto resourceMethod = resourceJson.value("resourceMethod", "");
 		auto requestHeader = resourceJson.value("requestHeader", "");
 		auto responseHeader = resourceJson.value("responseHeader", "");
@@ -300,10 +315,13 @@ namespace com::ft::sdk::wrapper {
 		auto responseConnection = resourceJson.value("responseConnection", "");
 		auto responseContentEncoding = resourceJson.value("responseContentEncoding", "");
 		auto responseContentType = resourceJson.value("responseContentType", "");
-		auto url = resourceJson.value("url","");
+		auto url = resourceJson.value("url", "");
 		auto resourceStatus = resourceJson.value("resourceStatus", -1);
 
 		json netStatusJson = json::parse(netStatusJsonStr);
+
+		internal::utils::removeNullValues(netStatusJson);
+
 		long dnsTime = netStatusJson.value("dnsTime", -1l);
 		long tcpTime = netStatusJson.value("tcpTime", -1l);
 		long sslTime = netStatusJson.value("sslTime", -1l);
