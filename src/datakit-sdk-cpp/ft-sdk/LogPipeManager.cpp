@@ -40,7 +40,7 @@ namespace com::ft::sdk::internal
 
                 std::map<std::string, std::string> tags;
                 tags[constants::KEY_SERVICE] = internal::FTSDKConfigManager::getInstance().getGeneralConfig().getServiceName();
-                tags[constants::KEY_STATUS] = EnumToString(level);
+                tags[constants::KEY_STATUS] = utils::convertToLowerCase(EnumToString(level));
 
                 FieldMap fields;
                 fields[constants::KEY_MESSAGE] = logMsg;

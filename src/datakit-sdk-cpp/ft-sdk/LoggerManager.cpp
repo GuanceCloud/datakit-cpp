@@ -8,7 +8,7 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/daily_file_sink.h>
-#ifdef WIN32
+#ifdef _WIN32
 #include <io.h>
 #include <direct.h>
 #else
@@ -18,7 +18,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mount.h>
-#endif // WIN32
+#endif // _WIN32
 
 #define ENABLE_CONSOLE_LOG 1
 
@@ -35,7 +35,7 @@ namespace com::ft::sdk::internal
 		}
 
         std::string logFolder = utils::getExecutablePath() + "/logs";
-#ifdef WIN32
+#ifdef _WIN32
         // determine if the app can read and write the folder
         if (_access(logFolder.c_str(), 0) == -1)
         {

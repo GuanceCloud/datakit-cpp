@@ -86,7 +86,7 @@ void ftsdksampleui::on_init_clicked()
     }
     catch (const std::exception& ex)
     {
-        QMessageBox::critical(this, "Error", "Failed to initialize��");
+        QMessageBox::critical(this, "Error", "Failed to initialize");
     }
 }
 
