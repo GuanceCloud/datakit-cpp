@@ -1,4 +1,9 @@
+# 1.0.1-alpha
+1.修正 wrapper 部分字段参数缺失错误的问题，以及 null 参数崩溃问题
+2.修在无法在启动 View  前，发送 Action，Resource，Error，LongTask 的问题
+3.修正自定义属性传参数错误的问题 
 
+---
 # 1.0.0-alpha
 1.支持日志、用户数据访问、链路数据传输
 2.支持 Windows，Linux
