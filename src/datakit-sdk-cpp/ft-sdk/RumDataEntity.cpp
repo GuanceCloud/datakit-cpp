@@ -80,16 +80,33 @@ namespace com::ft::sdk::internal
         m_itemId = internal::FTSDKConfigManager::getInstance().getRUMConfig().getRumAppId();
         m_parentId = ROOT_RUM_ID;
         m_itemName = "APP";
+
+        m_pDefaultView = new RUMView(this, DEFAULT_RUM_VIEW_NAME);
+        m_pDefaultView->setId(DEFAULT_RUM_VIEW_ID);
     }
 
     RUMApplication::~RUMApplication()
     {
-
+        if (m_pDefaultView != nullptr)
+        {
+            delete m_pDefaultView;
+            m_pDefaultView = nullptr;
+        }
     }
 
     //RUMApplication::RUMApplication(const std::string& parentId) : RUMItemContainer(parentId)
     //{
     //}
+
+    RUMView* RUMApplication::getDefaultView()
+    {
+        return m_pDefaultView;
+    }
+
+    RUMAction* RUMApplication::getDefaultAction()
+    {
+        return nullptr;
+    }
 
     const std::string& RUMApplication::getSessionId()
     {
@@ -179,6 +196,24 @@ namespace com::ft::sdk::internal
         }
 
         return vtAction;
+    }
+
+    void RUMView::clearClosedAction()
+    {
+        auto it = m_rumItems.begin();
+        while (it != m_rumItems.end())
+        {
+            RUMAction* act = (RUMAction*)(*it);
+            if (act != nullptr && act->isClose())
+            {
+                delete act;
+                it = m_rumItems.erase(it);
+            }
+            else
+            {
+                it++;
+            }
+        }
     }
 
     int RUMView::getLongTaskCount()

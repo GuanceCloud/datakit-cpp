@@ -157,7 +157,7 @@ namespace com::ft::sdk::internal
 			if (tag.second[len - 1] == 'i')
 			{
 				std::string numeric = tag.second.substr(0, len - 1);
-				fields[tag.first] = (std::int64_t)std::stol(numeric);
+				fields[tag.first] = (std::int64_t)std::stoll(numeric);
 			}
 			else
 			{

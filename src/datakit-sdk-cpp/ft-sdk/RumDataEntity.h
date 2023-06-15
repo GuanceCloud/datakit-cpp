@@ -15,6 +15,8 @@
 
 #define ROOT_RUM_ID "rum_root_id"
 #define ROOT_RUM_VIEW_ID "root"
+#define DEFAULT_RUM_VIEW_NAME "N/A"
+#define DEFAULT_RUM_VIEW_ID "N/A"
 
 namespace com::ft::sdk::internal
 {
@@ -36,6 +38,10 @@ namespace com::ft::sdk::internal
 		const std::string& getId()
 		{
 			return m_itemId;
+		}
+		void setId(const std::string& id)
+		{
+			m_itemId = id;
 		}
 
 		const std::string& getName()
@@ -107,6 +113,8 @@ namespace com::ft::sdk::internal
 		RUMView& addView(std::string viewName);
 	
 		void checkViewCapacity();
+		RUMView* getDefaultView();
+		RUMAction* getDefaultAction();
 
 		const std::string& getSessionId();
 		std::vector<RUMView*> getViewList();
@@ -115,6 +123,8 @@ namespace com::ft::sdk::internal
 		RUMApplication();
 		~RUMApplication();
 		RUMSession m_rumSession;
+
+		RUMView* m_pDefaultView = nullptr;
 	};
 
 	/// <summary>
@@ -250,6 +260,7 @@ namespace com::ft::sdk::internal
 		int getErrorCount();
 		int getResourceCount();
 
+		void clearClosedAction();
 		std::vector<RUMAction*> getActionList();
 
 		double getFpsAvg()

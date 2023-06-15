@@ -17,6 +17,35 @@
 #include "InternalStructs.h"
 #include "FTSDKError.h"
 
+
+#define CHECK_VIEW_EXISTANCE()    \
+    if (m_pActiveView == nullptr) {    \
+        LoggerManager::getInstance().logDebug("View is not started, use default view instead!");        \
+        m_pActiveView = RUMApplication::getInstance().getDefaultView();     \
+    }
+
+#define EXECUTE_WITH_VIEW(code)    \
+    if (m_pActiveView != nullptr && !m_pActiveView->isClose())  {       \
+        (code);         \
+    }   \
+    else     \
+    {   \
+        LoggerManager::getInstance().logDebug("View is absent!");       \
+    }
+
+#define EXECUTE_WITH_VIEW_OR_ACTION(code)   \
+    if (m_pActiveAction == nullptr || m_pActiveAction->isClose()) {     \
+        if (m_pActiveView != nullptr && !m_pActiveView->isClose())  {       \
+            (m_pActiveView->code);         \
+        }   \
+        else {    \
+            LoggerManager::getInstance().logDebug("View is absent!");       \
+        }   \
+    }       \
+    else {  \
+        (m_pActiveAction->code);     \
+    }
+
 namespace com::ft::sdk::internal
 {
     const std::int64_t MAX_RESTING_TIME = 900000000000;
@@ -39,22 +68,14 @@ namespace com::ft::sdk::internal
     {
         clear();
         checkSessionKeep();
+
+        m_pActiveView = RUMApplication::getInstance().getDefaultView();
     }
 
     void RUMManager::addLongTask(std::string log, std::int64_t duration)
     {
-        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
-
         LoggerManager::getInstance().logDebug("add long task: " + log);
-
-        if (m_pActiveAction == nullptr || m_pActiveAction->isClose())
-        {
-            RUMLongTask& res = m_pActiveView->addLongTask(m_pActiveView, log);
-        }
-        else
-        {
-            RUMLongTask& res = m_pActiveAction->addLongTask(m_pActiveAction, log);
-        }
+        EXECUTE_WITH_VIEW_OR_ACTION(addLongTask(m_pActiveView, log));
 
         try
         {
@@ -76,18 +97,8 @@ namespace com::ft::sdk::internal
 
     void RUMManager::addError(std::string log, std::string message, RUMErrorType errorType, AppState state)
     {
-        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
-
         LoggerManager::getInstance().logDebug("add error: " + log + " , " + message);
-
-        if (m_pActiveAction == nullptr || m_pActiveAction->isClose())
-        {
-            RUMError& res = m_pActiveView->addError(m_pActiveView, log);
-        }
-        else
-        {
-            RUMError& res = m_pActiveAction->addError(m_pActiveAction, log);
-        }
+        EXECUTE_WITH_VIEW_OR_ACTION(addError(m_pActiveView, log));
 
         try {
             auto tags = internal::FTSDKConfigManager::getInstance().getRUMPublicDynamicTags();
@@ -134,26 +145,14 @@ namespace com::ft::sdk::internal
 
     void RUMManager::addError(std::string log, RUMMap& tags, FieldMap& fields)
     {
-        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
-
         LoggerManager::getInstance().logDebug("add internal error: " + log);
-
-        if (m_pActiveAction == nullptr || m_pActiveAction->isClose())
-        {
-            RUMError& res = m_pActiveView->addError(m_pActiveView, log);
-        }
-        else
-        {
-            RUMError& res = m_pActiveAction->addError(m_pActiveAction, log);
-        }
+        EXECUTE_WITH_VIEW_OR_ACTION(addError(m_pActiveView, log));
 
         CacheDBManager::getInstance().insertRUMItem(constants::FT_MEASUREMENT_RUM_ERROR, tags, fields);
-
     }
 
     void RUMManager::addAction(std::string actionName, std::string actionType, std::int64_t duration, std::int64_t startTime)
     {
-        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
         LoggerManager::getInstance().logDebug("add action:" + actionName + " , " + actionType);
 
         checkSessionRefresh();
@@ -168,12 +167,7 @@ namespace com::ft::sdk::internal
 
     void RUMManager::startAction(std::string actionName, std::string actionType)
     {
-        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
         LoggerManager::getInstance().logDebug("start action:" + actionName + " , " + actionType);
-
-        std::string viewId = m_pActiveView != nullptr ? m_pActiveView->getId() : "";
-        std::string viewName = m_pActiveView != nullptr ? m_pActiveView->getName() : "";
-        std::string viewReferrer = getViewReferrerName(m_pActiveView);
 
         checkSessionRefresh();
         checkActionClose();
@@ -186,6 +180,11 @@ namespace com::ft::sdk::internal
 
     void RUMManager::stopAction()
     {
+        if (m_pActiveAction == nullptr)
+        {
+            return;
+        }
+
         LoggerManager::getInstance().logDebug("stop action");
 
         if (m_pActiveAction->isNeedWaitAction()) {
@@ -195,6 +194,7 @@ namespace com::ft::sdk::internal
         if (m_pActiveAction != nullptr)
         {
             closeAction(*m_pActiveAction, false);
+            m_pActiveAction = nullptr;
         }
     }
 
@@ -208,7 +208,6 @@ namespace com::ft::sdk::internal
 
     void RUMManager::addResource(std::string resourceId, ResourceParams params, NetStatus netStatusBean)
     {
-        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
         setTransformContent(resourceId, params);
         setNetState(resourceId, netStatusBean);
     }
@@ -466,7 +465,6 @@ namespace com::ft::sdk::internal
 
     void RUMManager::startResource(std::string resourceId)
     {
-        CHECK_SDK_CONDITION((m_pActiveView != nullptr), "View is required");
         LoggerManager::getInstance().logDebug("start resource: " + resourceId);
 
         if (m_pActiveAction == nullptr || m_pActiveAction->isClose())
@@ -505,7 +503,7 @@ namespace com::ft::sdk::internal
         res.viewName = m_pActiveView->getName();
         res.viewReferrer = getViewReferrerName(m_pActiveView);
         res.sessionId = getSessionId();
-        if (m_pActiveAction == nullptr || m_pActiveAction->isClose()) 
+        if (m_pActiveAction != nullptr && !m_pActiveAction->isClose()) 
         {
             res.actionId = m_pActiveAction->getId();
             res.actionName = m_pActiveAction->getName();
@@ -564,7 +562,7 @@ namespace com::ft::sdk::internal
         checkSessionRefresh();
 
         // close the previous view
-        if (m_pActiveView != nullptr && !m_pActiveView->isClose()) 
+        if (m_pActiveView != nullptr && !m_pActiveView->isClose() && m_pActiveView != RUMApplication::getInstance().getDefaultView()) 
         {
             m_pActiveView->close();
             closeView(*m_pActiveView);
@@ -594,9 +592,12 @@ namespace com::ft::sdk::internal
         //FTMonitorManager.get().attachMonitorData(activeView);
         //FTMonitorManager.get().removeMonitor(activeView.getId());
 
-        closeView(*m_pActiveView);
+        if (m_pActiveView != RUMApplication::getInstance().getDefaultView())
+        {
+            closeView(*m_pActiveView);
 
-        m_pActiveView = nullptr;
+            m_pActiveView = RUMApplication::getInstance().getDefaultView();
+        }
     }
 
     RUMView& RUMManager::initView(const std::string& viewName) 
@@ -660,6 +661,23 @@ namespace com::ft::sdk::internal
                 vw->setDirty(false);
                 vw->setSynced(true);
             }
+        }
+
+        // process the actions in the default view
+        if (m_pActiveView == RUMApplication::getInstance().getDefaultView())
+        {
+            for (auto actIt : m_pActiveView->getItems())
+            {
+                RUMAction* act = (RUMAction*)actIt;
+                if (act->isDirty() && act->isClose() && !act->isSynced())
+                {
+                    generateActionSum(*act, rumPublicTags);
+                    act->setDirty(false);
+                    act->setSynced(true);
+                }
+            }
+
+            m_pActiveView->clearClosedAction();
         }
 
         LoggerManager::getInstance().logTrace("DUMP DB after Flush: \n" + RUMApplication::getInstance().toString());
@@ -801,6 +819,7 @@ namespace com::ft::sdk::internal
             {
                 m_pActiveAction->close();
                 closeAction(*m_pActiveAction, timeOut);
+                m_pActiveAction = nullptr;
             }
         }
     }
