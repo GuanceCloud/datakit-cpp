@@ -1,5 +1,7 @@
 #include "pch.h"
+#ifdef _WIN32
 #include "FTSDKDLLWrapper.h"
+#endif
 #include "Include/FTSDKFactory.h"
 #include <nlohmann/json.hpp>
 #include <iostream>
