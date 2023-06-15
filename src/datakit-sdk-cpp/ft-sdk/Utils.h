@@ -13,6 +13,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <nlohmann/json.hpp>
 
 #if defined(WIN32)
 #include <windows.h>
