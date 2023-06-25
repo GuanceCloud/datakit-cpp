@@ -12,10 +12,37 @@
 #include "Include/FTSDKConfig.h"
 #include "Singleton.h"
 #include "Include/FTSDK.h"
+#include "InternalEnums.h"
 #include <vector>
 
 namespace com::ft::sdk::internal
 {
+	class FTTestConfig
+	{
+	public:
+		bool isOfflineMode()
+		{
+			return enableOfflineMode;
+		}
+		void setOfflineMode(bool enabled)
+		{
+			enableOfflineMode = enabled;
+		}
+
+		HTTP_STATUS getHttpStatus()
+		{
+			return httpStatus;
+		}
+		void setHttpStatus(HTTP_STATUS status)
+		{
+			httpStatus = status;
+		}
+
+	private:
+		bool enableOfflineMode = false;
+		HTTP_STATUS httpStatus = HTTP_STATUS::HTTP_OK;
+	};
+
 	class FTSDKConfigManager : public Singleton<FTSDKConfigManager>
 	{
 	public:
@@ -59,14 +86,9 @@ namespace com::ft::sdk::internal
 		{
 			return m_logPipeConfig;
 		}
-		bool isOfflineMode()
+		FTTestConfig& getTestConfig()
 		{
-			return m_enableOfflineMode;
-		}
-
-		void enableOfflineMode()
-		{
-			m_enableOfflineMode = true;
+			return m_testConfig;
 		}
 
 		bool isUserDataBinded()
@@ -109,11 +131,11 @@ namespace com::ft::sdk::internal
 		//HttpConfig m_httpConfig;
 		FTTraceConfig m_traceConfig;
 		FTLogConfig m_logPipeConfig;
+		FTTestConfig m_testConfig;
 
 		//设置全局 tag
 		std::map<std::string, std::string> m_mapGlobalContext;
 
-		bool m_enableOfflineMode = false;
 		bool m_isUserBinded = false;
 
 		std::string m_configFilePath;

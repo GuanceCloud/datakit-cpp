@@ -30,6 +30,7 @@ namespace com::ft::sdk::internal
 	{
         try
         {
+            m_logRetentionPolicy = FTSDKConfigManager::getInstance().getLogPipeConfig().getLogCacheDiscardStrategy();
             m_pDB = std::make_shared< SQLite::Database>(DB_FILE, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 
             SQLite::Transaction transaction(*m_pDB);
@@ -76,12 +77,31 @@ namespace com::ft::sdk::internal
     {
         DataType type = msg.dataType;
 
+        if (type == DataType::RUM_APP)
+        {
+            return insertRUMLine(msg);
+        }
+        else if (type == DataType::LOG)
+        {
+            return insertLogLine(msg);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool LineDBManager::insertRUMLine(DataMsg& rumMsg)
+    {
+        bool ret = true;
+        DataType type = rumMsg.dataType;
+
         try
         {
-            std::string linePtl = LineProtocolBuilder::getInstance().encode(msg);
+            std::string linePtl = LineProtocolBuilder::getInstance().encode(rumMsg);
 
             const std::string sql = "insert into " + getTableName(type) + "(line_cnt, packet, status, retry_cnt) values("
-                    + std::to_string((int)msg.vtLine.size()) + ",'" + linePtl + "'," + std::to_string(LineStatus::ready) + ", 0);";
+                + std::to_string((int)rumMsg.vtLine.size()) + ",'" + linePtl + "'," + std::to_string(LineStatus::ready) + ", 0);";
 
             int rows = executeSQL(sql);
 
@@ -94,10 +114,86 @@ namespace com::ft::sdk::internal
         }
         catch (std::exception& e)
         {
+            ret = false;
             LoggerManager::getInstance().logError("SQLite exception during insertion: {}", e.what());
         }
 
-        return false;
+        return ret;
+    }
+
+    bool LineDBManager::insertLogLine(DataMsg& logMsg)
+    {
+        bool ret = true;
+        DataType type = logMsg.dataType;
+
+        try
+        {
+            int log2add = logMsg.vtLine.size();
+            int log2Remove = reserveRoom4Log(log2add);
+
+            if (log2Remove >= log2add)
+            {
+                return false;
+            }
+            while (log2Remove-- > 0)
+            {
+                logMsg.vtLine.erase(logMsg.vtLine.end() - 1);
+            }
+
+            int rows_all = 0;
+            for (auto meas : logMsg.vtLine)
+            {
+                DataMsg msg;
+                msg.dataType = type;
+                msg.vtLine.push_back(meas);
+
+                std::string linePtl = LineProtocolBuilder::getInstance().encode(msg);
+
+                const std::string sql = "insert into " + getTableName(type) + "(line_cnt, packet, status, retry_cnt) values("
+                    + std::to_string((int)msg.vtLine.size()) + ",'" + linePtl + "'," + std::to_string(LineStatus::ready) + ", 0);";
+
+                int rows = executeSQL(sql);
+                rows_all += rows;
+            }
+
+            if (rows_all > 0)
+            {
+                DataSyncManager::getInstance().notifyNewLinefromDB();
+            }
+
+            return rows_all > 0;
+        }
+        catch (std::exception& e)
+        {
+            ret = false;
+            LoggerManager::getInstance().logError("SQLite exception during insertion: {}", e.what());
+        }
+
+        return ret;
+    }
+
+    int LineDBManager::getLineCount(DataType type)
+    {
+        try
+        {
+            std::string table = getTableName(type);
+            SQLite::Statement  query(*m_pDB, "SELECT SUM(line_cnt) FROM " + table);
+
+            int count = 0;
+            while (query.executeStep())
+            {
+                count = query.getColumn(0);
+                break;
+            }
+
+            return count;
+        }
+        catch (std::exception& e)
+        {
+            LoggerManager::getInstance().logError("exception: {}", e.what());
+        }
+
+        return 0;
     }
 
     /**
@@ -108,15 +204,18 @@ namespace com::ft::sdk::internal
      * @param type
      * @return 
      */
-    std::vector<std::shared_ptr<DataMsg>> LineDBManager::queryLineFromDB(DataType type)
+    std::vector<std::shared_ptr<DataMsg>> LineDBManager::queryLineFromDB(DataType type, bool ignoreStatus)
     {
         std::vector<std::shared_ptr<DataMsg>> vtLine;
         try
         {
             std::string table = getTableName(type);
-            SQLite::Statement  query(*m_pDB, "SELECT * FROM " + table + " order by id asc limit 1000"); // TODO: depends on the global strategy
+            std::string stsCondition = ignoreStatus ? "" : " where status=0";
+            SQLite::Statement  query(*m_pDB, "SELECT * FROM " + table + stsCondition + " order by id asc limit 1000"); 
 
             std::vector<int> vtId;
+            std::vector<std::vector<int>> vtMsgIds;
+            std::vector<int> vtMsgId;
             std::vector<std::string> vtRawLine;
             int accumulatedCnt = 0;
             std::string oneLine = "";
@@ -134,8 +233,12 @@ namespace com::ft::sdk::internal
                     vtRawLine.push_back(oneLine);
                     accumulatedCnt = 0;
                     oneLine = "";
+
+                    vtMsgIds.push_back(vtMsgId);
+                    vtMsgId.clear();
                 }
                 
+                vtMsgId.push_back(id);
                 vtId.push_back(id);
                 oneLine = oneLine + packet;
                 accumulatedCnt += line_cnt;
@@ -148,19 +251,25 @@ namespace com::ft::sdk::internal
             if (oneLine.size() > 0)
             {
                 vtRawLine.push_back(oneLine);
+                vtMsgIds.push_back(vtMsgId);
             }
 
+            int idx = 0;
             for (auto ln : vtRawLine)
             {
                 std::shared_ptr<DataMsg> dm = std::make_shared<DataMsg>();
                 dm->dataType = type;
                 dm->rawLine = ln;
+                dm->vtId = vtMsgIds[idx];
 
                 vtLine.push_back(dm);
+                idx++;
             }
 
-            // delete the retrieved items
-            executeSQLs("delete from " + table + " where id=?", vtId);
+            if (ignoreStatus)
+            {
+                updateLineStatus(table, LineStatus::poped, vtId);
+            }
         }
         catch (std::exception& e)
         {
@@ -168,6 +277,29 @@ namespace com::ft::sdk::internal
         }
 
         return vtLine;
+    }
+
+    void LineDBManager::putLineBackToDB(DataMsg& msg)
+    {
+        std::string tableName = getTableName(msg.dataType);
+        updateLineStatus(tableName, LineStatus::ready, msg.vtId);
+    }
+
+    void LineDBManager::deleteLineFromDB(DataMsg& msg)
+    {
+        std::string tableName = getTableName(msg.dataType);
+        deleteLines(tableName, msg.vtId);
+    }
+
+    int LineDBManager::deleteLines(const std::string table, std::vector<int> vtId)
+    {
+        // delete the retrieved items
+        return executeSQLs("delete from " + table + " where id=?", vtId);
+    }
+
+    int LineDBManager::updateLineStatus(const std::string table, LineStatus status, std::vector<int> vtId)
+    {
+        return executeSQLs("update " + table + " set status=" + std::to_string(status) + " where id=?", vtId);
     }
 
     int LineDBManager::executeSQL(std::string sql)
@@ -217,5 +349,74 @@ namespace com::ft::sdk::internal
         }
 
         return tableName;
+    }
+
+    /**
+     * reserve room for adding log.
+     *
+     * @param newCnt - how many new logs to be added
+     * @return		 - how many new logs need to be removed before adding
+     */
+    int LineDBManager::reserveRoom4Log(int newCnt)
+    {
+        int removeCnt = 0;
+        int logCount = getLineCount(DataType::LOG);
+        if (logCount >= m_userLogCountThreshold)
+        {
+            if (m_logRetentionPolicy == LogCacheDiscard::DISCARD)
+            {
+                return newCnt;
+            }
+            else
+            {
+                removeCnt = logCount - m_userLogCountThreshold + newCnt;
+            }
+        }
+        else if (logCount + newCnt <= m_userLogCountThreshold)
+        {
+            return 0;
+        }
+        else
+        {
+            int tobeRemove = logCount + newCnt - m_userLogCountThreshold;
+            if (logCount < m_userLogCountThreshold)
+            {
+
+            }
+            if (m_logRetentionPolicy == LogCacheDiscard::DISCARD)
+            {
+                return (logCount + newCnt - m_userLogCountThreshold);
+            }
+            else
+            {
+                removeCnt = logCount + newCnt - m_userLogCountThreshold;
+            }
+        }
+
+        if (removeCnt > 0)
+        {
+            // clear the oldest db log
+            deleteOldestLogs(removeCnt);
+        }
+
+        return 0;
+    }
+
+    int LineDBManager::deleteOldestLogs(int count)
+    {
+        try
+        {
+            std::string sql = "DELETE FROM line_log WHERE id IN(SELECT id FROM line_log ORDER BY id ASC LIMIT ";
+            sql = sql + std::to_string(count) + ")";
+
+            int rows = executeSQL(sql);
+            return rows;
+        }
+        catch (std::exception& e)
+        {
+            LoggerManager::getInstance().logError("SQLite exception during deletion: {}", e.what());
+        }
+
+        return 0;
     }
 }

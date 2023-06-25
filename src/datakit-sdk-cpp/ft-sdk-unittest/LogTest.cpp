@@ -25,7 +25,7 @@ protected:
 	void SetUp() override {
 		std::cout << "\nSetUp..." << std::endl;
 		internal::LoggerManager::getInstance().init();
-		internal::FTSDKConfigManager::getInstance().enableOfflineMode();
+		internal::FTSDKConfigManager::getInstance().getTestConfig().setOfflineMode(true);
 		internal::FTSDKConfigManager::getInstance().getGeneralConfig().setEnableFileDBCache(true);
 
 		internal::LineDBManager::getInstance().init();
@@ -116,3 +116,4 @@ TEST_F(UserLogTest, TesUserLogWithRum) {
 		VERIFY_RUM_TAG((vtLogs[0]), (constants::KEY_RUM_VIEW_NAME), FIRST_VIEW);
 	}
 }
+

@@ -16,7 +16,7 @@
 #include "MonitorManager.h"
 #include "InternalStructs.h"
 #include "FTSDKError.h"
-
+#include "Platform.h"
 
 #define CHECK_VIEW_EXISTANCE()    \
     if (m_pActiveView == nullptr) {    \
@@ -116,20 +116,21 @@ namespace com::ft::sdk::internal
             std::locale curLoc;
             tags[constants::KEY_DEVICE_LOCALE] = curLoc.name();
 
-            /* // not enable monitor the environment params so far
-            if (FTMonitorManager.get().isErrorMonitorType(ErrorMonitorType.MEMORY)) {
-                double[] memory = DeviceUtils.getRamData(FTApplication.getApplication());
-                tags[constants::KEY_MEMORY_TOTAL] = memory[0] + "GB";
-                msg.fields[constants::KEY_MEMORY_USE] = memory[1];
+            if (MonitorManager::getInstance().isErrorMonitorType(ErrorMonitorType::MEMORY)) 
+            {
+                std::int64_t memTotal = platform::getMemoryTotal();
+                tags[constants::KEY_MEMORY_TOTAL] = std::to_string(memTotal/(1024*1024*1024)) + "GB";
+                fields[constants::KEY_MEMORY_USE] = platform::getMemoryLoad();
             }
 
-            if (FTMonitorManager.get().isErrorMonitorType(ErrorMonitorType.CPU)) {
-                msg.fields[constants::KEY_CPU_USE] = DeviceUtils.getCpuUsage();
+            if (MonitorManager::getInstance().isErrorMonitorType(ErrorMonitorType::CPU)) 
+            {
+                fields[constants::KEY_CPU_USE] = platform::getCPULoad();
             }
-            if (FTMonitorManager.get().isErrorMonitorType(ErrorMonitorType.BATTERY)) {
-                msg.fields[constants::KEY_BATTERY_USE] = (float)BatteryUtils.getBatteryInfo(FTApplication.getApplication()).getBr();
-            }
-            */
+            //if (MonitorManager::getInstance().isErrorMonitorType(ErrorMonitorType.BATTERY)) {
+            //    msg.fields[constants::KEY_BATTERY_USE] = (float)BatteryUtils.getBatteryInfo(FTApplication.getApplication()).getBr();
+            //}
+            
 
             //std::int64_t dateline = internal::utils::getCurrentNanoTime();
             //FTTrackInner.getInstance().rum(dateline, constants::FT_MEASUREMENT_RUM_ERROR, tags, fields);
@@ -564,6 +565,9 @@ namespace com::ft::sdk::internal
         // close the previous view
         if (m_pActiveView != nullptr && !m_pActiveView->isClose() && m_pActiveView != RUMApplication::getInstance().getDefaultView()) 
         {
+            // stop monitor the performance metric
+            MonitorManager::getInstance().removeMonitor(m_pActiveView->getId());
+
             m_pActiveView->close();
             closeView(*m_pActiveView);
         }
@@ -577,20 +581,21 @@ namespace com::ft::sdk::internal
         //}
         std::string viewReferrer = getViewReferrerName(&view);
         setActiveView(&view);
-        //activeView = new ActiveViewBean(viewName, viewReferrer, loadTime, sessionId);
-        //FTMonitorManager.get().addMonitor(activeView.getId());
-        //FTMonitorManager.get().attachMonitorData(activeView);
 
         // start to monitor the performance metric
+        MonitorManager::getInstance().addMonitor(m_pActiveView);
     }
 
     void RUMManager::stopView()
     {
+        if (m_pActiveView == nullptr)
+        {
+            return;
+        }
         checkActionClose();
 
         // stop monitor the performance metric
-        //FTMonitorManager.get().attachMonitorData(activeView);
-        //FTMonitorManager.get().removeMonitor(activeView.getId());
+        MonitorManager::getInstance().removeMonitor(m_pActiveView->getId());
 
         if (m_pActiveView != RUMApplication::getInstance().getDefaultView())
         {
@@ -717,7 +722,8 @@ namespace com::ft::sdk::internal
             fields[constants::KEY_RUM_VIEW_LONG_TASK_COUNT] = view.getLongTaskCount();
             fields[constants::KEY_RUM_VIEW_IS_ACTIVE] = !view.isClose();
 
-            if (MonitorManager::getInstance().isDeviceMetricsMonitorType(DeviceMetricsMonitorType::CPU)) {
+            if (MonitorManager::getInstance().isDeviceMetricsMonitorType(DeviceMetricsMonitorType::CPU)) 
+            {
                 double cpuTickCountPerSecond = view.getCpuTickCountPerSecond();
                 long cpuTickCount = view.getCpuTickCount();
                 if (cpuTickCountPerSecond > -1) {
@@ -727,20 +733,21 @@ namespace com::ft::sdk::internal
                     fields[constants::KEY_CPU_TICK_COUNT] = cpuTickCount;
                 }
             }
-            if (MonitorManager::getInstance().isDeviceMetricsMonitorType(DeviceMetricsMonitorType::MEMORY)) {
+            if (MonitorManager::getInstance().isDeviceMetricsMonitorType(DeviceMetricsMonitorType::MEMORY)) 
+            {
                 fields[constants::KEY_MEMORY_MAX] = view.getMemoryMax();
                 fields[constants::KEY_MEMORY_AVG] = view.getMemoryAvg();
             }
-            if (MonitorManager::getInstance().isDeviceMetricsMonitorType(DeviceMetricsMonitorType::BATTERY)) {
-                fields[constants::KEY_BATTERY_CURRENT_AVG] = view.getBatteryCurrentAvg();
-                fields[constants::KEY_BATTERY_CURRENT_MAX] = view.getBatteryCurrentMax();
-            }
-            if (MonitorManager::getInstance().isDeviceMetricsMonitorType(DeviceMetricsMonitorType::FPS)) 
-            {
-                fields[constants::KEY_FPS_AVG] = view.getFpsAvg();
-                fields[constants::KEY_FPS_MINI] = view.getFpsMini();
+            //if (MonitorManager::getInstance().isDeviceMetricsMonitorType(DeviceMetricsMonitorType::BATTERY)) {
+            //    fields[constants::KEY_BATTERY_CURRENT_AVG] = view.getBatteryCurrentAvg();
+            //    fields[constants::KEY_BATTERY_CURRENT_MAX] = view.getBatteryCurrentMax();
+            //}
+            //if (MonitorManager::getInstance().isDeviceMetricsMonitorType(DeviceMetricsMonitorType::FPS)) 
+            //{
+            //    fields[constants::KEY_FPS_AVG] = view.getFpsAvg();
+            //    fields[constants::KEY_FPS_MINI] = view.getFpsMini();
 
-            }
+            //}
 
         }
         catch (std::exception e) 

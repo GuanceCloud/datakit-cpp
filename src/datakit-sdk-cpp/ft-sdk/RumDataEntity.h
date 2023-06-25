@@ -273,22 +273,42 @@ namespace com::ft::sdk::internal
 			return m_fpsMini;
 		}
 
+		void setCpuTickCountPerSecond(double tick)
+		{
+			m_cpuTickCountPerSecond = tick;
+		}
+
 		double getCpuTickCountPerSecond()
 		{
 			return m_cpuTickCountPerSecond;
 		}
 
-		long getCpuTickCount()
+		void setCpuTickCount(std::int64_t tick)
+		{
+			m_cpuTickCount = tick;
+		}
+
+		std::int64_t getCpuTickCount()
 		{
 			return m_cpuTickCount;
 		}
 
-		long getMemoryMax()
+		void setMemoryMax(std::int64_t mem)
+		{
+			m_memoryMax = mem;
+		}
+
+		std::int64_t getMemoryMax()
 		{
 			return m_memoryMax;
 		}
 
-		long getMemoryAvg()
+		void setMemoryAvg(std::int64_t mem)
+		{
+			m_memoryAvg = mem;
+		}
+
+		std::int64_t getMemoryAvg()
 		{
 			return m_memoryAvg;
 		}
@@ -309,10 +329,10 @@ namespace com::ft::sdk::internal
 		double m_fpsAvg;
 
 		double m_cpuTickCountPerSecond = -1;
-		long m_cpuTickCount = -1;
+		std::int64_t m_cpuTickCount = -1;
 
-		long m_memoryAvg;
-		long m_memoryMax;
+		std::int64_t m_memoryAvg;
+		std::int64_t m_memoryMax;
 
 		int m_batteryCurrentAvg;
 		int m_batteryCurrentMax;

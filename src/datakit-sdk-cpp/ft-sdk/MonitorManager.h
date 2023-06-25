@@ -11,7 +11,7 @@
 
 #include "Singleton.h"
 #include "RumDataEntity.h"
-#include "InternalEnums.h"
+#include "Include/FTSDKDataContracts.h"
 
 #include <map>
 #include <mutex>
@@ -44,6 +44,9 @@ namespace com::ft::sdk::internal
 		void stop();
 		void collectMetrics();
 
+	private:
+		void resetMetrics();
+		void performCollect();
 	private:
 		std::mutex m_mtx;
 		std::thread* m_pThread;

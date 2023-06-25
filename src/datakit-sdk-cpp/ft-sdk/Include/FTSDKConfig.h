@@ -216,6 +216,20 @@ namespace com::ft::sdk
          */
         PROPERTY(FTRUMConfig, std::string, RumAppId, rumAppId);
 
+        /**
+         * 设置错误数据监控类型
+         */
+        PROPERTY(FTRUMConfig, ErrorMonitorType, ExtraMonitorTypeWithError, extraMonitorTypeWithError);
+
+        /**
+         * 设置设备数据监控类型
+         */
+        PROPERTY(FTRUMConfig, DeviceMetricsMonitorType, DeviceMetricsMonitorType, deviceMetricsMonitorType);
+
+        /**
+         * 设置数据监测频率
+         */
+        PROPERTY(FTRUMConfig, DetectFrequency, DeviceMetricsDetectFrequency, deviceMetricsDetectFrequency);
     private:
         float samplingRate = 1.0f;
 
@@ -233,11 +247,11 @@ namespace com::ft::sdk
         //是否开启用户欣慰 Resource 追踪
         bool enableTraceUserResource = false;
         //崩溃采集数据附加类型
-        //ErrorMonitorType extraMonitorTypeWithError = ErrorMonitorType::NO_SET;
+        ErrorMonitorType extraMonitorTypeWithError = ErrorMonitorType::NO_SET;
 
         //监控指标数据类型
-        //DeviceMetricsMonitorType deviceMetricsMonitorType = DeviceMetricsMonitorType::NO_SET;
-        //DetectFrequency deviceMetricsDetectFrequency = DetectFrequency::DEFAULT;
+        DeviceMetricsMonitorType deviceMetricsMonitorType = DeviceMetricsMonitorType::NO_SET;
+        DetectFrequency deviceMetricsDetectFrequency = DetectFrequency::DEFAULT;
 
     };
 
@@ -295,6 +309,11 @@ namespace com::ft::sdk
          */
         PROPERTY(FTLogConfig, bool, EnableCustomLog, enableCustomLog);
 
+        /**
+         * 设置日志数据数据库存储策略. 
+         */
+        PROPERTY(FTLogConfig, LogCacheDiscard, LogCacheDiscardStrategy, logCacheDiscardStrategy);
+
         std::vector<LogLevel>& getLogLevelFilters() {
             return logLevelFilters;
         }
@@ -318,6 +337,7 @@ namespace com::ft::sdk
         std::string logPrefix = "";
         std::vector<LogLevel> logLevelFilters;
 
+        LogCacheDiscard logCacheDiscardStrategy = LogCacheDiscard::DISCARD;
     };
 }
 

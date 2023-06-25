@@ -20,12 +20,15 @@
 using namespace com::ft::sdk;
 using namespace _test::helper;
 
+const std::string TEST_ACTION_NAME = "test_action_name";
+const std::string TEST_ACTION_TYPE = "test_action_type";
+
 class RUMManagerTest : public ::testing::Test {
 protected:
 	void SetUp() override {
 		std::cout << "\nSetUp..." << std::endl;
 		internal::LoggerManager::getInstance().init();
-		internal::FTSDKConfigManager::getInstance().enableOfflineMode();
+		internal::FTSDKConfigManager::getInstance().getTestConfig().setOfflineMode(true);
 		internal::FTSDKConfigManager::getInstance().getGeneralConfig().setEnableFileDBCache(true);
 		internal::FTSDKConfigManager::getInstance().getRUMConfig().setSamplingRate(1.0f);
 
@@ -42,6 +45,55 @@ protected:
 		internal::RUMManager::getInstance().stopView();
 
 		waitForCompleted();
+	}
+
+	void generateSimpleAction()
+	{
+		internal::RUMManager::getInstance().startAction(TEST_ACTION_NAME, TEST_ACTION_TYPE);
+		internal::RUMManager::getInstance().stopAction();
+
+		waitForCompleted();
+	}
+
+	void generateSimpleItems()
+	{
+		internal::RUMManager::getInstance().addLongTask("test long task", 100010);
+		internal::RUMManager::getInstance().addError("test error", "first error", RUMErrorType::NATIVE_CRASH, AppState::UNKNOWN);
+
+		waitForCompleted();
+	}
+
+	long generateSimpleResource()
+	{
+		std::string resId = "resource id 1111";
+		internal::RUMManager::getInstance().startResource(resId);
+		internal::RUMManager::getInstance().stopResource(resId);
+		NetStatus status;
+		status.dnsStartTime = 0;
+		status.dnsEndTime = 100002;
+		status.tcpStartTime = status.dnsEndTime;
+		status.tcpEndTime = 300023;
+		status.sslStartTime = status.tcpEndTime;
+		status.sslEndTime = 3232122;
+		status.fetchStartTime = 4232122;
+		status.responseStartTime = 5632122;
+		status.responseEndTime = 13632122;
+
+		ResourceParams params;
+		params.resourceMethod = "GET";
+		params.resourceStatus = HTTP_STATUS::HTTP_OK;
+		params.responseConnection = "Keep-Alive";
+		params.responseContentEncoding = "UTF-8";
+
+		internal::PropagationUrl url = internal::PropagationUrl::parse("https://www.example.com/test.html?param=1");
+		internal::HttpUrl internalUrl{ url.getHost(), url.getPath(), url.getPort() };
+		auto traceHdr = internal::TraceManager::getInstance().getTraceHeader(resId, "https://www.example.com/test.html?param=1");
+
+		internal::RUMManager::getInstance().addResource(resId, params, status);
+
+		waitForCompleted();
+
+		return (status.dnsEndTime - status.dnsStartTime);
 	}
 };
 
@@ -76,10 +128,8 @@ TEST_F(RUMManagerTest, TestViewGeneration)
 
 	if (vtViews.size() > 0)
 	{
-		//EXPECT_TRUE((std::any_cast<std::int64_t>(vtViews[0]->fields[constants::KEY_RUM_VIEW_ACTION_COUNT])), 1);
 		VERIFY_RUM_FIELD_INT((vtViews[0]), (constants::KEY_RUM_VIEW_ACTION_COUNT), 1);
 		VERIFY_RUM_FIELD_INT((vtViews[0]), (constants::KEY_RUM_VIEW_LONG_TASK_COUNT), 1);
-		//auto cnt = std::any_cast<std::int64_t>(vtViews[0]->fields[constants::KEY_RUM_VIEW_RESOURCE_COUNT]);
 		VERIFY_RUM_FIELD_INT((vtViews[0]), (constants::KEY_RUM_VIEW_RESOURCE_COUNT), 0);
 		VERIFY_RUM_FIELD_INT((vtViews[0]), (constants::KEY_RUM_VIEW_ERROR_COUNT), 2);
 	}
@@ -199,31 +249,7 @@ TEST_F(RUMManagerTest, TestResourceGeneration)
 
 	internal::RUMManager::getInstance().startView(FIRST_VIEW);
 
-	std::string resId = "resource id 1111";
-	internal::RUMManager::getInstance().startResource(resId);
-	internal::RUMManager::getInstance().stopResource(resId);
-	NetStatus status;
-	status.dnsStartTime = 0;
-	status.dnsEndTime = 100002;
-	status.tcpStartTime = status.dnsEndTime;
-	status.tcpEndTime = 300023;
-	status.sslStartTime = status.tcpEndTime;
-	status.sslEndTime = 3232122;
-	status.fetchStartTime = 4232122;
-	status.responseStartTime = 5632122;
-	status.responseEndTime = 13632122;
-
-	ResourceParams params;
-	params.resourceMethod = "GET";
-	params.resourceStatus = HTTP_STATUS::HTTP_OK;
-	params.responseConnection = "Keep-Alive";
-	params.responseContentEncoding = "UTF-8";
-
-	internal::PropagationUrl url = internal::PropagationUrl::parse("https://www.example.com/test.html?param=1");
-	internal::HttpUrl internalUrl{ url.getHost(), url.getPath(), url.getPort() };
-	auto traceHdr = internal::TraceManager::getInstance().getTraceHeader(resId, "https://www.example.com/test.html?param=1");
-
-	internal::RUMManager::getInstance().addResource(resId, params, status);
+	long eclapsed = generateSimpleResource();
 
 	internal::RUMManager::getInstance().stopView();
 
@@ -246,6 +272,102 @@ TEST_F(RUMManagerTest, TestResourceGeneration)
 	EXPECT_TRUE(vtRess.size() == 1);
 	if (vtRess.size() > 0)
 	{
-		VERIFY_RUM_FIELD_INT((vtRess[0]), (constants::KEY_RUM_RESOURCE_DNS), (status.dnsEndTime - status.dnsStartTime));
+		VERIFY_RUM_FIELD_INT((vtRess[0]), (constants::KEY_RUM_RESOURCE_DNS), (eclapsed));
 	}
+}
+
+TEST_F(RUMManagerTest, TestActionGenerationWithoutView)
+{
+	internal::FTSDKConfigManager::getInstance().getRUMConfig().setSamplingRate(100.0f);
+	internal::FTSDKConfigManager::getInstance().unbindUserData();
+	internal::RUMManager::getInstance().init();
+
+	generateSimpleAction();
+
+	auto runRecs = internal::LineDBManager::getInstance().queryLineFromDB(DataType::RUM_APP);
+	EXPECT_TRUE(runRecs.size() > 0);
+	if (runRecs.size() > 0)
+	{
+		EXPECT_TRUE(runRecs[0]->dataType == DataType::RUM_APP);
+	}
+
+	auto vtMeas = internal::LineProtocolBuilder::getInstance().decode(runRecs[0]->rawLine);
+	EXPECT_TRUE(vtMeas.size() == 1);
+
+	auto vtActions = getRumItemsByName(constants::FT_MEASUREMENT_RUM_ACTION, TEST_ACTION_NAME, vtMeas);
+	EXPECT_TRUE(vtActions.size() == 1);
+
+	if (vtActions.size() > 0)
+	{
+		// not user-binded
+		EXPECT_TRUE(vtActions[0]->tags.find(constants::KEY_RUM_USER_ID) == vtActions[0]->tags.end());
+	}
+}
+
+TEST_F(RUMManagerTest, TestResourceGenerationWithoutView)
+{
+	internal::FTSDKConfigManager::getInstance().getRUMConfig().setSamplingRate(100.0f);
+	internal::FTSDKConfigManager::getInstance().unbindUserData();
+	internal::RUMManager::getInstance().init();
+
+	long eclapsed = generateSimpleResource();
+
+	auto runRecs = internal::LineDBManager::getInstance().queryLineFromDB(DataType::RUM_APP);
+	EXPECT_TRUE(runRecs.size() > 0);
+	if (runRecs.size() > 0)
+	{
+		EXPECT_TRUE(runRecs[0]->dataType == DataType::RUM_APP);
+	}
+
+	auto vtMeas = internal::LineProtocolBuilder::getInstance().decode(runRecs[0]->rawLine);
+	EXPECT_TRUE(vtMeas.size() == 1);
+
+	auto vtRess = getRumItemsByName(constants::FT_MEASUREMENT_RUM_RESOURCE, _GET_ALL_RECORDS_, vtMeas);
+	EXPECT_TRUE(vtRess.size() == 1);
+	if (vtRess.size() > 0)
+	{
+		VERIFY_RUM_FIELD_INT((vtRess[0]), (constants::KEY_RUM_RESOURCE_DNS), (eclapsed));
+	}
+}
+
+TEST_F(RUMManagerTest, TestSimpleItemGenerationWithoutViewAndAction)
+{
+	internal::FTSDKConfigManager::getInstance().getRUMConfig().setSamplingRate(100.0f);
+	internal::FTSDKConfigManager::getInstance().unbindUserData();
+	internal::RUMManager::getInstance().init();
+
+	generateSimpleItems();
+
+	auto runRecs = internal::LineDBManager::getInstance().queryLineFromDB(DataType::RUM_APP);
+	EXPECT_TRUE(runRecs.size() > 0);
+	if (runRecs.size() > 0)
+	{
+		EXPECT_TRUE(runRecs[0]->dataType == DataType::RUM_APP);
+	}
+
+	auto vtMeas = internal::LineProtocolBuilder::getInstance().decode(runRecs[0]->rawLine);
+	EXPECT_TRUE(vtMeas.size() == 2);
+}
+
+TEST_F(RUMManagerTest, TestSimpleItemGenerationWithoutView)
+{
+	internal::FTSDKConfigManager::getInstance().getRUMConfig().setSamplingRate(100.0f);
+	internal::FTSDKConfigManager::getInstance().unbindUserData();
+	internal::RUMManager::getInstance().init();
+
+	internal::RUMManager::getInstance().startAction("test_action", "test_type");
+	generateSimpleItems();
+	internal::RUMManager::getInstance().stopAction();
+
+	waitForCompleted();
+
+	auto runRecs = internal::LineDBManager::getInstance().queryLineFromDB(DataType::RUM_APP);
+	EXPECT_TRUE(runRecs.size() > 0);
+	if (runRecs.size() > 0)
+	{
+		EXPECT_TRUE(runRecs[0]->dataType == DataType::RUM_APP);
+	}
+
+	auto vtMeas = internal::LineProtocolBuilder::getInstance().decode(runRecs[0]->rawLine);
+	EXPECT_TRUE(vtMeas.size() == 3);
 }

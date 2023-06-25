@@ -2,7 +2,6 @@
 #include "DataSyncManager.h"
 #include "LineProtocolBuilder.h"
 #include <thread>
-#include "CommunicationManager.h"
 #include "LoggerManager.h"
 #include "LineDBManager.h"
 #include "FTSDKConfigManager.h"
@@ -91,9 +90,14 @@ namespace com::ft::sdk::internal
 				}
 			}
 
-			if (!m_stopping && needRetry && retryCount >= HTTP_RETRY_COUNT)
+			if (needRetry && retryCount >= HTTP_RETRY_COUNT)
 			{
-				internal::LoggerManager::getInstance().logError("failed to send the data message for 3 times, abandon it...");
+				internal::LoggerManager::getInstance().logError("failed to send the data message for 3 times, try it again later...");
+				internal::LineDBManager::getInstance().putLineBackToDB(dataMsg);
+			}
+			else
+			{
+				internal::LineDBManager::getInstance().deleteLineFromDB(dataMsg);
 			}
 		}
 
@@ -203,21 +207,8 @@ namespace com::ft::sdk::internal
 			linePtl = LineProtocolBuilder::getInstance().encode(dMsg);
 		}
 		ResponseData response = CommunicationManager::getInstance().post(dMsg.dataType, linePtl);
-		if (response.code == 200)
-		{
-			internal::LoggerManager::getInstance().logInfo("successfully posted the rum event to datakit agent.");
-		}
-		else if (response.code == 400 || response.code == 500)
-		{
-			internal::LoggerManager::getInstance().logError("failed to post the rum event to datakit agent due to network issue, giving up: code={}, message={}", std::to_string(response.code), response.message);
-		}
-		else
-		{
-			needRetry = true;
-			internal::LoggerManager::getInstance().logError("failed to post the rum event to datakit agent: code={}, message={}", std::to_string(response.code), response.message);
-		}
 
-		return needRetry;
+		return handleSyncResponse(response, __func__);
 	}
 
 	bool DataSyncManager::handleLogEvent(DataMsg& dMsg)
@@ -229,25 +220,35 @@ namespace com::ft::sdk::internal
 			linePtl = LineProtocolBuilder::getInstance().encode(dMsg);
 		}
 		ResponseData response = CommunicationManager::getInstance().post(dMsg.dataType, linePtl);
-		if (response.code == 200)
-		{
-			internal::LoggerManager::getInstance().logInfo("successfully posted the log event to datakit agent.");
-		}
-		else if (response.code == 400 || response.code == 500)
-		{
-			internal::LoggerManager::getInstance().logError("failed to post the log event to datakit agent due to network issue, giving up: code={}, message={}", std::to_string(response.code), response.message);
-		}
-		else
-		{
-			needRetry = true;
-			internal::LoggerManager::getInstance().logError("failed to post the log event to datakit agent: code={}, message={}", std::to_string(response.code), response.message);
-		}
-
-		return needRetry;
+		return handleSyncResponse(response, __func__);
 	}
 
 	bool DataSyncManager::handleTraceEvent(DataMsg& dMsg)
 	{
 		return true;
+	}
+
+	bool DataSyncManager::handleSyncResponse(ResponseData& response, const std::string& type)
+	{
+		bool needRetry = false;
+
+		if (response.code == HTTP_STATUS::HTTP_OK)
+		{
+			internal::LoggerManager::getInstance().logInfo(type + " : successfully posted the event to datakit agent.");
+		}
+		else if (response.code >= HTTP_SERVER_ERROR || response.code < 100)	// code below 100 is from curl internal
+		{
+			needRetry = true;
+			internal::LoggerManager::getInstance().logError(type + " : failed to post the  event to datakit agent: code={}, message={}", \
+				std::to_string(response.code), response.message);
+		}
+		else //if (response.code > 400 && response.code < 500)
+		{
+			internal::LoggerManager::getInstance().logError(type + \
+				" : failed to post the  event to datakit agent due to network issue, giving up: code={}, message={}", \
+				std::to_string(response.code), response.message);
+		}
+
+		return needRetry;
 	}
 }

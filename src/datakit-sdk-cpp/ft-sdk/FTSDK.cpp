@@ -24,6 +24,7 @@
 #include "CacheDBManager.h"
 #include "FTSDKConstants.h"
 #include "FTSDKError.h"
+#include "NetworkMonitor.h"
 
 namespace com::ft::sdk
 {
@@ -76,6 +77,7 @@ namespace com::ft::sdk
 		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().setGeneralConfig(cpConfig));
 		FTSDK_LOG_EXCEPTION(internal::DataSyncManager::getInstance().init());
 		FTSDK_LOG_EXCEPTION(internal::CommunicationManager::getInstance().initialize(cpConfig));
+		FTSDK_LOG_EXCEPTION(internal::NetworkMonitor::getInstance().init());
 
 		_LOG_INFO("initialized general config.");
 

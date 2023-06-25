@@ -44,10 +44,11 @@ namespace com::ft::sdk::internal::platform
 	unsigned long long FileTimeToInt64(const FILETIME& ft);
 #endif
 
-	float CalculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks);
-	float GetCPULoad();
+	double CalculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks);
+	double getCPULoad();
 
-	float getMemoryLoad();
+	std::int64_t getMemoryTotal();
+	double getMemoryLoad();
 
 	std::string getNetworkType();
 	std::string getAppVersionName();

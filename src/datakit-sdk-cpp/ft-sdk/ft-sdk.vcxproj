@@ -287,6 +287,7 @@ copy $(ProjectDir)Include\* $(SolutionDir)..\..\datakit_sdk_redist\include\
     <ClInclude Include="LoggerManager.h" />
     <ClInclude Include="LogPipeManager.h" />
     <ClInclude Include="MonitorManager.h" />
+    <ClInclude Include="NetworkMonitor.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="resource.h" />
@@ -325,6 +326,7 @@ copy $(ProjectDir)Include\* $(SolutionDir)..\..\datakit_sdk_redist\include\
     <ClCompile Include="LoggerManager.cpp" />
     <ClCompile Include="LogPipeManager.cpp" />
     <ClCompile Include="MonitorManager.cpp" />
+    <ClCompile Include="NetworkMonitor.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Create</PrecompiledHeader>

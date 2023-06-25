@@ -121,6 +121,45 @@ namespace com::ft::sdk
 	 */
 	ENUM_MACRO5(EnvType, PROD, GRAY, PRE, COMMON, LOCAL)
 
+	/**
+	 * 上报错误时，需要记录的监测类型.
+	 */
+	enum class ErrorMonitorType : unsigned int {
+		ALL = 0xFFFFFFFF,
+		BATTERY = 1 << 1,
+		MEMORY = 1 << 2,
+		CPU = 1 << 3,
+		NO_SET = 0
+	};
+
+	/**
+	 * 上报设备数据时，需要记录的监测类型.
+	 */
+	enum class DeviceMetricsMonitorType : unsigned int {
+		ALL = 0xFFFFFFFF,
+		BATTERY = 1 << 1,
+		MEMORY = 1 << 2,
+		CPU = 1 << 3,
+		FPS = 1 << 4,
+		NO_SET = 0
+	};
+
+	/**
+	 * 上报设备数据时的监测频率.
+	 */
+	enum class DetectFrequency : unsigned short {
+		DEFAULT = 500,
+		FREQUENT = 100,
+		RARE = 1000
+	};
+
+	/**
+	 * 日志数据库缓存丢弃策略.
+	 */
+	enum class LogCacheDiscard : unsigned char {
+		DISCARD,
+		DISCARD_OLDEST
+	};
 
     /**
      * 网络耗时统计，支持方式：

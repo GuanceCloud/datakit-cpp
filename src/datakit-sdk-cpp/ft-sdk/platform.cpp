@@ -251,7 +251,7 @@ namespace com::ft::sdk::internal::platform
         return deviceUuid;
     }
 
-    float CalculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks)
+    double CalculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks)
     {
         static unsigned long long _previousTotalTicks = 0;
         static unsigned long long _previousIdleTicks = 0;
@@ -259,7 +259,7 @@ namespace com::ft::sdk::internal::platform
         unsigned long long totalTicksSinceLastTime = totalTicks - _previousTotalTicks;
         unsigned long long idleTicksSinceLastTime = idleTicks - _previousIdleTicks;
 
-        float ret = 1.0f - ((totalTicksSinceLastTime > 0) ? ((float)idleTicksSinceLastTime) / totalTicksSinceLastTime : 0);
+        double ret = 1.0f - ((totalTicksSinceLastTime > 0) ? ((double)idleTicksSinceLastTime) / totalTicksSinceLastTime : 0.0f);
 
         _previousTotalTicks = totalTicks;
         _previousIdleTicks = idleTicks;
@@ -276,25 +276,29 @@ namespace com::ft::sdk::internal::platform
     // Returns 1.0f for "CPU fully pinned", 0.0f for "CPU idle", or somewhere in between
     // You'll need to call this at regular intervals, since it measures the load between
     // the previous call and the current one.  Returns -1.0 on error.
-    float GetCPULoad()
+    double getCPULoad()
     {
+        double cpuLoad = 0.0f;
+
 #ifdef _WIN32
         FILETIME idleTime, kernelTime, userTime;
-        return GetSystemTimes(&idleTime, &kernelTime, &userTime) ? CalculateCPULoad(FileTimeToInt64(idleTime), FileTimeToInt64(kernelTime) + FileTimeToInt64(userTime)) : -1.0f;
+        cpuLoad = GetSystemTimes(&idleTime, &kernelTime, &userTime) ? CalculateCPULoad(FileTimeToInt64(idleTime), FileTimeToInt64(kernelTime) + FileTimeToInt64(userTime)) : 0.0f;
 #elif __linux__        
-        std::string coreReg = "lscpu | grep -Po 'CPU\\(s\\):      +\\K[^\"]*'";
+        std::string coreReg = "lscpu | grep -Po '^CPU\\(s\\):      +\\K[^\"]*'";
         int coreNum = std::stoi(utils::trimRet(utils::execShellCmd(coreReg)));
         //printf("CPU CORE NUM=%d\n\n", coreNum);
 
         std::string loadReg = "cat /proc/loadavg | grep -Eo '^[^ ]+'";
-        float loadIn1Min = std::stof(utils::trimRet(utils::execShellCmd(coreReg)));
+        double loadIn1Min = std::stod(utils::trimRet(utils::execShellCmd(loadReg)));
         //printf("LOAD AVG=%f\n\n", loadIn1Min);
 
-        return loadIn1Min/(float)coreNum;
+        cpuLoad = loadIn1Min/(double)coreNum;
 #endif
+
+        return cpuLoad * 100.0f;
     }
 
-    float getMemoryLoad()
+    std::int64_t getMemoryTotal()
     {
 #ifdef _WIN32
         //Code block intiialization for the memory referenced in the Kernell
@@ -302,12 +306,30 @@ namespace com::ft::sdk::internal::platform
         memStat.dwLength = sizeof(memStat);
         GlobalMemoryStatusEx(&memStat);
 
-        return (float)memStat.dwMemoryLoad / (float)memStat.ullTotalPhys;
+        return memStat.ullTotalPhys;
 #elif __linux__
         /* Obtain system statistics. */
         struct sysinfo si;
         sysinfo(&si);
-        return (float)(si.totalram - si.freeram) / (float)si.totalram;
+
+        return si.totalram;
+#endif
+    }
+
+    double getMemoryLoad()
+    {
+#ifdef _WIN32
+        //Code block intiialization for the memory referenced in the Kernell
+        MEMORYSTATUSEX memStat;
+        memStat.dwLength = sizeof(memStat);
+        GlobalMemoryStatusEx(&memStat);
+
+        return (double)memStat.dwMemoryLoad;
+#elif __linux__
+        /* Obtain system statistics. */
+        struct sysinfo si;
+        sysinfo(&si);
+        return 100.0f * ((double)(si.totalram - si.freeram) / (double)si.totalram);
 #endif
     }
 

@@ -120,10 +120,10 @@ namespace com::ft::sdk::internal
 			break;
 		}
 
-		if (FTSDKConfigManager::getInstance().isOfflineMode())
+		if (FTSDKConfigManager::getInstance().getTestConfig().isOfflineMode())
 		{
-			std::cout << uri << " -- \n" << data << std::endl;
-			ResponseData resDt = { HTTP_STATUS::HTTP_OK , "Test" };
+			std::cout << "POST " << uri << " -- \n" << data << std::endl;
+			ResponseData resDt = { FTSDKConfigManager::getInstance().getTestConfig().getHttpStatus(), "Test" };
 
 			return resDt;
 		}
@@ -137,7 +137,7 @@ namespace com::ft::sdk::internal
 			}
 			catch (std::exception ex)
 			{
-				ResponseData resDt = { HTTP_STATUS::HTTP_BAD_REQUEST, ex.what() };
+				ResponseData resDt = { HTTP_STATUS::HTTP_UNAVAILABLE, ex.what() };
 
 				return resDt;
 			}
@@ -145,4 +145,29 @@ namespace com::ft::sdk::internal
 		}
 	}
 
+	ResponseData CommunicationManager::get(const std::string& url)
+	{
+		if (FTSDKConfigManager::getInstance().getTestConfig().isOfflineMode())
+		{
+			std::cout << "GET " << url << std::endl;
+			ResponseData resDt = { FTSDKConfigManager::getInstance().getTestConfig().getHttpStatus(), "GET Test" };
+
+			return resDt;
+		}
+		else
+		{
+			try
+			{
+				RestClient::Response r = m_pConnection->get(url);
+				ResponseData resDt = { r.code, r.body };
+				return resDt;
+			}
+			catch (std::exception ex)
+			{
+				ResponseData resDt = { HTTP_STATUS::HTTP_UNAVAILABLE, ex.what() };
+
+				return resDt;
+			}
+		}
+	}
 }

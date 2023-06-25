@@ -15,30 +15,6 @@ namespace com::ft::sdk
         TRACE
     };
 
-	//-- below three enums will be moved to interface once they are ready
-    enum class ErrorMonitorType : unsigned int {
-        ALL = 0xFFFFFFFF,
-        BATTERY = 1 << 1,
-        MEMORY = 1 << 2,
-        CPU = 1 << 3,
-        NO_SET = 0
-    };
-
-    enum class DeviceMetricsMonitorType : unsigned int {
-        ALL = 0xFFFFFFFF,
-        BATTERY = 1 << 1,
-        MEMORY = 1 << 2,
-        CPU = 1 << 3,
-        FPS = 1 << 4,
-        NO_SET = 0
-    };
-
-    enum class DetectFrequency : unsigned short {
-        DEFAULT = 500,
-        FREQUENT = 100,
-        RARE = 1000
-    };
-
 	enum HTTP_STATUS
 	{
 		HTTP_OK = 200,

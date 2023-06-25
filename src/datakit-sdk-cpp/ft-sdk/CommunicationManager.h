@@ -44,7 +44,7 @@ namespace com::ft::sdk::internal
 		}
 		void setHeadParam();
 		ResponseData post(DataType dt, std::string& data);
-
+		ResponseData get(const std::string& url);
 	private:
 		FTSDKConfig m_generalConfig;
 		std::shared_ptr<RestClient::Connection> m_pConnection;

@@ -20,6 +20,8 @@
 #include "FTSDKNode.h"
 #include "TrackNodeImpl.h"
 #include "InternalEnums.h"
+#include "CommunicationManager.h"
+
 
 namespace com::ft::sdk::internal
 {
@@ -40,6 +42,7 @@ namespace com::ft::sdk::internal
 		std::vector<Measurement> vtLine;
 		//double basetime;
 		std::string rawLine;
+		std::vector<int> vtId;
 
 		Measurement& addMeasurement();
 		bool isConverted()
@@ -66,6 +69,7 @@ namespace com::ft::sdk::internal
 		bool handleRUMEvent(DataMsg& dMsg);
 		bool handleLogEvent(DataMsg& dMsg);
 		bool handleTraceEvent(DataMsg& dMsg);
+		bool handleSyncResponse(ResponseData& response, const std::string& type);
 	private:
 		bool m_stopping = false;
 

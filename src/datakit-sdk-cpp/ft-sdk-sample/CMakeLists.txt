@@ -20,6 +20,9 @@ find_package(SQLiteCpp CONFIG REQUIRED)
 set(restclient-cpp_DIR "${VCPKG_CMAKE_SHARE}/restclient-cpp/")
 find_package(restclient-cpp CONFIG REQUIRED)
 
+#find_path(FT-SDK_INCLUDE_DIR datakit-sdk-cpp/FTSDK.h)
+#find_library(FT-SDK_LIBRARY ft-sdk "${FT-SDK_INCLUDE_DIR}/../lib/")
+#include_directories(${FT-SDK_INCLUDE_DIR})
 
 file(GLOB PROJECT_SOURCE "*.cpp")
 file(GLOB PROJECT_HEADER "../include/*.h" "*.h")
@@ -33,6 +36,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE "/usr/local/include/")
 target_include_directories(${PROJECT_NAME} PRIVATE "/usr/include/")
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/../ft-sdk/Include")
 
+#target_link_libraries(${PROJECT_NAME} PRIVATE restclient-cpp ${FT-SDK_LIBRARY})
 target_link_libraries(${PROJECT_NAME} PRIVATE restclient-cpp ft-sdk)
 target_link_libraries(${PROJECT_NAME}_static PRIVATE restclient-cpp ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/libft-sdk.a)
 target_link_libraries(${PROJECT_NAME}_static PRIVATE stduuid SQLiteCpp)

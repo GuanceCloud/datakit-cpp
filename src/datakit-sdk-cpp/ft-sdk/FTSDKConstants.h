@@ -113,7 +113,8 @@ namespace com::ft::sdk::constants
 #elif __linux__
 	const std::string DEFAULT_LOG_SERVICE_NAME = "df_rum_linux";
 #endif // __WIN32
-	
+	const int MAX_DB_CACHE_NUM = 5000;//数据库最大缓存容量
+
 	const std::string KEY_TIME_COST_DURATION = "duration";
 	const std::string KEY_STATUS = "status";
 

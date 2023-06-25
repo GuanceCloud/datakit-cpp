@@ -203,7 +203,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DataStoreTest.cpp" />
+    <ClCompile Include="DataSyncTest.cpp" />
     <ClCompile Include="ft-sdk-unittest.cpp" />
+    <ClCompile Include="HttpTest.cpp" />
     <ClCompile Include="LineProtocolTest.cpp" />
     <ClCompile Include="LogTest.cpp" />
     <ClCompile Include="RUMManagerTest.cpp" />
