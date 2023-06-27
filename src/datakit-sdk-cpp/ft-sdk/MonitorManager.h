@@ -34,7 +34,7 @@ namespace com::ft::sdk::internal
 		MonitorMetrics memoryMetrics;
 		MonitorMetrics fpsMetrics;
 		MonitorMetrics batteryMetrics;
-		DetectFrequency detectFreq;
+		DetectFrequency detectFreq = DetectFrequency::DEFAULT;
 
 		RUMView* pView;
 

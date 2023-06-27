@@ -224,12 +224,12 @@ namespace com::ft::sdk
         /**
          * 设置设备数据监控类型
          */
-        PROPERTY(FTRUMConfig, DeviceMetricsMonitorType, DeviceMetricsMonitorType, deviceMetricsMonitorType);
+        //PROPERTY(FTRUMConfig, DeviceMetricsMonitorType, DeviceMetricsMonitorType, deviceMetricsMonitorType);
 
         /**
          * 设置数据监测频率
          */
-        PROPERTY(FTRUMConfig, DetectFrequency, DeviceMetricsDetectFrequency, deviceMetricsDetectFrequency);
+        //PROPERTY(FTRUMConfig, DetectFrequency, DeviceMetricsDetectFrequency, deviceMetricsDetectFrequency);
     private:
         float samplingRate = 1.0f;
 

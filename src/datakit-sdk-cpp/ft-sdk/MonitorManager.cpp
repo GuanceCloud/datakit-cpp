@@ -14,7 +14,7 @@ namespace com::ft::sdk::internal
 	{
 		m_stop = false;
 		this->pView = pView;
-		detectFreq = FTSDKConfigManager::getInstance().getRUMConfig().getDeviceMetricsDetectFrequency();
+		//detectFreq = FTSDKConfigManager::getInstance().getRUMConfig().getDeviceMetricsDetectFrequency();
 	}
 
 	void MonitoredViewContainer::start()
@@ -115,7 +115,7 @@ namespace com::ft::sdk::internal
 	void MonitorManager::init()
 	{
 		errorMonitorType = FTSDKConfigManager::getInstance().getRUMConfig().getExtraMonitorTypeWithError();
-		deviceMetricsMonitorType = FTSDKConfigManager::getInstance().getRUMConfig().getDeviceMetricsMonitorType();
+		//deviceMetricsMonitorType = FTSDKConfigManager::getInstance().getRUMConfig().getDeviceMetricsMonitorType();
 	}
 
 	bool MonitorManager::isErrorMonitorType(ErrorMonitorType errorMonitorType)

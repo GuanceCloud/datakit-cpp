@@ -29,6 +29,7 @@ namespace com::ft::sdk::internal
 	{
 	private:
 		CommunicationManager() {}
+		~CommunicationManager();
 		std::string calculateDate();
 
 	public:

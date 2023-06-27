@@ -52,6 +52,10 @@ namespace com::ft::sdk::internal
             {
                 clearDB();
             }
+            else
+            {
+                DataSyncManager::getInstance().notifyNewLinefromDB();
+            }
         }
         catch (std::exception& e)
         {
@@ -244,7 +248,7 @@ namespace com::ft::sdk::internal
                 accumulatedCnt += line_cnt;
 
                 std::stringstream info;
-                info << "id: " << id << ", line_cnt: " << line_cnt << ", acc_line: " << accumulatedCnt << std::endl;
+                info << "table: " << table <<  ", id: " << id << ", line_cnt: " << line_cnt << ", acc_line: " << accumulatedCnt << std::endl;
                 LoggerManager::getInstance().logDebug(info.str());
             }
 
@@ -266,7 +270,7 @@ namespace com::ft::sdk::internal
                 idx++;
             }
 
-            if (ignoreStatus)
+            if (!ignoreStatus)
             {
                 updateLineStatus(table, LineStatus::poped, vtId);
             }

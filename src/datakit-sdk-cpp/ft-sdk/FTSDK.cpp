@@ -42,7 +42,6 @@ namespace com::ft::sdk
 		FTSDK_LOG_EXCEPTION(internal::LoggerManager::getInstance().init());
 		_LOG_INFO("SDK initializing...");
 
-		FTSDK_LOG_EXCEPTION(internal::LineDBManager::getInstance().init());
 		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().setSDKInited(true));
 	}
 
@@ -75,8 +74,9 @@ namespace com::ft::sdk
 		}
 
 		FTSDK_LOG_EXCEPTION(internal::FTSDKConfigManager::getInstance().setGeneralConfig(cpConfig));
-		FTSDK_LOG_EXCEPTION(internal::DataSyncManager::getInstance().init());
 		FTSDK_LOG_EXCEPTION(internal::CommunicationManager::getInstance().initialize(cpConfig));
+		FTSDK_LOG_EXCEPTION(internal::DataSyncManager::getInstance().init());
+		FTSDK_LOG_EXCEPTION(internal::LineDBManager::getInstance().init());
 		FTSDK_LOG_EXCEPTION(internal::NetworkMonitor::getInstance().init());
 
 		_LOG_INFO("initialized general config.");

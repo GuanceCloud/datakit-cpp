@@ -4,6 +4,7 @@
 #include <ctime>
 #include <iostream>
 #include <cstring>
+#include <thread>
 #include "LoggerManager.h"
 #include "FTSDKConfigManager.h"
 
@@ -169,5 +170,10 @@ namespace com::ft::sdk::internal
 				return resDt;
 			}
 		}
+	}
+
+	CommunicationManager::~CommunicationManager()
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 	}
 }
