@@ -25,7 +25,7 @@ public static class FTWrapper
     public static extern void BindUserData(string jsonConfig);
 
     [DllImport(dllName)]
-    public static extern void UnbindUserdata();
+    public static extern void UnBindUserdata();
 
     [DllImport(dllName)]
     public static extern void AddAction(string actionName, string actionType, long duration, long startTime);
