@@ -1,3 +1,9 @@
+# 1.0.2-alpha
+1.优化同步机制
+2.添加日志堆积策略清除策略
+3.修正 FTWrapper 错误 EntryPoint
+
+---
 # 1.0.1-alpha
 1.修正 wrapper 部分字段参数缺失错误的问题，以及 null 参数崩溃问题
 2.修在无法在启动 View  前，发送 Action，Resource，Error，LongTask 的问题

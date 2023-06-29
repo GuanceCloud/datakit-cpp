@@ -126,7 +126,7 @@ namespace com::ft::sdk
 	 */
 	enum class ErrorMonitorType : unsigned int {
 		ALL = 0xFFFFFFFF,
-		BATTERY = 1 << 1,
+		// BATTERY = 1 << 1,
 		MEMORY = 1 << 2,
 		CPU = 1 << 3,
 		NO_SET = 0
