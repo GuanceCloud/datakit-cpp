@@ -48,7 +48,7 @@ namespace com::ft::sdk::internal
 			
 			m_serverUrl = tryGetValue(j, { SECTION_HTTP_CONFIG, "serverUrl"});
 
-			if (j.count(SECTION_USER_CONFIG) > 0)
+			if (j.count(SECTION_USER_CONFIG) > 0 && j[SECTION_USER_CONFIG].size() > 0 )
 			{
 				m_username = tryGetValue(j, { SECTION_USER_CONFIG, "name" });
 				m_userId = tryGetValue(j, { SECTION_USER_CONFIG, "id" });
