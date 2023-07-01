@@ -24,6 +24,7 @@ protected:
 
 		if (!inited)
 		{
+			waitForCompleted();
 			inited = true;
 			internal::LoggerManager::getInstance().init();
 			internal::FTSDKConfigManager::getInstance().getGeneralConfig().setEnableFileDBCache(true);
