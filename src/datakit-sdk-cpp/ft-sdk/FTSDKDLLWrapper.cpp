@@ -8,7 +8,7 @@
 #include <sstream>
 #include <algorithm>
 #include "Utils.h"
-
+#include "LoggerManager.h"
 
 using namespace com::ft::sdk;
 using json = nlohmann::json;
@@ -20,215 +20,284 @@ namespace com::ft::sdk::wrapper {
 	
 	void Install(const char* jsonString) {
 		sdk->init();
-		json j = json::parse(jsonString);
 
-		internal::utils::removeNullValues(j);
+		try
+		{
+			json j = json::parse(jsonString);
 
-		auto serverUrl = j.value("serverUrl", "");
-		auto envType = j.value("envType", "prod");
-		bool enableFileDBCache = j.value("enableFileDBCache", false);
-		bool clearDBWhenStartUp = j.value("clearDBWhenStartUp", false);
-		auto appVersion = j.value("appVersion", "");
-		auto serviceName = j.value("serviceName", "");
+			internal::utils::removeNullValues(j);
 
-		json globalContext = j["globalContext"];
+			auto serverUrl = j.value("serverUrl", "");
+			auto envType = j.value("envType", "prod");
+			bool enableFileDBCache = j.value("enableFileDBCache", false);
+			bool clearDBWhenStartUp = j.value("clearDBWhenStartUp", false);
+			auto appVersion = j.value("appVersion", "");
+			auto serviceName = j.value("serviceName", "");
 
-		std::string serverUrlStr(serverUrl);
-		std::string envTypeStr(envType);
+			json globalContext = j["globalContext"];
 
-		FTSDKConfig gc;
-		gc.setServerUrl(serverUrlStr);
+			std::string serverUrlStr(serverUrl);
+			std::string envTypeStr(envType);
+			internal::LoggerManager::getInstance().logError("");
 
-		if (!envTypeStr.empty()) {
+			FTSDKConfig gc;
+			gc.setServerUrl(serverUrlStr);
 
-			std::string et = internal::utils::convertToLowerCase(envTypeStr);
-			EnvType env = EnvType::PROD;
+			if (!envTypeStr.empty()) {
 
-			if (et == "gray") {
-				env= EnvType::GRAY;
+				std::string et = internal::utils::convertToLowerCase(envTypeStr);
+				EnvType env = EnvType::PROD;
+
+				if (et == "gray") {
+					env = EnvType::GRAY;
+				}
+				else if (et == "common") {
+					env = EnvType::COMMON;
+				}
+				else if (et == "local") {
+					env = EnvType::LOCAL;
+				}
+				else if (et == "pre") {
+					env = EnvType::PRE;
+				}
+
+				gc.setEnv(env);
 			}
-			else if (et == "common") {
-				env = EnvType::COMMON;
-			}
-			else if (et == "local") {
-				env = EnvType::LOCAL;
-			}
-			else if (et == "pre") {
-				env = EnvType::PRE;
+			if (enableFileDBCache) {
+				gc.setEnableFileDBCache(enableFileDBCache);
 			}
 
-			gc.setEnv(env);
-		}
-		if (enableFileDBCache) {
-			gc.setEnableFileDBCache(enableFileDBCache);
-		}
-
-		if (clearDBWhenStartUp) {
-			gc.setClearDBWhenStartUp(clearDBWhenStartUp);
-		}
-
-		if (!appVersion.empty()) {
-			gc.setAppVersion(appVersion);
-		}
-
-		if (globalContext!=NULL) {
-
-			for (auto it = globalContext.begin(); it != globalContext.end(); ++it)
-			{
-				gc.addGlobalContext(it.key(), it.value());
+			if (clearDBWhenStartUp) {
+				gc.setClearDBWhenStartUp(clearDBWhenStartUp);
 			}
-		}
 
-		if (!serviceName.empty()) {
-			gc.setServiceName(serviceName);
-		}
-		
-		sdk->install(gc);
+			if (!appVersion.empty()) {
+				gc.setAppVersion(appVersion);
+			}
 
+			if (globalContext != NULL) {
+
+				for (auto it = globalContext.begin(); it != globalContext.end(); ++it)
+				{
+					gc.addGlobalContext(it.key(), it.value());
+				}
+			}
+
+			if (!serviceName.empty()) {
+				gc.setServiceName(serviceName);
+			}
+
+			sdk->install(gc);
+
+		}
+		catch (const std::exception& e)
+		{
+			internal::LoggerManager::getInstance().logError("Install Exception:" + std::string(e.what()));
+		}
 	}
 
 
 	void InitRUMConfig(const char* jsonString) {
 
-		json j = json::parse(jsonString);
+		try
+		{
+			json j = json::parse(jsonString);
 
-		internal::utils::removeNullValues(j);
+			internal::utils::removeNullValues(j);
 
-		auto appid = j.value("appId", "");
-		auto sampleRate = j.value("sampleRate", 1.0f);
+			auto appid = j.value("appId", "");
+			auto sampleRate = j.value("sampleRate", 1.0f);
+			auto extraMonitorTypeWithError = j.value("extraMonitorTypeWithError", "");
 
-		json globalContext = j["globalContext"];
+			json globalContext = j["globalContext"];
 
-		FTRUMConfig rc;
-		if (!appid.empty()) {
-			rc.setRumAppId(appid);
-		}
-
-		if (sampleRate) {
-			rc.setSamplingRate(sampleRate);
-		}
-
-		if (globalContext!=NULL) {
-
-			//std::ostringstream oss;
-
-			for (auto it = globalContext.begin(); it != globalContext.end(); ++it)
-			{
-				rc.addGlobalContext(it.key(), it.value());
+			FTRUMConfig rc;
+			if (!appid.empty()) {
+				rc.setRumAppId(appid);
 			}
-		}
 
-		sdk->initRUMWithConfig(rc);
+			if (sampleRate) {
+				rc.setSamplingRate(sampleRate);
+			}
+
+			if (globalContext != NULL) {
+
+				//std::ostringstream oss;
+
+				for (auto it = globalContext.begin(); it != globalContext.end(); ++it)
+				{
+					rc.addGlobalContext(it.key(), it.value());
+				}
+			}
+
+			if (!extraMonitorTypeWithError.empty()) {
+				std::string emtwe = internal::utils::convertToLowerCase(extraMonitorTypeWithError);
+
+				if (emtwe == "all") {
+					rc.setExtraMonitorTypeWithError(ErrorMonitorType::ALL);
+				}
+				else if (emtwe == "memory") {
+					rc.setExtraMonitorTypeWithError(ErrorMonitorType::MEMORY);
+				}
+				else if (emtwe == "cpu") {
+					rc.setExtraMonitorTypeWithError(ErrorMonitorType::CPU);
+				}
+			}
+
+			sdk->initRUMWithConfig(rc);
+
+		}
+		catch (const std::exception&e)
+		{
+			internal::LoggerManager::getInstance().logError("InitRUMConfig Exception:" + std::string(e.what()));
+		}
 		
 	}
 
 	void InitLogConfig(const char* jsonString) {
+		try
+		{
+			json j = json::parse(jsonString);
 
-		json j = json::parse(jsonString);
+			internal::utils::removeNullValues(j);
 
-		internal::utils::removeNullValues(j);
+			auto sampleRate = j.value("sampleRate", 1.0f);
+			auto enableCustomLog = j.value("enableCustomLog", false);
+			auto enableLinkRumData = j.value("enableLinkRumData", false);
+			auto logCacheDiscardStrategy = j.value("logCacheDiscardStrategy", "");
+			json globalContext = j["globalContext"];
 
-		auto sampleRate = j.value("sampleRate",1.0f);
-		auto enableCustomLog = j.value("enableCustomLog",false);
-		auto enableLinkRumData = j.value("enableLinkRumData",false);
-		json globalContext = j["globalContext"];
-
-		FTLogConfig lc;
-		if (sampleRate) {
-			lc.setSamplingRate(sampleRate);
-		}
-
-		if (enableCustomLog) {
-			lc.setEnableCustomLog(enableCustomLog);
-		}
-		
-		if (enableLinkRumData) { 
-			lc.setEnableLinkRumData(true);
-		}
-		
-		if (globalContext!=NULL) {
-
-			for (auto it = globalContext.begin(); it != globalContext.end(); ++it)
-			{
-				lc.addGlobalContext(it.key(), it.value());
+			FTLogConfig lc;
+			if (sampleRate) {
+				lc.setSamplingRate(sampleRate);
 			}
+
+			if (enableCustomLog) {
+				lc.setEnableCustomLog(enableCustomLog);
+			}
+
+			if (enableLinkRumData) {
+				lc.setEnableLinkRumData(true);
+			}
+
+			if (globalContext != NULL) {
+
+				for (auto it = globalContext.begin(); it != globalContext.end(); ++it)
+				{
+					lc.addGlobalContext(it.key(), it.value());
+				}
+			}
+
+			if (!logCacheDiscardStrategy.empty()) {
+				std::string lcds = internal::utils::convertToLowerCase(logCacheDiscardStrategy);
+
+				if (lcds == "discard") {
+					lc.setLogCacheDiscardStrategy(LogCacheDiscard::DISCARD);
+				}
+				else if (lcds == "discard_old") {
+					lc.setLogCacheDiscardStrategy(LogCacheDiscard::DISCARD_OLDEST);
+				}
+			}
+
+			sdk->initLogWithConfig(lc);
+
 		}
-		sdk->initLogWithConfig(lc);
+		catch (const std::exception&e)
+		{
+			internal::LoggerManager::getInstance().logError("InitLogConfig Exception:" + std::string(e.what()));
+		}
+
+		
 
 	}
 
 	void InitTraceConfig(const char* jsonString) {
+		try
+		{
+			json j = json::parse(jsonString);
 
-		json j = json::parse(jsonString);
+			internal::utils::removeNullValues(j);
 
-		internal::utils::removeNullValues(j);
+			auto sampleRate = j.value("sampleRate", 1.0f);
+			auto traceType = j.value("traceType", "ddtrace");
+			auto enableLinkRumData = j.value("enableLinkRumData", false);
 
-		auto sampleRate = j.value("sampleRate", 1.0f);
-		auto traceType = j.value("traceType", "ddtrace");
-		auto enableLinkRumData = j.value("enableLinkRumData", false);
+			FTTraceConfig tc;
+			if (sampleRate) {
+				tc.setSamplingRate(sampleRate);
+			}
 
-		FTTraceConfig tc;
-		if (sampleRate) {
-			tc.setSamplingRate(sampleRate);
+			if (enableLinkRumData) {
+				tc.setEnableLinkRUMData(enableLinkRumData);
+			}
+
+			if (!traceType.empty()) {
+				std::string tt = internal::utils::convertToLowerCase(traceType);
+
+
+				TraceType tte = TraceType::DDTRACE;
+
+				if (tt == "jaeger") {
+					tte = TraceType::JAEGER;
+				}
+				else if (tt == "skywalking") {
+					tte = TraceType::SKYWALKING;
+				}
+				else if (tt == "traceparent") {
+					tte = TraceType::TRACEPARENT;
+				}
+				else if (tt == "zipkin_single_header") {
+					tte = TraceType::ZIPKIN_SINGLE_HEADER;
+				}
+				else if (tt == "zipkin_multi_header") {
+					tte = TraceType::ZIPKIN_MULTI_HEADER;
+				}
+				tc.setTraceType(tte);
+			}
+
+			sdk->initTraceWithConfig(tc);
 		}
-
-		if (enableLinkRumData) {
-			tc.setEnableLinkRUMData(enableLinkRumData);
+		catch (const std::exception&e)
+		{
+			internal::LoggerManager::getInstance().logError("InitTraceConfig Exception:" +std::string(e.what()));
 		}
-
-		if (!traceType.empty()) {
-			std::string tt = internal::utils::convertToLowerCase(traceType);
-
-
-			TraceType tte = TraceType::DDTRACE;
-
-			if (tt == "jaeger") {
-				tte= TraceType::JAEGER;
-			}
-			else if (tt == "skywalking") {
-				tte=  TraceType::SKYWALKING;
-			}
-			else if (tt == "traceparent") {
-				tte=  TraceType::TRACEPARENT;
-			}
-			else if (tt == "zipkin_single_header") {
-				tte=  TraceType::ZIPKIN_SINGLE_HEADER;
-			}
-			else if (tt == "zipkin_multi_header") {
-				tte=  TraceType::ZIPKIN_MULTI_HEADER;
-			}
-			tc.setTraceType(tte);
-		}
-
-		sdk->initTraceWithConfig(tc);
+		
 	}
 
 	void BindUserData(const char* jsonString) {
 
-		json j = json::parse(jsonString);
+		try
+		{
+			json j = json::parse(jsonString);
 
-		internal::utils::removeNullValues(j);
+			internal::utils::removeNullValues(j);
 
-		auto userId = j.value("userId", "");
-		auto userName = j.value("userName", "");
-		auto userEmail = j.value("userEmail", "");
-		json extra = j["extra"];
+			auto userId = j.value("userId", "");
+			auto userName = j.value("userName", "");
+			auto userEmail = j.value("userEmail", "");
+			json extra = j["extra"];
 
-		std::string userIdStr(userId);
-        std::string userNameStr(userName);
-        std::string userEmailStr(userEmail);
+			std::string userIdStr(userId);
+			std::string userNameStr(userName);
+			std::string userEmailStr(userEmail);
 
-		UserData uc;
-		uc.init(userIdStr, userNameStr, userEmailStr);
+			UserData uc;
+			uc.init(userIdStr, userNameStr, userEmailStr);
 
-		if (extra!=NULL) {
+			if (extra != NULL) {
 
-			for (auto it = extra.begin(); it != extra.end(); ++it)
-			{
-				uc.addCustomizeItem(it.key(), it.value());
+				for (auto it = extra.begin(); it != extra.end(); ++it)
+				{
+					uc.addCustomizeItem(it.key(), it.value());
+				}
 			}
+			sdk->bindUserData(uc);
 		}
-		sdk->bindUserData(uc);
+		catch (const std::exception&e)
+		{
+			internal::LoggerManager::getInstance().logError("BindUserData Exception:" + std::string(e.what()));
+		}
+		
 	}
 
 
@@ -306,72 +375,83 @@ namespace com::ft::sdk::wrapper {
 
 	void AddResource(const char* resourceId, const char* resourceParamsJsonStr, const char* netStatusJsonStr) {
 		std::string resourceIdStr(resourceId);
-		json resourceJson = json::parse(resourceParamsJsonStr);
 
-		internal::utils::removeNullValues(resourceJson);
+		try
+		{
+			json resourceJson = json::parse(resourceParamsJsonStr);
+
+			internal::utils::removeNullValues(resourceJson);
+
+			auto resourceMethod = resourceJson.value("resourceMethod", "");
+			auto requestHeader = resourceJson.value("requestHeader", "");
+			auto responseHeader = resourceJson.value("responseHeader", "");
+			auto responseBody = resourceJson.value("responseBody", "");
+			auto responseConnection = resourceJson.value("responseConnection", "");
+			auto responseContentEncoding = resourceJson.value("responseContentEncoding", "");
+			auto responseContentType = resourceJson.value("responseContentType", "");
+			auto url = resourceJson.value("url", "");
+			auto resourceStatus = resourceJson.value("resourceStatus", -1);
+
+			json netStatusJson = json::parse(netStatusJsonStr);
+
+			internal::utils::removeNullValues(netStatusJson);
+
+			long dnsTime = netStatusJson.value("dnsTime", -1l);
+			long tcpTime = netStatusJson.value("tcpTime", -1l);
+			long sslTime = netStatusJson.value("sslTime", -1l);
+			long ttfb = netStatusJson.value("ttfb", -1l);
+			long responseTime = netStatusJson.value("responseTime", -1l);
+			long firstByteTime = netStatusJson.value("firstByteTime", -1l);
+
+			long fetchStartTime = netStatusJson.value("fetchStartTime", -1l);
+			long dnsStartTime = netStatusJson.value("dnsStartTime", -1l);
+			long dnsEndTime = netStatusJson.value("dnsEndTime", -1l);
+			long responseStartTime = netStatusJson.value("responseStartTime", -1l);
+			long responseEndTime = netStatusJson.value("responseEndTime", -1l);
+			long sslStartTime = netStatusJson.value("sslStartTime", -1l);
+			long sslEndTime = netStatusJson.value("sslEndTime", -1l);
+			long tcpStartTime = netStatusJson.value("tcpStartTime", -1l);
+			long tcpEndTime = netStatusJson.value("tcpEndTime", -1l);
+
+			NetStatus status;
+			ResourceParams params;
+			params.resourceMethod = resourceMethod;
+			params.requestHeader = requestHeader;
+			params.responseHeader = responseHeader;
+
+			params.responseBody = responseBody;
+			params.responseConnection = responseConnection;
+			params.responseContentEncoding = responseContentEncoding;
+			params.responseContentType = responseContentType;
+			params.url = url;
+			params.resourceStatus = resourceStatus;
+
+			status.dnsTime = dnsTime;
+			status.tcpTime = tcpTime;
+			status.sslTime = sslTime;
+			status.ttfb = ttfb;
+			status.responseTime = responseTime;
+			status.firstByteTime = firstByteTime;
+
+			status.fetchStartTime = fetchStartTime;
+			status.dnsStartTime = dnsStartTime;
+			status.dnsEndTime = dnsEndTime;
+			status.responseStartTime = responseStartTime;
+			status.responseEndTime = responseEndTime;
+			status.sslStartTime = sslStartTime;
+			status.sslEndTime = sslEndTime;
+			status.tcpStartTime = tcpStartTime;
+			status.tcpEndTime = tcpEndTime;
+
+			sdk->addResource(resourceIdStr, params, status);
+
+		}
+		catch (const std::exception&e)
+		{
+			internal::LoggerManager::getInstance().logError("AddResource Exception:" + std::string(e.what()));
+		}
+
 		
-		auto resourceMethod = resourceJson.value("resourceMethod", "");
-		auto requestHeader = resourceJson.value("requestHeader", "");
-		auto responseHeader = resourceJson.value("responseHeader", "");
-		auto responseBody = resourceJson.value("responseBody", "");
-		auto responseConnection = resourceJson.value("responseConnection", "");
-		auto responseContentEncoding = resourceJson.value("responseContentEncoding", "");
-		auto responseContentType = resourceJson.value("responseContentType", "");
-		auto url = resourceJson.value("url", "");
-		auto resourceStatus = resourceJson.value("resourceStatus", -1);
-
-		json netStatusJson = json::parse(netStatusJsonStr);
-
-		internal::utils::removeNullValues(netStatusJson);
-
-		long dnsTime = netStatusJson.value("dnsTime", -1l);
-		long tcpTime = netStatusJson.value("tcpTime", -1l);
-		long sslTime = netStatusJson.value("sslTime", -1l);
-		long ttfb = netStatusJson.value("ttfb", -1l);
-		long responseTime = netStatusJson.value("responseTime", -1l);
-		long firstByteTime = netStatusJson.value("firstByteTime", -1l);
-
-		long fetchStartTime = netStatusJson.value("fetchStartTime", -1l);
-		long dnsStartTime = netStatusJson.value("dnsStartTime", -1l);
-		long dnsEndTime = netStatusJson.value("dnsEndTime", -1l);
-		long responseStartTime = netStatusJson.value("responseStartTime", -1l);
-		long responseEndTime = netStatusJson.value("responseEndTime", -1l);
-		long sslStartTime = netStatusJson.value("sslStartTime", -1l);
-		long sslEndTime = netStatusJson.value("sslEndTime", -1l);
-		long tcpStartTime = netStatusJson.value("tcpStartTime", -1l);
-		long tcpEndTime = netStatusJson.value("tcpEndTime", -1l);
-
-		NetStatus status;
-		ResourceParams params;
-		params.resourceMethod = resourceMethod;
-		params.requestHeader = requestHeader;
-		params.responseHeader = responseHeader;
-
-		params.responseBody = responseBody;
-		params.responseConnection = responseConnection;
-		params.responseContentEncoding = responseContentEncoding;
-		params.responseContentType = responseContentType;
-		params.url = url;
-		params.resourceStatus = resourceStatus;
-
-		status.dnsTime = dnsTime;
-		status.tcpTime = tcpTime;
-		status.sslTime = sslTime;
-		status.ttfb = ttfb;
-		status.responseTime = responseTime;
-		status.firstByteTime = firstByteTime;
-
-		status.fetchStartTime = fetchStartTime;
-		status.dnsStartTime = dnsStartTime;
-		status.dnsEndTime = dnsEndTime;
-		status.responseStartTime = responseStartTime;
-		status.responseEndTime = responseEndTime;
-		status.sslStartTime = sslStartTime;
-		status.sslEndTime = sslEndTime;
-		status.tcpStartTime = tcpStartTime;
-		status.tcpEndTime = tcpEndTime;
-
-		sdk->addResource(resourceIdStr, params, status);
 	}
 
 	void AddLog(const char* content, const char* logLevel) {
@@ -441,3 +521,4 @@ namespace com::ft::sdk::wrapper {
 	}	
 
 }
+
