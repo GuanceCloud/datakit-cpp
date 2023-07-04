@@ -28,8 +28,8 @@ protected:
 			inited = true;
 			internal::LoggerManager::getInstance().init();
 			internal::FTSDKConfigManager::getInstance().getGeneralConfig().setEnableFileDBCache(true);
-			internal::DataSyncManager::getInstance().init();
 			internal::LineDBManager::getInstance().init();
+			internal::DataSyncManager::getInstance().init();
 		}
 	}
 
