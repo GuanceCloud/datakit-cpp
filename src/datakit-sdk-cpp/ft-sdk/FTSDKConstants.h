@@ -22,7 +22,7 @@ namespace com::ft::sdk::constants
 	const std::string URL_MODEL_TRACING = "/v1/write/tracing";//链路上传
 	const std::string URL_MODEL_LOG = "/v1/write/logging";//日志数据上传路径
 	const std::string URL_MODEL_RUM = "/v1/write/rum";
-	const std::string URL_MONITOR = "/monitor";
+	const std::string URL_MONITOR = "/v1/ping";
 
 	const std::string FT_MEASUREMENT_RUM_VIEW = "view";
 	const std::string FT_MEASUREMENT_RUM_ERROR = "error";
