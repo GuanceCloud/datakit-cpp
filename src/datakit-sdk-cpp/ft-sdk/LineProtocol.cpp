@@ -58,13 +58,15 @@ namespace com::ft::sdk::internal
 
     LineProtocol&& LineProtocol::addTag(const std::string& key, const std::string& value)
     {
-        mTags += ",";
-        mTags += utils::escapeTagAndKeyValue(key);
-        mTags += "=";
+        if (value != "") {
+            mTags += ",";
+            mTags += utils::escapeTagAndKeyValue(key);
+            mTags += "=";
 
-        std::string convertedVal = value == "" ? constants::UNKNOWN : value;
-        mTags += utils::escapeTagAndKeyValue(convertedVal);
-        return std::move(*this);
+            std::string convertedVal = value;
+            mTags += utils::escapeTagAndKeyValue(convertedVal);
+            return std::move(*this);
+        }
     }
 
     LineProtocol&& LineProtocol::setTimestamp(std::chrono::time_point<std::chrono::system_clock> timestamp)
