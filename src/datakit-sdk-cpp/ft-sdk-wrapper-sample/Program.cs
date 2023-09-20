@@ -91,8 +91,6 @@ namespace ft_sdk_wrapper_sample
                 ""resourceStatus"": 200
             }",
             @"{
-                ""requestHeader"": null,
-                ""responseHeader"": null,
                 ""dnsTime"": 0,
                 ""fetchStartTime"": null,
                 ""tcpTime"": 0,
