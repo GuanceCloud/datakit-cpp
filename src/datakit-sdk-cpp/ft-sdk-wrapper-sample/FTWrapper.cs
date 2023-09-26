@@ -55,7 +55,7 @@ public static class FTWrapper
     public static extern void AddResource(string resourceId,string resourceParams,string netStauts);
 
     [DllImport(dllName)]
-    public static extern void AddLog(string log, string message);
+    public static extern void AddLog(string log, string logLevel);
 
     [DllImport(dllName)]
     public static extern IntPtr GetTraceHeader(string resourceId, string url);
