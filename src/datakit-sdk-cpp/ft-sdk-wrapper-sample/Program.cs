@@ -5,7 +5,7 @@ namespace ft_sdk_wrapper_sample
 {
     class Program
     {
-        const string FAKE_URL = "https://www.guance.com/path_test/?param=1";
+        const string FAKE_URL = "https://httpbin.org/status/200";
 
 
         static void Main(string[] args)
