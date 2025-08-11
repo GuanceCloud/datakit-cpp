@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Datakit SDK 测试界面</string>
+           <string>Datakit SDK Test Interface</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGroupBox" name="groupBox">
@@ -84,7 +84,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>开始操作</string>
+              <string>Start Operation</string>
      </property>
     </widget>
     <widget class="QPushButton" name="simulateStuckBtn">
@@ -97,7 +97,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>模拟卡顿</string>
+              <string>Simulate Lag</string>
      </property>
     </widget>
     <widget class="QPushButton" name="simulateCrashBtn">
@@ -110,7 +110,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>模拟崩溃</string>
+              <string>Simulate Crash</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton">
@@ -123,7 +123,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>结束操作</string>
+              <string>End Operation</string>
      </property>
     </widget>
    </widget>
@@ -162,7 +162,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>模拟日志</string>
+              <string>Simulate Log</string>
      </property>
     </widget>
    </widget>
@@ -204,7 +204,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>模拟资源</string>
+              <string>Simulate Resource</string>
      </property>
     </widget>
    </widget>
@@ -244,7 +244,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>初始化</string>
+             <string>Initialize</string>
     </property>
    </widget>
   </widget>

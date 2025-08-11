@@ -70,10 +70,10 @@ namespace com::ft::sdk::internal
 
     // TODO: 
     //void judgeLogCachePolicy(@NonNull List<SyncJsonData> recordDataList) {
-    //    //如果 OP 类型不等于 LOG 则直接进行数据库操作；否则执行同步策略，根据同步策略返回结果判断是否需要执行数据库操作
+    //    //If the OP type is not equal to LOG, perform database operation directly; otherwise execute synchronization strategy, and judge whether to perform database operation based on the synchronization strategy result
     //    int length = recordDataList.size();
     //    int policyStatus = FTDBCachePolicy.get().optLogCachePolicy(length);
-    //    if (policyStatus >= 0) {//执行同步策略
+    //    if (policyStatus >= 0) {//Execute synchronization strategy
     //        if (policyStatus > 0) {
     //            for (int i = 0; i < policyStatus && i < length; i++) {
     //                recordDataList.remove(0);

@@ -24,12 +24,12 @@ namespace com::ft::sdk::internal::utils
 	void Wchar_tToString(std::string& szDst, wchar_t* wchar)
 	{
 		wchar_t* wText = wchar;
-		DWORD dwNum = WideCharToMultiByte(CP_OEMCP, NULL, wText, -1, NULL, 0, NULL, FALSE);// WideCharToMultiByte的运用
-		char* psText; // psText为char*的临时数组，作为赋值给std::string的中间变量
+		DWORD dwNum = WideCharToMultiByte(CP_OEMCP, NULL, wText, -1, NULL, 0, NULL, FALSE);// Usage of WideCharToMultiByte
+		char* psText; // psText is a temporary array of char*, used as an intermediate variable for assignment to std::string
 		psText = new char[dwNum];
-		WideCharToMultiByte(CP_OEMCP, NULL, wText, -1, psText, dwNum, NULL, FALSE);// WideCharToMultiByte的再次运用
-		szDst = psText;// std::string赋值
-		delete[]psText;// psText的清除
+		WideCharToMultiByte(CP_OEMCP, NULL, wText, -1, psText, dwNum, NULL, FALSE);// Second usage of WideCharToMultiByte
+		szDst = psText;// std::string assignment
+		delete[]psText;// Clear psText
 	}
 
 	// string to wstring
@@ -237,7 +237,7 @@ namespace com::ft::sdk::internal::utils
 	}
 
 	/**
-	 * 转译特殊字符
+	 * Escape special characters
 	 *
 	 * @param special
 	 * @param oldStr

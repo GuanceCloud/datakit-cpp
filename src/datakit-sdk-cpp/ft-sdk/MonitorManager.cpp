@@ -120,7 +120,7 @@ namespace com::ft::sdk::internal
 
 	bool MonitorManager::isErrorMonitorType(ErrorMonitorType errorMonitorType)
 	{
-		//判断某一种监控项是否开启
+		//Judge whether a certain monitoring item is enabled
 		return ((int)this->errorMonitorType | (int)errorMonitorType) == (int)this->errorMonitorType;
 	}
 

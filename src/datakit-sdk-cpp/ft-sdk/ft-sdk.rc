@@ -1,4 +1,4 @@
-// Microsoft Visual C++ 生成的资源脚本。
+// Microsoft Visual C++ 
 //
 
 #include "resource.h"
@@ -6,7 +6,7 @@
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 //
-// 从 TEXTINCLUDE 2 资源生成。
+//  TEXTINCLUDE 2 
 //
 #include "winres.h"
 
@@ -14,7 +14,6 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文(简体，中国) 资源
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE 4, 2
@@ -44,7 +43,7 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // 中文(简体，中国) 资源
+#endif    
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -52,9 +51,9 @@ END
 #ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
-// 从 TEXTINCLUDE 3 资源生成。
+//  TEXTINCLUDE 3 
 //
 
 
 /////////////////////////////////////////////////////////////////////////////
-#endif    // 不是 APSTUDIO_INVOKED
+#endif    //  APSTUDIO_INVOKED

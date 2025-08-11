@@ -19,8 +19,8 @@ namespace com::ft::sdk::constants
 	const std::string DEFAULT_APP_VERSION = "0.0.0";
 	const std::string DATAKIT_SDK_VERSION = "1.0.2-alpha";
 
-	const std::string URL_MODEL_TRACING = "/v1/write/tracing";//链路上传
-	const std::string URL_MODEL_LOG = "/v1/write/logging";//日志数据上传路径
+	const std::string URL_MODEL_TRACING = "/v1/write/tracing";//Trace upload
+const std::string URL_MODEL_LOG = "/v1/write/logging";//Log data upload path
 	const std::string URL_MODEL_RUM = "/v1/write/rum";
 	const std::string URL_MONITOR = "/v1/ping";
 
@@ -114,7 +114,7 @@ namespace com::ft::sdk::constants
 #elif __linux__
 	const std::string DEFAULT_LOG_SERVICE_NAME = "df_rum_linux";
 #endif // __WIN32
-	const int MAX_DB_CACHE_NUM = 5000;//数据库最大缓存容量
+	const int MAX_DB_CACHE_NUM = 5000;//Maximum database cache capacity
 
 	const std::string KEY_TIME_COST_DURATION = "duration";
 	const std::string KEY_STATUS = "status";

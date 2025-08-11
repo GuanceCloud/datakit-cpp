@@ -44,7 +44,7 @@
 namespace com::ft::sdk
 {
 	/**
-	 * Trace 类型
+	 * Trace type
 	 */
 	enum class TraceType : char {
 		/**
@@ -88,7 +88,7 @@ namespace com::ft::sdk
 	};
 
 	/**
-	 * Sky Walking Trace 版本
+	 * Sky Walking Trace version
 	 */
 	enum class SkyWalkingVersion : char
 	{
@@ -97,32 +97,32 @@ namespace com::ft::sdk
 	};
 
 	/**
-	 * 程序运行状态
+	 * Program running state
 	 */
 	ENUM_MACRO3(AppState, UNKNOWN, STARTUP, RUN)
 
 	/**
-	 * RUM 错误类型
+	 * RUM error type
 	 */
 	ENUM_MACRO4(RUMErrorType, NATIVE_CRASH, JAVA_CRASH, FLUTTER_CRASH, NETWORK_ERROR)
 
 	/**
-	 * 错误源
+	 * Error source
 	 */
 	ENUM_MACRO2(ErrorSource, LOGGER, NETWORK)
 
 	/**
-	 * 日志级别
+	 * Log level
 	 */
 	ENUM_MACRO5(LogLevel, INFO, WARNING, ERR, CRITICAL, OK)
 
 	/**
-	 * 数据传输环境
+	 * Data transmission environment
 	 */
 	ENUM_MACRO5(EnvType, PROD, GRAY, PRE, COMMON, LOCAL)
 
 	/**
-	 * 上报错误时，需要记录的监测类型.
+	 * Monitoring type that needs to be recorded when reporting errors.
 	 */
 	enum class ErrorMonitorType : unsigned int {
 		ALL = 0xFFFFFFFF,
@@ -133,7 +133,7 @@ namespace com::ft::sdk
 	};
 
 	/**
-	 * 上报设备数据时，需要记录的监测类型.
+	 * Monitoring type that needs to be recorded when reporting device data.
 	 */
 	enum class DeviceMetricsMonitorType : unsigned int {
 		ALL = 0xFFFFFFFF,
@@ -145,7 +145,7 @@ namespace com::ft::sdk
 	};
 
 	/**
-	 * 上报设备数据时的监测频率.
+	 * Monitoring frequency when reporting device data.
 	 */
 	enum class DetectFrequency : unsigned short {
 		DEFAULT = 500,
@@ -154,76 +154,76 @@ namespace com::ft::sdk
 	};
 
 	/**
-	 * 日志数据库缓存丢弃策略.
+	 * Log database cache discard strategy.
 	 */
 	enum class LogCacheDiscard : unsigned char {
 		DISCARD,
 		DISCARD_OLDEST
 	};
 
-    /**
-     * 网络耗时统计，支持方式：
-     * 1. 时间段
-     * 2. 时间点
-     */
+    	/**
+	 * Network time consumption statistics, supported methods:
+	 * 1. Time period
+	 * 2. Time point
+	 */
 	struct FTSDK_EXPORT NetStatus {
-		//----------时间段参数-------------------
-        /** tcp 连接耗时 */
+		//----------Time period parameters-------------------
+        		/** TCP connection time consumption */
         long tcpTime = -1;
-        /** dns 解析耗时 */
+        		/** DNS resolution time consumption */
         long dnsTime = -1;
-        /** ssl 连接耗时 */
+        		/** SSL connection time consumption */
         long sslTime = -1;
-        /** dns 解析到接收到第一个数据包的总时长 */
+        		/** Total time from DNS resolution to receiving the first data packet */
         long firstByteTime = -1;
-        /** 请求响应时间，开始发送请求到接收到响应首包的时长 */
+        		/** Request response time, time from sending request to receiving response first packet */
         long ttfb = -1;
-        /** 响应内容传输耗时 */
+        		/** Response content transmission time consumption */
         long responseTime = -1;
 
-		//----------时间点参数-------------------
-        /** 请求开始时间 */
+		//----------Time point parameters-------------------
+        		/** Request start time */
 		long fetchStartTime = -1;
-        /** tcp 连接时间 */
+        		/** TCP connection time */
 		long tcpStartTime = -1;
-        /** tcp 结束时间 */
+        		/** TCP end time */
 		long tcpEndTime = -1;
-        /** dns 开始时间 */
+        		/** DNS start time */
 		long dnsStartTime = -1;
-        /** dns 结束时间 */
+        		/** DNS end time */
 		long dnsEndTime = -1;
-        /** 响应开始时间 */
+        		/** Response start time */
 		long responseStartTime = -1;
-        /** 响应结束时间 */
+        		/** Response end time */
 		long responseEndTime = -1;
-        /** ssl 开始时间 */
+        		/** SSL start time */
 		long sslStartTime = -1;
-        /** ssl 结束时间 */
+        		/** SSL end time */
 		long sslEndTime = -1;
 
 	};
 
-    /**
-     * 网络传输参数
-     */
+    	/**
+	 * Network transmission parameters
+	 */
 	struct FTSDK_EXPORT ResourceParams {
-        /** 网络地址 */
+        		/** Network address */
 		std::string url = "";
-        /** 请求头参数 */
+        		/** Request header parameters */
 		std::string requestHeader = "";
-        /** 响应头参数 */
+        		/** Response header parameters */
 		std::string responseHeader = "";
-        /** 响应 connection */
+        		/** Response connection */
 		std::string responseConnection = "";
-        /** 响应 ContentType */
+        		/** Response ContentType */
 		std::string responseContentType = "";
-        /** 响应 ContentEncoding */
+        /** Response ContentEncoding */
 		std::string responseContentEncoding = "";
-        /** 响应 ContentEncoding */
+        /** Response method */
 		std::string resourceMethod = "";
-        /** 返回 body 内容 */
+        /** Response body content */
 		std::string responseBody = "";
-        /** 响应 HTTP 状态 */
+        /** Response HTTP status */
 		int resourceStatus = -1;
 	};
 

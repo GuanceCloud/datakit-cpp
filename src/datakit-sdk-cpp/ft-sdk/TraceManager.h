@@ -26,7 +26,7 @@ namespace com::ft::sdk::internal
         bool resourceStop = false;
         std::int64_t startTime = 0;
 
-        const int TIME_OUT = 60000;//暂不考虑长链接情况
+        const int TIME_OUT = 60000;//Temporarily not considering long connection scenarios
 
         std::shared_ptr<TraceHeader> header;
 
@@ -39,7 +39,7 @@ namespace com::ft::sdk::internal
         }
 
         /**
-         * 未避免错误调用造成内存溢出
+         		* To avoid memory overflow caused by incorrect calls
          *
          * @return
          */
@@ -71,7 +71,7 @@ namespace com::ft::sdk::internal
 		std::string m_traceID = "";
 		std::string m_spanID = "";
 
-		//是否可以采样
+		//Whether sampling is possible
 		bool m_enableTrace = false;
 
 		FTTraceConfig m_traceConfig;

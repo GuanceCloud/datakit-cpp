@@ -25,12 +25,12 @@ namespace com::ft::sdk
 		/// Disables copy constructor
 		FTSDKFactory(const FTSDKFactory&) = delete;
 
-		/**
-		 * 创建SDK实例
-		 * 
-		 * @param configJson 全局配置文件
-		 * @return FTSDK实例指针
-		 */
+			/**
+	 * Create SDK instance
+	 * 
+	 * @param configJson Global configuration file
+	 * @return FTSDK instance pointer
+	 */
 		static std::unique_ptr<FTSDK> get(const std::string& configJson = "ft_sdk_config.json") noexcept(false);
 
 	private:

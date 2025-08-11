@@ -22,7 +22,7 @@ namespace com::ft::sdk
 	typedef std::map<std::string, std::string> PropagationHeader;
 
 	/**
-	 * Datakit SDK 接口类, 所有操作通过此接口访问。
+	 * Datakit SDK interface class, all operations are accessed through this interface.
 	 */
 	class FTSDK_EXPORT FTSDK
 	{
@@ -34,26 +34,26 @@ namespace com::ft::sdk
 		FTSDK(const FTSDK&) = delete;
 
 		/**
-		 * 初始化SDK
+		 * Initialize SDK
 		 * 
 		 */
 		void init();
 
 		/**
-		 * 关闭SDK，执行相关资源清理操作
+		 * Shutdown SDK, perform related resource cleanup operations
 		 * 
 		 */
 		void deinit();
 
 		/**
-		 * 获取SDK版本
+		 * Get SDK version
 		 * 
-		 * @return SDK版本号
+		 * @return SDK version number
 		 */
 		std::string getVersionString();
 
 		/**
-		 * 配置全局通用参数
+		 * Configure global common parameters
 		 * 
 		 * @param config
 		 * @return 
@@ -61,7 +61,7 @@ namespace com::ft::sdk
 		FTSDK&& install(FTSDKConfig& config);
 
 		/**
-		 * 配置RUM参数
+		 * Configure RUM parameters
 		 * 
 		 * @param config
 		 * @return 
@@ -69,7 +69,7 @@ namespace com::ft::sdk
 		FTSDK&& initRUMWithConfig(FTRUMConfig& config);
 		
 		/**
-		 * 配置Trace参数
+		 * Configure Trace parameters
 		 * 
 		 * @param config
 		 * @return 
@@ -77,7 +77,7 @@ namespace com::ft::sdk
 		FTSDK&& initTraceWithConfig(FTTraceConfig& config);
 		
 		/**
-		 * 配置Log参数
+		 * Configure Log parameters
 		 * 
 		 * @param config
 		 * @return 
@@ -85,81 +85,81 @@ namespace com::ft::sdk
 		FTSDK&& initLogWithConfig(FTLogConfig& config);
 
 		/**
-		 * 绑定用户数据
+		 * Bind user data
 		 * 
-		 * @param config	用户数据
+		 * @param config	User data
 		 * @return
 		 */
 		FTSDK&& bindUserData(UserData& config);		
 
 		/**
-		 * 解绑用户数据
+		 * Unbind user data
 		 * 
 		 */
 		void unbindUserData();
 
 		/**
-		 * 按配置生成trace数据
+		 * Generate trace data according to configuration
 		 * 
-		 * @param url	网络地址
-		 * @return		trace数据
+		 * @param url	Network address
+		 * @return		Trace data
 		 */
 		PropagationHeader generateTraceHeader(const std::string& url);
 
 		/**
-		 * 按配置生成trace数据
+		 * Generate trace data according to configuration
 		 * 
-		 * @param resourceId	关联资源 id
-		 * @param url			网络地址
-		 * @return				trace数据
+		 * @param resourceId	Associated resource id
+		 * @param url			Network address
+		 * @return				Trace data
 		 */
 		PropagationHeader generateTraceHeader(const std::string& resourceId, const std::string& url);
 
 		/**
-		 * 上传用户日志到datakit
+		 * Upload user logs to datakit
 		 * 
-		 * @param content	日志内容
-		 * @param level		日志级别
+		 * @param content	Log content
+		 * @param level		Log level
 		 */
 		void addLog(std::string content, LogLevel level);
 
 		// ---RUM interface
 		/**
-		 * 添加长耗时任务
+		 * Add long-running task
 		 * 
-		 * @param log		日志
-		 * @param duration	持续时间(ns)
+		 * @param log		Log
+		 * @param duration	Duration (ns)
 		 */
 		void addLongTask(std::string log, long duration);
 
 		/**
-		 * 添加错误信息
+		 * Add error information
 		 * 
-		 * @param log		日志
-		 * @param message	消息
-		 * @param errorType	错误类型
-		 * @param state		程序运行状态
+		 * @param log		Log
+		 * @param message	Message
+		 * @param errorType	Error type
+		 * @param state		Program running state
 		 */
 		void addError(std::string log, std::string message, RUMErrorType errorType, AppState state);
 
 		/**
-		 * 设置网络传输内容
+		 * Set network transmission content
 		 * 
-		 * @param resourceId		资源 Id
-		 * @param params			网络传输参数
-		 * @param netStatusBean		网络状态统计
+		 * @param resourceId		Resource Id
+		 * @param params			Network transmission parameters
+		 * @param netStatusBean		Network status statistics
 		 */
 		void addResource(std::string resourceId, ResourceParams params, NetStatus netStatusBean);
 
 		/**
-		 * resource 起始
+		 * Resource start
 		 * 
-		 * @param resourceId		资源 Id
+		 * @param resourceId		Resource Id
 		 */
 		void startResource(std::string resourceId);
 
 		/**
-		 * resource 终止
+		 * Resource end
 		 * 
 		 * @param resourceId
 		 */
@@ -168,28 +168,28 @@ namespace com::ft::sdk
 		void addAction(std::string actionName, std::string actionType, long duration, long startTime);
 
 		/**
-		 * action 开始
+		 * Action start
 		 * 
-		 * @param actionName action 名称
-		 * @param actionType action 类型
+		 * @param actionName Action name
+		 * @param actionType Action type
 		 */
 		void startAction(std::string actionName, std::string actionType);
 
 		/**
-		 * action结束
+		 * Action end
 		 * 
 		 */
 		void stopAction();
 
 		/**
-		 * view 开始.
+		 * View start.
 		 * 
-		 * @param viewName 当前页面名称
+		 * @param viewName Current page name
 		 */
 		void startView(std::string viewName);
 
 		/**
-		 * view 结束.
+		 * View end.
 		 * 
 		 */
 		void stopView();

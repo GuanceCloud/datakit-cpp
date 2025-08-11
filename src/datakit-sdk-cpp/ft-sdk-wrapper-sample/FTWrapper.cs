@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 public static class FTWrapper
 
 {
-    // vcpkg 安装目录 
+    // vcpkg installation directory 
     //const string dllName = "C:\\{vcpkg_root}\\vcpkg\\installed\\{platform}\\bin\\ft-sdk.dll";
      
     const string dllName = "C:\\Users\\dell\\Desktop\\vcpkg_install\\vcpkg\\installed\\x64-windows\\bin\\ft-sdk.dll";

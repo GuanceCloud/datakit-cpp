@@ -21,7 +21,7 @@ namespace com::ft::sdk::internal
         //this.httpUrl = httpUrl;
 
         std::string sampled;
-        //抓取数据内容
+        // Fetch data content
         if (m_enableTrace) 
         {
             sampled = "1";
@@ -31,7 +31,7 @@ namespace com::ft::sdk::internal
             sampled = "0";
         }
 
-        //在数据中添加标记
+        // Add tag to data
         if (m_traceType == TraceType::ZIPKIN_MULTI_HEADER
             || m_traceType == TraceType::ZIPKIN_SINGLE_HEADER
             || m_traceType == TraceType::JAEGER || m_traceType == TraceType::TRACEPARENT) 

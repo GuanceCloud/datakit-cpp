@@ -113,7 +113,7 @@ int main()
     sdk->startView("TEST_VIEW_THREE");
     // 6. upload the user log
     sdk->addLog("this\\is a \"test\" log", LogLevel::INFO);
-    sdk->stopView();    //测试
+    	sdk->stopView();    //Test
     
     // 7. wait a litter longer so that the background thread has enough time to upload the event to datakit agent
     std::cout << "Press any key to exit...";

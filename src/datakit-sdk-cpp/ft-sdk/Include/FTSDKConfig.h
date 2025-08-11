@@ -21,7 +21,7 @@
 namespace com::ft::sdk
 {
     /**
-     * 全局属性配置基类
+     * Global property configuration base class
      */
     template<typename T>
     class FTSDK_EXPORT ContextConfig
@@ -32,7 +32,7 @@ namespace com::ft::sdk
         }
 
         /**
-         * 添加全局属性
+         * Add global property
          * 
          * @param key
          * @param value
@@ -46,7 +46,7 @@ namespace com::ft::sdk
         }
 
         /**
-         * 获取全局属性
+         * Get global property
          * 
          * @return 
          */
@@ -56,48 +56,48 @@ namespace com::ft::sdk
         }
 
     protected:
-        //设置全局 tag
+        // Set global tag
         std::map<std::string, std::string> m_globalContext;
     };
 
     /**
-     * SDK 通用配置项
+     * SDK common configuration items
      */
     class FTSDK_EXPORT FTSDKConfig : public ContextConfig<FTSDKConfig>
     {
     public:
         /**
-         * 设置datakit安装地址
+         * Set datakit installation address
          */
         PROPERTY(FTSDKConfig, std::string, ServerUrl, serverUrl)
 
         /**
-         * 设置服务名称
+         * Set service name
          */
         PROPERTY(FTSDKConfig, std::string, ServiceName, serviceName)
 
         /**
-         * 设置外部应用程序版本
+         * Set external application version
          */
         PROPERTY(FTSDKConfig, std::string, AppVersion, appVersion)
 
         /**
-         * 设置数据传输的环境
+         * Set the environment for data transmission
          */
         PROPERTY(FTSDKConfig, EnvType, Env, env)
 
         /**
-         * 设置是否使用文件缓存
+         * Set whether to use file cache
          */
         PROPERTY(FTSDKConfig, bool, EnableFileDBCache, enableFileDBCache)
 
         /**
-         * 设置启动时是否清除缓存数据
+         * Set whether to clear cache data on startup
          */
         PROPERTY(FTSDKConfig, bool, ClearDBWhenStartUp, clearDBWhenStartUp)
 
     private:
-        //崩溃日志的环境
+        // Environment for crash logs
         EnvType env = EnvType::PROD;
 
         std::string appVersion = "";
@@ -113,16 +113,16 @@ namespace com::ft::sdk
     };
 
 
-    /**
-     * 用户数据
-     */
+    		/**
+		 * User data
+		 */
     class FTSDK_EXPORT UserData 
     {
     public:
         UserData() {}
 
         /**
-         * 初始化用户数据
+         * Initialize user data
          * 
          * @param name
          * @param id
@@ -139,7 +139,7 @@ namespace com::ft::sdk
         }
 
         /**
-         * 重置用户数据
+         * Reset user data
          * 
          */
         void reset()
@@ -152,7 +152,7 @@ namespace com::ft::sdk
         }
 
         /**
-         * 添加用户自定义字段
+         * Add user custom field
          * 
          * @param key
          * @param value
@@ -166,17 +166,17 @@ namespace com::ft::sdk
         }
 
         /**
-         * 设置用户名
+         * Set user name
          */
         PROPERTY(UserData, std::string, Name, name);
 
         /**
-         * 设置用户Id
+         * Set user Id
          */
         PROPERTY(UserData, std::string, Id, id);
 
         /**
-         * 设置用户邮件地址
+         * Set user email address
          */
         PROPERTY(UserData, std::string, Email, email);
 
@@ -194,7 +194,7 @@ namespace com::ft::sdk
     };
 
     /**
-     * RUM 相关配置项
+     * RUM related configuration items
      */
     class FTSDK_EXPORT FTRUMConfig : public ContextConfig<FTRUMConfig>
     {
@@ -207,56 +207,56 @@ namespace com::ft::sdk
         }
 
         /**
-         * 设置RUM采样率
+         * Set RUM sampling rate
          */
         PROPERTY(FTRUMConfig, float, SamplingRate, samplingRate);
 
         /**
-         * 设置应用Id
+         * Set application Id
          */
         PROPERTY(FTRUMConfig, std::string, RumAppId, rumAppId);
 
         /**
-         * 设置错误数据监控类型
+         * Set error data monitoring type
          */
         PROPERTY(FTRUMConfig, ErrorMonitorType, ExtraMonitorTypeWithError, extraMonitorTypeWithError);
 
         /**
-         * 设置设备数据监控类型
+         * Set device data monitoring type
          */
         //PROPERTY(FTRUMConfig, DeviceMetricsMonitorType, DeviceMetricsMonitorType, deviceMetricsMonitorType);
 
         /**
-         * 设置数据监测频率
+         * Set data monitoring frequency
          */
         //PROPERTY(FTRUMConfig, DetectFrequency, DeviceMetricsDetectFrequency, deviceMetricsDetectFrequency);
     private:
         float samplingRate = 1.0f;
 
         std::string rumAppId = "";
-        //设置是否需要采集崩溃日志
+        		//Set whether to collect crash logs
         bool enableTrackAppCrash = false;
-        //设置是否检测 UI 卡顿
+        		//Set whether to detect UI lag
         bool enableTrackAppUIBlock = false;
-        //设置是否检测 ANR
+        		//Set whether to detect ANR
         bool enableTrackAppANR = false;
-        //是否开启用户行为 action 追踪
+        		//Whether to enable user behavior action tracking
         bool enableTraceUserAction = false;
-        //是否开启用户行为 view 追踪
+        		//Whether to enable user behavior view tracking
         bool enableTraceUserView = false;
-        //是否开启用户欣慰 Resource 追踪
+        		//Whether to enable user behavior Resource tracking
         bool enableTraceUserResource = false;
-        //崩溃采集数据附加类型
+        		//Crash collection data additional type
         ErrorMonitorType extraMonitorTypeWithError = ErrorMonitorType::NO_SET;
 
-        //监控指标数据类型
+        		//Monitoring metrics data type
         DeviceMetricsMonitorType deviceMetricsMonitorType = DeviceMetricsMonitorType::NO_SET;
         DetectFrequency deviceMetricsDetectFrequency = DetectFrequency::DEFAULT;
 
     };
 
     /**
-     * Trace 相关配置项
+     * Trace related configuration items
      */
     class FTSDK_EXPORT FTTraceConfig
     {
@@ -264,17 +264,17 @@ namespace com::ft::sdk
         FTTraceConfig() {}
 
         /**
-         * 设置Trace采样率
+         * Set Trace sampling rate
          */
         PROPERTY(FTTraceConfig, float, SamplingRate, samplingRate);
 
         /**
-         * 设置Trace类型
+         * Set Trace type
          */
         PROPERTY(FTTraceConfig, TraceType, TraceType, traceType);
 
         /**
-         * 设置是否关联RUM数据
+         * Set whether to associate RUM data
          */
         PROPERTY(FTTraceConfig, bool, EnableLinkRUMData, enableLinkRUMData);
 
@@ -287,7 +287,7 @@ namespace com::ft::sdk
     };
 
     /**
-     * 日志相关配置项
+     * Log related configuration items
      */
     class FTSDK_EXPORT FTLogConfig : public ContextConfig<FTLogConfig>
     {
@@ -295,22 +295,22 @@ namespace com::ft::sdk
         FTLogConfig() {}
 
         /**
-         * 设置Log采样率
+         * Set Log sampling rate
          */
         PROPERTY(FTLogConfig, float, SamplingRate, samplingRate);
 
         /**
-         * 设置是否关联RUM数据
+         * Set whether to associate RUM data
          */
         PROPERTY(FTLogConfig, bool, EnableLinkRumData, enableLinkRumData);
 
         /**
-         * 设置是否上传自定义日志
+         * Set whether to upload custom logs
          */
         PROPERTY(FTLogConfig, bool, EnableCustomLog, enableCustomLog);
 
-        /**
-         * 设置日志数据数据库存储策略. 
+                /**
+         * Set log data database storage strategy.
          */
         PROPERTY(FTLogConfig, LogCacheDiscard, LogCacheDiscardStrategy, logCacheDiscardStrategy);
 

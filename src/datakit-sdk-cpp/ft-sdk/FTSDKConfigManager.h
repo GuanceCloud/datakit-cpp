@@ -133,7 +133,7 @@ namespace com::ft::sdk::internal
 		FTLogConfig m_logPipeConfig;
 		FTTestConfig m_testConfig;
 
-		//设置全局 tag
+		//Set global tag
 		std::map<std::string, std::string> m_mapGlobalContext;
 
 		bool m_isUserBinded = false;

@@ -39,9 +39,9 @@ namespace com::ft::sdk::internal
     public:
         TraceHeader(bool m_enableTrace, TraceType traceType);
 
-        //是否可以采样
+        		//Whether sampling is possible
         bool m_enableTrace;
-        //请求开始时间
+        		//Request start time
         std::int64_t requestTime = utils::getCurrentNanoTime();
         std::string m_traceID = "";
         std::string m_spanID = "";

@@ -4,8 +4,8 @@
 
 namespace com::ft::sdk
 {
-    /**
-	 * 上传的数据类型
+    	/**
+	 * Upload data type
 	 */
     enum class DataType : char
     {

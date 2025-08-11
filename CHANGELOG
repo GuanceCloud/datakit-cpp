@@ -1,17 +1,17 @@
 # 1.0.2-alpha
-1.优化同步机制
-2.添加日志堆积策略清除策略
-3.修正 FTWrapper 错误 EntryPoint
+1. Optimized synchronization mechanism
+2. Added log accumulation strategy cleanup strategy
+3. Fixed FTWrapper error EntryPoint
 
 ---
 # 1.0.1-alpha
-1.修正 wrapper 部分字段参数缺失错误的问题，以及 null 参数崩溃问题
-2.修在无法在启动 View  前，发送 Action，Resource，Error，LongTask 的问题
-3.修正自定义属性传参数错误的问题 
+1. Fixed the issue of missing field parameters in the wrapper part and null parameter crash issues
+2. Fixed the issue of being unable to send Action, Resource, Error, LongTask before starting View
+3. Fixed the issue of incorrect custom attribute parameter passing
 
 ---
 # 1.0.0-alpha
-1.支持日志、用户数据访问、链路数据传输
-2.支持 Windows，Linux
+1. Support for logs, user data access, and trace data transmission
+2. Support for Windows and Linux
 
 
