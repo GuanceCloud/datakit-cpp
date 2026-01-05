@@ -14,22 +14,23 @@
 #include <spdlog/spdlog.h>
 #include "AbstractManager.h"
 #include "Singleton.h"
+#include "Include/datakit_exports.h"
 
 namespace com::ft::sdk::internal
 {
-    class LoggerManager :
+    class FTSDK_EXPORT LoggerManager :
         public AbstractManager, public Singleton<LoggerManager>
     {
     public:
         void init();
-        template<typename... Args> 
+        template<typename... Args>
         void logDebug(const std::string& logContent, Args const& ... args)
         {
             //std::cout << "DEBUG: " << info << std::endl;
             std::string info = logContent;
-            if (sizeof...(args) > 0)
+            if constexpr (sizeof...(args) > 0)
             {
-                info = fmt::format(logContent.c_str(), args...);
+                info = fmt::format(fmt::runtime(logContent), args...);
             }
             putLog(SPDLOG_LEVEL_DEBUG, m_component.c_str(), info.c_str());
         }
@@ -39,9 +40,9 @@ namespace com::ft::sdk::internal
         {
             //std::cout << "INFO: " << info << std::endl;
             std::string info = logContent;
-            if (sizeof...(args) > 0)
+            if constexpr (sizeof...(args) > 0)
             {
-                info = fmt::format(logContent.c_str(), args...);
+                info = fmt::format(fmt::runtime(logContent), args...);
             }
             putLog(SPDLOG_LEVEL_INFO, m_component.c_str(), info.c_str());
         }
@@ -51,9 +52,9 @@ namespace com::ft::sdk::internal
         {
             //std::cout << "WARN: " << info << std::endl;
             std::string info = logContent;
-            if (sizeof...(args) > 0)
+            if constexpr (sizeof...(args) > 0)
             {
-                info = fmt::format(logContent.c_str(), args...);
+                info = fmt::format(fmt::runtime(logContent), args...);
             }
             putLog(SPDLOG_LEVEL_WARN, m_component.c_str(), info.c_str());
         }
@@ -63,9 +64,9 @@ namespace com::ft::sdk::internal
         {
             //std::cout << "ERROR: " << info << std::endl;
             std::string info = logContent;
-            if (sizeof...(args) > 0)
+            if constexpr (sizeof...(args) > 0)
             {
-                info = fmt::format(logContent.c_str(), args...);
+                info = fmt::format(fmt::runtime(logContent), args...);
             }
             putLog(SPDLOG_LEVEL_ERROR, m_component.c_str(), info.c_str());
         }
@@ -75,9 +76,9 @@ namespace com::ft::sdk::internal
         {
             //std::cout << "INFO: " << info << std::endl;
             std::string info = logContent;
-            if (sizeof...(args) > 0)
+            if constexpr (sizeof...(args) > 0)
             {
-                info = fmt::format(logContent.c_str(), args...);
+                info = fmt::format(fmt::runtime(logContent), args...);
             }
             putLog(SPDLOG_LEVEL_TRACE, m_component.c_str(), info.c_str());
         }
