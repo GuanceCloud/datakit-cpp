@@ -9,6 +9,7 @@
 #ifndef _DATAKIT_SDK_CONFIG_MANAGER_H_
 #define _DATAKIT_SDK_CONFIG_MANAGER_H_
 
+#include "Include/datakit_exports.h"
 #include "Include/FTSDKConfig.h"
 #include "Singleton.h"
 #include "Include/FTSDK.h"
@@ -43,7 +44,7 @@ namespace com::ft::sdk::internal
 		HTTP_STATUS httpStatus = HTTP_STATUS::HTTP_OK;
 	};
 
-	class FTSDKConfigManager : public Singleton<FTSDKConfigManager>
+	class FTSDK_EXPORT FTSDKConfigManager : public Singleton<FTSDKConfigManager>
 	{
 	public:
 		FTSDKConfigManager&& setGeneralConfig(FTSDKConfig& config);

@@ -72,6 +72,11 @@ namespace com::ft::sdk
         PROPERTY(FTSDKConfig, std::string, ServerUrl, serverUrl)
 
         /**
+         * Set dataway client token
+         */
+        PROPERTY(FTSDKConfig, std::string, ClientToken, clientToken)
+
+        /**
          * Set service name
          */
         PROPERTY(FTSDKConfig, std::string, ServiceName, serviceName)
@@ -107,6 +112,7 @@ namespace com::ft::sdk
 
         // HttpConfig
         std::string serverUrl;
+        std::string clientToken = "";
 
         std::string serviceName = "";
 

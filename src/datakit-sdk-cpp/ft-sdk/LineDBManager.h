@@ -20,6 +20,7 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <string>
 #include "DataSyncManager.h"
+#include "Include/datakit_exports.h"
 #include "Include/FTSDKDataContracts.h"
 #include "FTSDKConstants.h"
 
@@ -33,7 +34,7 @@ namespace com::ft::sdk::internal
 		failed
 	};
 
-	class LineDBManager : public Singleton<LineDBManager>
+	class FTSDK_EXPORT LineDBManager : public Singleton<LineDBManager>
 	{
 	public:
 		void init();

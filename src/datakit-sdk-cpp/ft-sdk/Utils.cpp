@@ -55,7 +55,7 @@ namespace com::ft::sdk::internal::utils
 	std::string getExecutablePath() 
 	{
 		WCHAR result[512];
-		GetModuleFileName(NULL, result, sizeof(result));
+		GetModuleFileNameW(NULL, result, static_cast<DWORD>(_countof(result)));
 		std::string fname;
 		Wchar_tToString(fname, result);
 		return dirnameOf(fname);
@@ -351,12 +351,17 @@ namespace com::ft::sdk::internal::utils
 
 	std::string convertVector2Json(std::vector<std::string> tobeConverted)
 	{
+		if (tobeConverted.empty()) {
+			return "[]";
+		}
+
 		std::string strHdr = "[";
 		for (auto& item : tobeConverted)
 		{
 			strHdr.append("\"" + item + "\"");
 			strHdr.append(",");
 		}
+		// Remove the last comma (size-1, not size-2)
 		strHdr = strHdr.substr(0, strHdr.size() - 1);
 		strHdr.append("]");
 

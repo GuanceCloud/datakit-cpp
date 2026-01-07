@@ -35,14 +35,14 @@ namespace com::ft::sdk::internal::platform
 
         HKEY hKey;
         DWORD dwType;
-        DWORD dwSize = MAX_PATH;
-        TCHAR szProductType[MAX_PATH];
+        WCHAR szProductType[MAX_PATH];
+        DWORD dwSize = sizeof(szProductType);
 
-        if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"), 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
+        if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
         {
-            if (RegGetValue(hKey, nullptr, TEXT("ProductName"), RRF_RT_REG_SZ, &dwType, szProductType, &dwSize) == ERROR_SUCCESS)
+            if (RegGetValueW(hKey, nullptr, L"ProductName", RRF_RT_REG_SZ, &dwType, szProductType, &dwSize) == ERROR_SUCCESS)
             {
-                utils::Wchar_tToString(osName, (wchar_t*)szProductType);
+                utils::Wchar_tToString(osName, szProductType);
             }
 
             RegCloseKey(hKey);
@@ -495,20 +495,20 @@ namespace com::ft::sdk::internal::platform
 #ifdef _WIN32
         HKEY hKey;
         DWORD dwType = REG_SZ;
-        if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"HARDWARE\\DESCRIPTION\\System\\BIOS", 0, KEY_READ, &hKey) == ERROR_SUCCESS)
+        if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"HARDWARE\\DESCRIPTION\\System\\BIOS", 0, KEY_READ, &hKey) == ERROR_SUCCESS)
         {
-            char szValue[MAX_PATH] = { 0 };
+            WCHAR szValue[MAX_PATH] = { 0 };
             DWORD dwSize = sizeof(szValue);
-            if (RegQueryValueEx(hKey, L"SystemManufacturer", NULL, &dwType, (LPBYTE)szValue, &dwSize) == ERROR_SUCCESS)
+            if (RegQueryValueExW(hKey, L"SystemManufacturer", NULL, &dwType, (LPBYTE)szValue, &dwSize) == ERROR_SUCCESS)
             {
-                utils::Wchar_tToString(devInfo.band, (wchar_t*)szValue);
+                utils::Wchar_tToString(devInfo.band, szValue);
             }
 
-            char szValue2[1024] = { 0 };
+            WCHAR szValue2[1024] = { 0 };
             DWORD dwSize2 = sizeof(szValue2);
-            if (RegQueryValueEx(hKey, L"SystemProductName", NULL, &dwType, (LPBYTE)szValue2, &dwSize2) == ERROR_SUCCESS)
+            if (RegQueryValueExW(hKey, L"SystemProductName", NULL, &dwType, (LPBYTE)szValue2, &dwSize2) == ERROR_SUCCESS)
             {
-                utils::Wchar_tToString(devInfo.model, (wchar_t*)szValue2);
+                utils::Wchar_tToString(devInfo.model, szValue2);
             }
             RegCloseKey(hKey);
         }

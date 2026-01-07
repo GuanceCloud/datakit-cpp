@@ -30,9 +30,12 @@ namespace com::ft::sdk
 {
 	FTSDK::FTSDK(const std::string& configJson)
 	{
-		// load config
-		internal::FTSDKConfigManager::getInstance().setConfigFileName(configJson);
-		internal::ConfigFileHandler::getInstance().load();
+		if (!configJson.empty())
+		{
+			// load config
+			internal::FTSDKConfigManager::getInstance().setConfigFileName(configJson);
+			internal::ConfigFileHandler::getInstance().load();
+		}
 	}
 
 	void FTSDK::init()

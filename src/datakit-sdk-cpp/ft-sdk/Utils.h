@@ -10,6 +10,7 @@
 #define _DATAKIT_UTILS_H_
 
 #include "pch.h"
+#include "Include/datakit_exports.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -72,7 +73,7 @@ namespace com::ft::sdk::internal::utils
 	std::string convertMap2JsonArray(std::map<std::string, std::string> tobeConverted);
 
 	std::string convertMap2Json(std::map<std::string, std::string> tobeConverted);
-	std::string convertVector2Json(std::vector<std::string> tobeConverted);
+	FTSDK_EXPORT std::string convertVector2Json(std::vector<std::string> tobeConverted);
 
 	std::string execShellCmd(const std::string& cmd);
 	std::string trimRet(const std::string& str);

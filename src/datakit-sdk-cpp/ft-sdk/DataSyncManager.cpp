@@ -206,6 +206,7 @@ namespace com::ft::sdk::internal
 		{
 			linePtl = LineProtocolBuilder::getInstance().encode(dMsg);
 		}
+		internal::LoggerManager::getInstance().logDebug("line protocol:\n" + linePtl);
 		ResponseData response = CommunicationManager::getInstance().post(dMsg.dataType, linePtl);
 
 		return handleSyncResponse(response, __func__);
@@ -219,6 +220,7 @@ namespace com::ft::sdk::internal
 		{
 			linePtl = LineProtocolBuilder::getInstance().encode(dMsg);
 		}
+		internal::LoggerManager::getInstance().logDebug("line protocol:\n" + linePtl);
 		ResponseData response = CommunicationManager::getInstance().post(dMsg.dataType, linePtl);
 		return handleSyncResponse(response, __func__);
 	}
