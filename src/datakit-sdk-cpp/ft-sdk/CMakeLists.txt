@@ -21,6 +21,8 @@ project(ft-sdk VERSION 1.0.0 LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Disable install rules by default to avoid INSTALL target failures in plugin builds.
+option(FTSDK_ENABLE_INSTALL "Enable ft-sdk install rules" OFF)
 #include("../module.cmake")
 #include_directories(${PROJECT_SOURCE_DIR}/../include)
 #include ("${VCPKG_CMAKE_SHARE}/restclient-cpp/restclient-cppConfig.cmake")
@@ -115,12 +117,14 @@ target_include_directories(${PROJECT_NAME} PRIVATE "/usr/local/include/")
 target_include_directories(${PROJECT_NAME} PRIVATE "/usr/include/")
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include/)
 
-install(TARGETS ${PROJECT_NAME} DESTINATION ${DIST_DIR}/lib/${ARCHITECTURE}/)
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Include/ DESTINATION ${DIST_DIR}/include)
+if(FTSDK_ENABLE_INSTALL)
+  install(TARGETS ${PROJECT_NAME} DESTINATION ${DIST_DIR}/lib/${ARCHITECTURE}/)
+  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Include/ DESTINATION ${DIST_DIR}/include)
 
-if(UNIX)
-install(TARGETS ${PROJECT_NAME}_static DESTINATION ${DIST_DIR}/lib/${ARCHITECTURE}/)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/install.sh DESTINATION ${DIST_DIR})
+  if(UNIX)
+    install(TARGETS ${PROJECT_NAME}_static DESTINATION ${DIST_DIR}/lib/${ARCHITECTURE}/)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/install.sh DESTINATION ${DIST_DIR})
+  endif()
 endif()
 
 #target_link_libraries(${PROJECT_NAME} "/usr/local/lib/librestclient-cpp.a")

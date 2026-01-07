@@ -80,18 +80,38 @@ namespace com::ft::sdk::internal
 			return 0;
 		}
 
+		if (generalFileLogger == nullptr
+#if ENABLE_CONSOLE_LOG
+			|| logger == nullptr
+#endif
+			)
+		{
+			init();
+		}
+
+		if (generalFileLogger == nullptr)
+		{
+			return 0;
+		}
+
 		if (!component || component[0] == 0)
 		{
 			generalFileLogger->log((spdlog::level::level_enum)severity, message);
 #if ENABLE_CONSOLE_LOG
-			logger->log((spdlog::level::level_enum)severity, message);
+			if (logger != nullptr)
+			{
+				logger->log((spdlog::level::level_enum)severity, message);
+			}
 #endif //ENABLE_CONSOLE_LOG
 		}
 		else
 		{
 			generalFileLogger->log((spdlog::level::level_enum)severity, std::string(component) + ": " + message);
 #if ENABLE_CONSOLE_LOG
-			logger->log((spdlog::level::level_enum)severity, message);
+			if (logger != nullptr)
+			{
+				logger->log((spdlog::level::level_enum)severity, message);
+			}
 #endif //ENABLE_CONSOLE_LOG
 		}
 

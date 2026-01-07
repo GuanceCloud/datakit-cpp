@@ -121,6 +121,19 @@ namespace com::ft::sdk::internal
 			break;
 		}
 
+		if (!m_generalConfig.getClientToken().empty())
+		{
+			if (uri.find('?') == std::string::npos)
+			{
+				uri.append("?");
+			}
+			else
+			{
+				uri.append("&");
+			}
+			uri.append("token=").append(m_generalConfig.getClientToken()).append("&to_headless=true");
+		}
+
 		if (FTSDKConfigManager::getInstance().getTestConfig().isOfflineMode())
 		{
 			std::cout << "POST " << uri << " -- \n" << data << std::endl;
