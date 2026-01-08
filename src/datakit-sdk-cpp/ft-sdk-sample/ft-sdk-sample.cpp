@@ -15,8 +15,8 @@ using namespace com::ft::sdk;
 
 int main()
 {
-    std::string TEST_FAKE_URL = "https://baike.baidu.com/calendar/?param=1";
-    std::string TEST_FAKE_URL2 = "http://www.guance.com/test.html?param=2";
+    std::string TEST_FAKE_URL = "https://httpbin.org/status/404";
+    std::string TEST_FAKE_URL2 = "https://httpbin.org/status/200";
 
     std::string CUSTOM_KEY = "custom_key";
     std::string CUSTOM_VALUE = "custom_value";
