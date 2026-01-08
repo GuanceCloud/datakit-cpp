@@ -17,8 +17,8 @@ endif()
 
 project(ft-sdk VERSION 1.0.0 LANGUAGES CXX C)
 
-# C++20 standard required (stduuid needs std::span)
-set(CMAKE_CXX_STANDARD 20)
+# C++17 standard (stduuid 1.2.3 is C++17-compatible)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Disable install rules by default to avoid INSTALL target failures in plugin builds.
@@ -63,7 +63,7 @@ add_definitions(/EHa)
 add_definitions(-D_WINDLL)
 add_definitions(-D_UNICODE)
 add_definitions(-DUNICODE)
-add_compile_options(/std:c++20)
+# Use CMake's CMAKE_CXX_STANDARD for MSVC; no explicit /std:c++20 override
 endif()
 
 set(DIST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../datakit_sdk_redist/${CMAKE_BUILD_TYPE}")
