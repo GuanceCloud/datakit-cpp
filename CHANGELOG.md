@@ -1,11 +1,6 @@
-## 1.0.3 -alpha
-1. Add Windows DLL bundling guidance and redist handling.
-2. Align build/export workflow for ft-sdk DLL outputs.
-3. Bundle Windows runtime DLLs from `windows/third_party` for easier distribution without vcpkg.
-4. Add optional export of built `ft-sdk.dll` to `windows/ft-sdk-prebuilt/bin/<CONFIG>`.
-5. Add `flutter_dotenv` support and `config/.env` for runtime configuration loading.
-6. Switch example config to environment-based values (compile-time or .env) and validate required keys at startup.
-7. Update Windows CMake bundling logic to include dependency DLLs and avoid missing DLL errors.
+## 1.0.3-alpha
+1. Flutter Windows Support
+2. Support uploads via both Dataway and Client Token.
 
 ---
 # 1.0.2-alpha

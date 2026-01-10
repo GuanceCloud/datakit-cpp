@@ -17,10 +17,10 @@ namespace com::ft::sdk::constants
 	const std::string CONTENT_TYPE = "text/plain";
 	const std::string CHARSET = "UTF-8";
 	const std::string DEFAULT_APP_VERSION = "0.0.0";
-	const std::string DATAKIT_SDK_VERSION = "1.0.2-alpha";
+	const std::string DATAKIT_SDK_VERSION = "1.0.3-alpha";
 
 	const std::string URL_MODEL_TRACING = "/v1/write/tracing";//Trace upload
-const std::string URL_MODEL_LOG = "/v1/write/logging";//Log data upload path
+	const std::string URL_MODEL_LOG = "/v1/write/logging";//Log data upload path
 	const std::string URL_MODEL_RUM = "/v1/write/rum";
 	const std::string URL_MONITOR = "/v1/ping";
 
