@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #ifndef _DATAKIT_SDK_CONFIG_H_
 #define _DATAKIT_SDK_CONFIG_H_
 
@@ -135,11 +135,11 @@ namespace com::ft::sdk
          * @param email
          * @return 
          */
-        UserData&& init(const std::string& name, const std::string& id, const std::string& email) 
+        UserData&& init(const std::string& userName, const std::string& userId, const std::string& userEmail) 
         {
-            this->name = name;
-            this->id = id;
-            this->email = email;
+            this->name = userName;
+            this->id = userId;
+            this->email = userEmail;
 
             return std::move(*this);
         }
@@ -348,3 +348,4 @@ namespace com::ft::sdk
 }
 
 #endif // _DATAKIT_SDK_CONFIG_H_
+
