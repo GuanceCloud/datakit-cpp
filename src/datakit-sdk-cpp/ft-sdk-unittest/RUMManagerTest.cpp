@@ -85,9 +85,9 @@ protected:
 		params.responseConnection = "Keep-Alive";
 		params.responseContentEncoding = "UTF-8";
 
-		internal::PropagationUrl url = internal::PropagationUrl::parse("https://www.example.com/test.html?param=1");
+		internal::PropagationUrl url = internal::PropagationUrl::parse("https://httpbin.org/status/200");
 		internal::HttpUrl internalUrl{ url.getHost(), url.getPath(), url.getPort() };
-		auto traceHdr = internal::TraceManager::getInstance().getTraceHeader(resId, "https://www.example.com/test.html?param=1");
+		auto traceHdr = internal::TraceManager::getInstance().getTraceHeader(resId, "https://httpbin.org/status/200");
 
 		internal::RUMManager::getInstance().addResource(resId, params, status);
 

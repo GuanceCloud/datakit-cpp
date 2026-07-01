@@ -80,7 +80,7 @@ namespace ft_sdk_wrapper_sample
 
             FTWrapper.AddResource(resourceId, @"
             {
-                ""url"": ""https://api.fxbsports.com/commune"",
+                ""url"": ""https://httpbin.org/status/200"",
                 ""requestHeader"": null,
                 ""responseHeader"": null,
                 ""responseConnection"": null,

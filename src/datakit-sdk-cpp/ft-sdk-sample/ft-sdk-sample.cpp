@@ -75,7 +75,7 @@ int main()
     //sdk->addCustomTrack(tn);
 
     // 4. generate trace header base on the trace config
-    auto header = sdk->generateTraceHeader("https://www.example.com/test.html?param=1");
+    auto header = sdk->generateTraceHeader("https://httpbin.org/status/200");
 
     // 5. -- start testing rum entities
     sdk->startView("TEST_VIEW_ONE");

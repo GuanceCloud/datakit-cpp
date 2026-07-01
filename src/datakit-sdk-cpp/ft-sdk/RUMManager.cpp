@@ -869,7 +869,7 @@ namespace com::ft::sdk::internal
                 tags[constants::KEY_RUM_SESSION_ID] = getSessionId();
 
 
-                tags[constants::KEY_RUM_RESOURCE_URL_HOST] = "http://test.com";
+                tags[constants::KEY_RUM_RESOURCE_URL_HOST] = "httpbin.org";
 
                 //if (pRes->resourceType != null && !pRes->resourceType.isEmpty()) 
                 //{

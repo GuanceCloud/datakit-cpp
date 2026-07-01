@@ -188,7 +188,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>https://baike.baidu.com/calendar/?param=1</string>
+      <string>https://httpbin.org/status/200</string>
      </property>
      <property name="maxLength">
       <number>32766</number>
@@ -231,7 +231,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>http://172.25.248.216:9529</string>
+     <string>http://10.0.0.1:9529</string>
     </property>
    </widget>
    <widget class="QPushButton" name="initBtn">

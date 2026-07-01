@@ -34,10 +34,10 @@ namespace _test::helper
 		x-content-type-options=[nosniff], content-type=[text/html],\
 		 content-security-policy-report-only=[script-src 'nonce-e-zcQTJtEfSCU-KEHJAWqw'\
 		 'report-sample' 'strict-dynamic' 'unsafe-eval' 'unsafe-inline' http: https:;\
-		 object-src 'none'; report-uri https://csp.withgoogle.com/csp/static-on-bigtable;\
+		 object-src 'none'; report-uri https://httpbin.org/status/200;\
 		base-uri 'none'],\
 		 report-to=[{\"group\":\"static-on-bigtable\",\"max_age\":2592000,\"endpoints\"\
-		:[{\"url\":\"https://csp.withgoogle.com/csp/report-to/static-on-bigtable\"}]}],\
+		:[{\"url\":\"https://httpbin.org/status/200\"}]}],\
 		 cross-origin-resource-policy=[cross-origin], cache-control=[no-cache, must-revalidate],\
 		 accept-ranges=[bytes], cross-origin-opener-policy-report-only=[same-origin; report-to=\"static-on-bigtable\"]}";
 	const std::string BODY_CONTENT = "body content";
@@ -45,4 +45,3 @@ namespace _test::helper
 }
 
 #endif // !_TEST_HELPER_H_
-

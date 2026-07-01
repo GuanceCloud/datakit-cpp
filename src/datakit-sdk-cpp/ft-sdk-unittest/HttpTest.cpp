@@ -21,7 +21,7 @@ protected:
 		internal::LoggerManager::getInstance().init();
 
 		FTSDKConfig config;
-		config.setServerUrl("http://www.baidu.com");
+		config.setServerUrl("https://httpbin.org/status/200");
 		internal::CommunicationManager::getInstance().initialize(config);
 	}
 

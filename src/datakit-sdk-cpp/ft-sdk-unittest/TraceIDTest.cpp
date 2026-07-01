@@ -21,7 +21,7 @@ protected:
 		std::cout << "TearDown...\n" << std::endl;
 	}
 
-	std::string urlStr = "https://www.example.com/test.html?param=1";
+	std::string urlStr = "https://httpbin.org/status/200";
 	HttpUrl url{ "host", "path", 1234 };
 	FTTraceConfig tc;
 };
